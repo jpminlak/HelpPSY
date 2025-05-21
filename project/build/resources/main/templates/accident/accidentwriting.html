@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <table>
+    <form action="/registration" method="post" enctype="multipart/form-data">
+        <tr>
+            <td>제목</td>
+            <td><input type="text" name="title" id="title"></td>
+        </tr>
+        <tr>
+            <td>사고 분류</td>
+            <td>
+                <select name="accident">
+                    <option  value="차량 간 충돌사고">차량 간 충돌사고</option>
+                    <option  value="차량 간 사람사고">차량 간 사람사고</option>
+                    <option  value="차량 단독 사고">차량 단독 사고</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>사고 지역</td>
+            <td>
+                <select name="region">
+                    <option value="서울">서울</option>
+                    <option value="부산">부산</option>
+                    <option value="인천">인천</option>
+                    <option value="대구">대구</option>
+                    <option value="대전">대전</option>
+                    <option value="광주">광주</option>
+                    <option value="울산">울산</option>
+                    <option value="세종">세종</option>
+                    <option value="경기">경기</option>
+                    <option value="강원">강원</option>
+                    <option value="충북">충북</option>
+                    <option value="충남">충남</option>
+                    <option value="전북">전북</option>
+                    <option value="전남">전남</option>
+                    <option value="경북">경북</option>
+                    <option value="경남">경남</option>
+                    <option value="제주">제주</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>차량 등급(크기)</td>
+            <td>
+                <select name="rating">
+                    <option value="경차">경차</option>
+                    <option value="소형차">소형차</option>
+                    <option value="준중형차">준중형차</option>
+                    <option value="중형차">중형차</option>
+                    <option value="준대형차">준대형차</option>
+                    <option value="대형차">대형차</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>차량 종류</td>
+            <td><input type="text" name="type"></td>
+        </tr>
+        <tr>
+            <td>내 용</td>
+            <td><textarea name="detail" rows="15" cols="40"></textarea></td>
+        </tr>
+        <tr>
+            <td>첨부파일</td>
+            <td><input type="file" name="file"></td>
+        </tr>
+        <tr>
+            <td>첨부파일</td>
+            <td><input type="file" name="file"></td>
+        </tr>
+        <tr>
+            <td colspan=2>
+                <input type="submit" value="등록">
+            </td>
+        </tr>
+    </form>
+    </table>
+
+</body>
+</html>
