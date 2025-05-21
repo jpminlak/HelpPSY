@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,6 +25,9 @@ public class Question {
 
     @Column(length = 200)
     private String content;
+
+    @Column(length = 200)
+    private String file;
 
     @Column(columnDefinition = "TEXT")
     private LocalDateTime createDate;
