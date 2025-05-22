@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>답변</title>
+    <style>
+        table {
+            border: 1px solid black;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            text-align: center;
+            padding: 5px;
+        }
+        label{
+            width : 200px;
+            height: 150px;
+        }
+    </style>
+</head>
+<body>
+<h1>문의 답변</h1>
+
+<form action="kkk" method="post">
+    <table>
+        <thead>
+        <tr>
+            <th>선택</th>
+            <th>번호</th>
+            <th>작성자</th>
+            <th>제목</th>
+            <th>내용</th>
+            <th>파일명</th>
+            <th>작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td><input type="checkbox" name="ids" th:value="${user.id}"></td>
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.writer}"></td>
+            <td th:text="${user.subject}"></td>
+            <td th:text="${user.content}"></td>
+            <td th:text="${user.file}"></td>
+            <td th:text="${#temporals.format(user.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <br><br>
+
+    <div>
+        <label>
+            <input type="text" name="respondent" placeholder="관리자 닉네임을 입력하세요">
+        </label>
+        <label>
+            <input type="text" name="title" placeholder="제목을 입력하세요">
+        </label>
+        <br>
+        <label>
+            <textarea name="content2" placeholder="내용을 입력하세요"></textarea>
+        </label>
+        <br><br>
+
+        <button type="submit" name="action" value="answer">전송</button>
+        <button type="submit" name="action" value="delete">삭제</button>
+    </div>
+</form>
+
+</body>
+</html>

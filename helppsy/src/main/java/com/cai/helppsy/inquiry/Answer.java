@@ -18,6 +18,15 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(length = 20)
+    private String respondent;
+
+    @Column(length = 50)
+    private String title;
+
+    @Column(length = 200)
+    private String content2;
+
     @Column(columnDefinition = "TEXT")
     private LocalDateTime createDate;
 
