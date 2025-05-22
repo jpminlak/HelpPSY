@@ -3,6 +3,9 @@ package com.example.demo.accident;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -27,4 +30,6 @@ public class RegistrationEntity {
     @Column(length = 15)
     private String type; // 차종류
 
+    @CreationTimestamp
+    private LocalDateTime createDate; // 로컬 데이터 시간 표기
 }

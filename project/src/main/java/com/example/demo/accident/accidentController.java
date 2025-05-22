@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Controller
 public class accidentController {
@@ -25,11 +27,18 @@ public class accidentController {
     }
 
     @PostMapping("/registration") // 사고 게시판 작성글 db업로드
-    public String writing(Model model,@ModelAttribute RegistrationEntity registration
+    public String writing(@ModelAttribute RegistrationEntity registration
     ,@ModelAttribute RegistrationFileEntity registrationfileentity
     ,MultipartFile[] file) throws Exception{
         registrationService.write(registration); // 작성글 서비스단 보내기
         registrationService.files(registrationfileentity,file); // 사진 서비스단 보내기
-        return "accident/accidentwriting";
+        return "redirect:/return";
+    }
+
+    @GetMapping("/return")
+    public String list(Model model){
+        List<RegistrationEntity> writegetlist = registrationService.writegetlist();
+        model.addAttribute("writegetlist",writegetlist);
+        return "accident/accidentmain";
     }
 }

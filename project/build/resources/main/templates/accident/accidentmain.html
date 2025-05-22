@@ -3,7 +3,14 @@
 <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
 <html lang="en">
 <style>
+    table {
+        border-collapse: collapse;
+    }
 
+    tr, td, th {
+        border: 1px solid black;
+        width: 150px;
+    }
 </style>
 <head>
     <meta charset="UTF-8">
@@ -20,23 +27,19 @@
     </nav>
     <br>
     <table>
-
-    </table>
     <tr>
         <td>게시글 번호</td>
         <td>제목</td>
         <td>작성자</td>
         <td>작성일</td>
-        <td>조회수</td>
-        <td>수정/삭제</td>
     </tr>
-    <tr th:each="writing : ${writinglist}">
-        <td th:text="${writing}">dd</td>
-        <td th:text="${writing}">dd</td>
-        <td th:text="${writing}"></td>
-        <td th:text="${writing}"></td>
-        <td th:text="${writing}"></td>
-        <td th:text="${writing}"></td>
+    <tr th:each="list : ${writegetlist}">
+        <td th:text="${list.id}">dd</td>
+        <td th:text="${list.title}"></td>
+        <td>회원가입 미작성</td>
+        <td th:text="${#temporals.format(list.createDate, 'yyyy-MM-dd HH:mm')}"
+            thymeleaf></td>
     </tr>
+    </table>
 </body>
 </html>
