@@ -3,11 +3,10 @@ package com.example.demo.accident;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
 
 @Data
 @Entity
-@NoArgsConstructor
 public class RegistrationEntity {
 
     @Id // 외래키 지정
@@ -28,11 +27,5 @@ public class RegistrationEntity {
 
     @Column(length = 15)
     private String type; // 차종류
-
-    @Column(columnDefinition = "Text")
-    private String filename; // 파일
-
-    @Column(columnDefinition = "Text")
-    private String filepath; // 파일
 
 }

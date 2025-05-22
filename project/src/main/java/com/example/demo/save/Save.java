@@ -18,7 +18,7 @@ public class Save {
     private String name;
 
     @Column(length = 20)
-    private String pass;
+    private String[] pass;
 
     private LocalDateTime createDate;
 

@@ -2,6 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
 <html lang="en">
+<style>
+
+</style>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -15,5 +18,25 @@
             <li><a th:href="@{/accidentwriting}">글쓰기</a></li>
         </ul>
     </nav>
+    <br>
+    <table>
+
+    </table>
+    <tr>
+        <td>게시글 번호</td>
+        <td>제목</td>
+        <td>작성자</td>
+        <td>작성일</td>
+        <td>조회수</td>
+        <td>수정/삭제</td>
+    </tr>
+    <tr th:each="writing : ${writinglist}">
+        <td th:text="${writing}">dd</td>
+        <td th:text="${writing}">dd</td>
+        <td th:text="${writing}"></td>
+        <td th:text="${writing}"></td>
+        <td th:text="${writing}"></td>
+        <td th:text="${writing}"></td>
+    </tr>
 </body>
 </html>
