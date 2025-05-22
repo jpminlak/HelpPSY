@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 public class accidentController {
 
-    private final IF_RegistrationService registrationService;
+    private final RegistrationService registrationService;
 
     @GetMapping("accidentmain") // 사고 게시판 메인화면
     public String main(){
@@ -24,37 +24,12 @@ public class accidentController {
         return "accident/accidentwriting";
     }
 
-    @PostMapping("/registration") // 사고 게시판
-    public String writing(Model model,
-                          @ModelAttribute RegistrationEntity registration) {
-        registrationService.write(registration); // 사진배열 서비스단 보내기
-//        System.out.println(registration.getTitle()); // 제목
-//        System.out.println(registration.getAccident()); // 사고
-//        System.out.println(registration.getRegion()); // 지역
-//        System.out.println(registration.getRating()); // 차등급
-//        System.out.println(registration.getType()); // 차종류
-//        System.out.println(file[0].getOriginalFilename()); // 파일사진이름
-//        System.out.println(file[1].getOriginalFilename()); // 파일사진이름
-//      model.addAttribute("message","글작성이 완료되었습니다");
-//      model.addAttribute("searchUrl","/registration/list");
-        return "redirect:/file";
-    }
-    @PostMapping("/file") // 사고 게시판
-    public String file(Model model,
-                          @ModelAttribute RegistrationFileEntity registrationfileentity
-            , MultipartFile[] file) throws Exception {
-        registrationService.write(registrationfileentity, file); // 사진배열 서비스단 보내기
-//        System.out.println(registration.getTitle()); // 제목
-//        System.out.println(registration.getAccident()); // 사고
-//        System.out.println(registration.getRegion()); // 지역
-//        System.out.println(registration.getRating()); // 차등급
-//        System.out.println(registration.getType()); // 차종류
-//        System.out.println(file[0].getOriginalFilename()); // 파일사진이름
-//        System.out.println(file[1].getOriginalFilename()); // 파일사진이름
-//      model.addAttribute("message","글작성이 완료되었습니다");
-//      model.addAttribute("searchUrl","/registration/list");
+    @PostMapping("/registration") // 사고 게시판 작성글 db업로드
+    public String writing(Model model,@ModelAttribute RegistrationEntity registration
+    ,@ModelAttribute RegistrationFileEntity registrationfileentity
+    ,MultipartFile[] file) throws Exception{
+        registrationService.write(registration); // 작성글 서비스단 보내기
+        registrationService.files(registrationfileentity,file); // 사진 서비스단 보내기
         return "accident/accidentwriting";
     }
-
-
 }

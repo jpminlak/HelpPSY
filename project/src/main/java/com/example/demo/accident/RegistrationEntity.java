@@ -4,7 +4,6 @@ package com.example.demo.accident;
 import jakarta.persistence.*;
 import lombok.Data;
 
-
 @Data
 @Entity
 public class RegistrationEntity {

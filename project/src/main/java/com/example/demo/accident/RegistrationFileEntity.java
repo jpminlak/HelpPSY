@@ -4,8 +4,8 @@ package com.example.demo.accident;
 import jakarta.persistence.*;
 import lombok.Data;
 
-@Entity
 @Data
+@Entity
 public class RegistrationFileEntity {
 
     @Id // 외래키 지정
