@@ -7,6 +7,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,7 +24,7 @@ public class Question {
     @Column(length = 30)
     private String subject;
 
-    @Column(length = 200)
+    @Column(length = 400)
     private String content;
 
     @Column(length = 200)
@@ -32,7 +33,7 @@ public class Question {
     @Column(columnDefinition = "TEXT")
     private LocalDateTime createDate;
 
-//    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
-//    private List<Answer> answerList;
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Answer> answers = new ArrayList<>();
 
 }

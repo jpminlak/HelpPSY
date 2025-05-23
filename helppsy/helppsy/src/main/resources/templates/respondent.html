@@ -14,8 +14,8 @@
             text-align: center;
             padding: 5px;
         }
-        label{
-            width : 200px;
+        label {
+            width: 200px;
             height: 150px;
         }
     </style>
@@ -23,7 +23,7 @@
 <body>
 <h1>문의 답변</h1>
 
-<form action="kkk" method="post">
+<form action="/delete" method="post">
     <table>
         <thead>
         <tr>
@@ -39,34 +39,18 @@
         <tbody>
         <tr th:each="user : ${users}">
             <td><input type="checkbox" name="ids" th:value="${user.id}"></td>
-            <td th:text="${user.id}"></td>
+            <td><a th:href="@{'/question/' + ${user.id}}" th:text="${user.id}"></a></td>
             <td th:text="${user.writer}"></td>
             <td th:text="${user.subject}"></td>
-            <td th:text="${user.content}"></td>
+            <td th:text="${#strings.length(user.content) > 3 ? #strings.substring(user.content, 0, 5) + '...' : user.content}"></td>
             <td th:text="${user.file}"></td>
             <td th:text="${#temporals.format(user.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
         </tr>
         </tbody>
     </table>
 
-    <br><br>
-
-    <div>
-        <label>
-            <input type="text" name="respondent" placeholder="관리자 닉네임을 입력하세요">
-        </label>
-        <label>
-            <input type="text" name="title" placeholder="제목을 입력하세요">
-        </label>
-        <br>
-        <label>
-            <textarea name="content2" placeholder="내용을 입력하세요"></textarea>
-        </label>
-        <br><br>
-
-        <button type="submit" name="action" value="answer">전송</button>
-        <button type="submit" name="action" value="delete">삭제</button>
-    </div>
+    <br>
+    <button type="submit">삭제</button>
 </form>
 
 </body>

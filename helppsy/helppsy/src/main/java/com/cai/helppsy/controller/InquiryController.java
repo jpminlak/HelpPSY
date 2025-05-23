@@ -5,13 +5,9 @@ import com.cai.helppsy.inquiry.AnswerRepository;
 import com.cai.helppsy.inquiry.Question;
 import com.cai.helppsy.inquiry.QuestionRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -54,9 +50,9 @@ public class InquiryController {
                 uploadPath.mkdirs();    // 없으면 필요한 경로 모두 포함해서 폴더를 만든다.
             }
 
-            String fileName = file.getOriginalFilename();
-            File dest = new File(upload + fileName);
-            file.transferTo(dest);
+            String fileName = file.getOriginalFilename();   //fileName에 원래 파일이름을 저장
+            File dest = new File(upload + fileName);    //파일이 저장될 폴더를 만든다.
+            file.transferTo(dest);  //MultipartFile file 객체에 담긴 업로드된 파일을 실제로 서버 디스크에 저장
 
             question.setFile(fileName);
         }
@@ -65,24 +61,32 @@ public class InquiryController {
     }
 
 
-    @GetMapping("respondent")
+    @GetMapping("respondent")   //문의 답변전체 페이지
     public String listUsers(Model model) {
         List<Question> users = q1.findAll();  // DB에서 모든 사용자 조회
-        model.addAttribute("users", users);           // 모델에 담기
-        return "respondent";                            // 템플릿 파일명 (userList.html)
+        model.addAttribute("users", users); // 모델에 담기
+        return "respondent"; // 템플릿 파일명 (userList.html)
     }
 
     @PostMapping("kkk")
-    public String kkk(@RequestParam(value = "action") String action,
-                      @RequestParam(value = "ids", required = false) List<Integer> ids,
-                      @ModelAttribute Answer A) {
+    public String kkk(@RequestParam(value = "action") String action,    //@Requestparam으로 action을 넘겨줌
+                      @RequestParam(value = "ids", required = false) List<Integer> ids, //기본값: true를 false로 바꿈
+                      @ModelAttribute Answer A,
+                      @RequestParam(value = "question.id", required = false) Integer qid) { //question.id를 넘겨줌 변수명 : qid
 
-        if (action.equals("delete")) {
-            if (ids != null && !ids.isEmpty()) {
-                q1.deleteAllById(ids);
+        if ("delete".equals(action)) {      //action이 delete면
+            if (ids != null && !ids.isEmpty()) {    //ids가 빈값이 아니면 존재여부 확인
+                q1.deleteAllById(ids);  //해당 id(번호) 행 삭제
             }
-        } else if (action.equals("answer")) {
+        } else if ("answer".equals(action)) {   //action이 answer이면
             A.setCreateDate(LocalDateTime.now());
+
+            // 질문 ID가 전달되었으면 연결해주기
+            if (qid != null) {  //qid가 존재하면
+                Question question = q1.findById(qid).orElse(null);
+                A.setQuestion(question);
+            }
+
             a1.save(A);
         }
 
@@ -92,10 +96,24 @@ public class InquiryController {
 
     @PostMapping("delete")
     public String delete(@RequestParam(value = "ids", required = false) List<Integer> ids) {
-        if (ids != null && !ids.isEmpty()) {    //ids는 번호, 번호가 null이 아니고 비어있지 않으면
-            q1.deleteAllById(ids);              //question 행을 지운다.
+        if (ids != null && !ids.isEmpty()) {
+            q1.deleteAllById(ids);  //해당 ids 삭제
         }
         return "redirect:/respondent";
+    }
+
+
+    @GetMapping("/question/{id}")   //해당 id 문의 자세히 보기 페이지
+    public String questionDetail(@PathVariable("id") Integer id, Model model) {
+        Question question = q1.findById(id).orElse(null);
+
+        if (question == null) {
+            // 존재하지 않는 질문이면 목록으로 리다이렉트
+            return "redirect:/respondent";
+        }
+
+        model.addAttribute("question", question);
+        return "question_detail";
     }
 
 

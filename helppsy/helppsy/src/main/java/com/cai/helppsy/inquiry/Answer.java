@@ -30,6 +30,7 @@ public class Answer {
     @Column(columnDefinition = "TEXT")
     private LocalDateTime createDate;
 
-//    @ManyToOne
-//    private Question question;
+    @ManyToOne
+    @JoinColumn(name = "question_id")   //name = question_id 이면 join?
+    private Question question;
 }
