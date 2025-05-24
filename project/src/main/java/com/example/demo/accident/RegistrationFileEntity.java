@@ -15,5 +15,8 @@ public class RegistrationFileEntity {
     @Column(columnDefinition = "Text")
     private String filename; // 파일
 
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "registration_entity_id")
+    // Join되는거 service쪽 fileEntity.setRegistrationEntity(registrationEntity);에서 연결
+    private RegistrationEntity registrationEntity;
 }
