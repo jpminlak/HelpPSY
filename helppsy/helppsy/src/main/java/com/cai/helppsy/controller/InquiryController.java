@@ -112,7 +112,10 @@ public class InquiryController {
             return "redirect:/respondent";
         }
 
+        List<Answer> answerList = a1.findByQuestionId(id);
+
         model.addAttribute("question", question);
+        model.addAttribute("answers",answerList);
         return "question_detail";
     }
 

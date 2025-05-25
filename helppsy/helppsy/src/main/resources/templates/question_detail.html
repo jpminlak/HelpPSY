@@ -69,6 +69,34 @@
 
 <br>
 
+<h2>답변 목록</h2>
+<div th:if="${#lists.isEmpty(answers)}">
+    <p>등록된 답변이 없습니다.</p>
+</div>
+<div th:if="${!#lists.isEmpty(answers)}">
+    <table>
+        <thead>
+        <tr>
+            <th>번호</th>
+            <th>답변자</th>
+            <th>제목</th>
+            <th>내용</th>
+            <th>작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="answer : ${answers}">
+            <td th:text="${answer.id}"></td>
+            <td th:text="${answer.respondent}"></td>
+            <td th:text="${answer.title}"></td>
+            <td th:text="${answer.content2}"></td>
+            <td th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
 <!-- 답변 작성 폼 -->
 <h2>답변 작성</h2>
 <form action="/kkk" method="post">
@@ -97,7 +125,7 @@
 </form>
 
 <br>
-<a href="/respondent">←전체 목록</a>
+<a href="/respondent">전체 목록</a> 
 
 </body>
 </html>
