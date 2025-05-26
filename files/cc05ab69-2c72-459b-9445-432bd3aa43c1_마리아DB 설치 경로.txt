@@ -1,0 +1,1 @@
+C:\Program Files\MariaDB 11.7\data\

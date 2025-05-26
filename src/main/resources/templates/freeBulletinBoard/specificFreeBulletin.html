@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자유 게시판</title>
+</head>
+<style>
+    h1 {
+        text-align: center;
+    }
+
+    nav {
+        border: 1px solid;
+    }
+
+    nav a {
+        margin-left: 5%;
+    }
+
+    footer span {
+        margin-left: 5%;
+    }
+
+    main {
+        position: absolute;
+        width: 750px;
+        height: 800px;
+        border: 1px solid;
+        margin-left: opx;
+        margin-top: 20px;
+    }
+
+    aside {
+        position: absolute;
+        width: 250px;
+        height: 800px;
+        border: 1px solid;
+        margin-left: 780px;
+        margin-top: 20px;
+    }
+
+    footer {
+        border: 1px solid;
+        margin-top: 820px;
+    }
+
+    #signInfoBox {
+        position: absolute;
+        width: 250px;
+        height: 200px;
+        border: 1px solid;
+    }
+
+    #inputId {
+        position: absolute;
+        width: 130px;
+        height: 20px;
+        margin-left: 10px;
+        margin-top: 60px;
+    }
+
+    #inputPass {
+        position: absolute;
+        width: 130px;
+        height: 20px;
+        margin-left: 10px;
+        margin-top: 90px;
+    }
+
+    #loginBtn {
+        position: absolute;
+        width: 80px;
+        height: 50px;
+        margin-left: 160px;
+        margin-top: 63px;
+    }
+
+    #signUp {
+        position: absolute;
+        margin-left: 50px;
+        margin-top: 125px;
+    }
+
+    #findIdOrPass {
+        position: absolute;
+        margin-left: 30px;
+        margin-top: 150px;
+    }
+
+
+    #specificBulletin {
+      position: absolute;
+      margin-left: 0px;
+      margin-top: 0px;
+      border: 1px solid;
+      width: 750px;
+      height: 700px;
+    }
+
+
+</style>
+
+<body>
+<header>
+    <h1>자유 게시판</h1>
+</header>
+<nav>
+    <a href="">o 자유 게시판</a>
+    <a href="">o 사고 게시판</a>
+    <a href="">o 지도상 사고난 위치</a>
+</nav>
+<main>
+    <div id="specificBulletin">
+        <h1 th:text="'제목 : '+${bulletinOne.title}"></h1>
+        <img id="imgFile" th:src="@{attachFiles}+'/'+${imgName}" width="600" height="">
+        <p th:text="${bulletinOne.content}"></p>
+    </div>
+</main>
+<aside>
+    <div id="signInfoBox">
+        <input id="inputId" type="text" placeholder="아이디를 입력하세요">
+        <input id="inputPass" type="password" placeholder="비밀번호를 입력하세요">
+        <input id="loginBtn" type="button" value="로그인">
+        <a id="signUp" href="">회원가입</a>
+        <a id="findIdOrPass" href="">아이디/비번 찾기</a>
+    </div>
+</aside>
+<footer>
+    <span>개발자 이메일 : human@gmail.com</span>
+    <span>대표 이름 : human</span>
+</footer>
+</body>
+
+</html>
+<script>
+
+</script>

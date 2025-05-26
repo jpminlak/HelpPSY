@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자유 게시판</title>
+</head>
+<style>
+    h1 {
+        text-align: center;
+    }
+
+    nav {
+        border: 1px solid;
+    }
+
+    nav a {
+        margin-left: 5%;
+    }
+
+    footer span {
+        margin-left: 5%;
+    }
+
+    main {
+        display: inline-block;
+        width: 750px;
+        height: 800px;
+        border: 1px solid;
+    }
+
+    aside {
+        display: inline-block;
+        width: 250px;
+        height: 800px;
+        border: 1px solid;
+    }
+
+    footer {
+        border: 1px solid;
+    }
+
+    #signInfoBox {
+        position: absolute;
+        width: 250px;
+        height: 200px;
+        border: 1px solid;
+    }
+
+    #inputId {
+        position: absolute;
+        width: 130px;
+        height: 20px;
+        margin-left: 10px;
+        margin-top: 60px;
+    }
+
+    #inputPass {
+        position: absolute;
+        width: 130px;
+        height: 20px;
+        margin-left: 10px;
+        margin-top: 90px;
+    }
+
+    #loginBtn {
+        position: absolute;
+        width: 80px;
+        height: 50px;
+        margin-left: 160px;
+        margin-top: 63px;
+    }
+
+    #signUp {
+        position: absolute;
+        margin-left: 50px;
+        margin-top: 125px;
+    }
+
+    #findIdOrPass {
+        position: absolute;
+        margin-left: 30px;
+        margin-top: 150px;
+    }
+
+    #poppularBulletin {
+        position: absolute;
+        margin-left: 0px;
+        margin-top: 10px;
+        border: 1px solid;
+        width: 750px;
+        height: 200px;
+    }
+
+    #wholeBulletin {
+        position: absolute;
+        margin-left: 0px;
+        margin-top: 230px;
+        border: 1px solid;
+        width: 750px;
+        height: 550px;
+    }
+
+    #searchWord {
+        position: absolute;
+        width: 400px;
+        height: 25px;
+        margin-left: 50px;
+        margin-top: 30px;
+    }
+
+    #searchBtn {
+        position: absolute;
+        width: 80px;
+        height: 30px;
+        margin-left: 470px;
+        margin-top: 30px;
+    }
+    #newBulletin {
+        position: absolute;
+        width: 120px;
+        height: 30px;
+        margin-left: 580px;
+        margin-top: 30px;
+        background-color: rgb(66, 148, 34);
+        font-size: 15px;
+        color: rgb(3, 3, 3);
+        border: none;
+    }
+    #newBulletin:hover {
+        background-color: rgb(72, 170, 33);
+        color: rgb(255, 255, 255);
+    }
+    #bulletins {
+        position: absolute;
+        border: 1px solid;
+        width: 650px;
+        height: 450px;
+        margin-left: 50px;
+        margin-top: 80px;
+    }
+    #allListV_v1 th, td {
+      border: 1px solid;
+      height: 20px;
+      text-align: center;
+    }
+
+    #mainTitle {
+        text-decoration: none;
+        color: black;
+    }
+</style>
+
+<body>
+<header>
+    <h1><a id="mainTitle" href="main">차량 사고 커뮤니티</a></h1>
+    <h1>(자유 게시판)</h1>
+</header>
+<nav>
+    <a href="">o 자유 게시판</a>
+    <a href="">o 사고 게시판</a>
+    <a href="">o 지도상 사고난 위치</a>
+</nav>
+<main>
+    <div id="poppularBulletin">
+        <h1>(추천 게시물) 공사중...</h1>
+    </div>
+    <div id="wholeBulletin">
+        <input id="searchWord" type="text" placeholder="검색어를 입력하세요">
+        <input id="searchBtn" type="button" value="검색">
+        <input id="newBulletin" type="button" value="게시글 작성" onclick="addBulletin()">
+        <div id="bulletins">
+            <table id="allListV_v1">
+                <tr>
+                    <th>게시글 번호</th>
+                    <th>조회수</th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>작성일자</th>
+                </tr>
+                <tr th:each="bulletinOne : ${bulletin}">
+                    <td id="col1" th:text="${bulletinOne.no}"></td>
+                    <td id="col2" th:text="${bulletinOne.views}"></td>
+                    <td id="col3"><a th:text="${bulletinOne.title}"
+                                     th:href="@{specificBulletin(no=${bulletinOne.no})}"></a></td>
+                    <td id="col4" th:text="${bulletinOne.writer}">작성자 없음</td>
+                    <td id="col5" th:text="${#temporals.format(bulletinOne.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</main>
+<aside>
+    <div id="signInfoBox">
+        <input id="inputId" type="text" placeholder="아이디를 입력하세요">
+        <input id="inputPass" type="password" placeholder="비밀번호를 입력하세요">
+        <input id="loginBtn" type="button" value="로그인">
+        <a id="signUp" href="">회원가입</a>
+        <a id="findIdOrPass" href="">아이디/비번 찾기</a>
+    </div>
+</aside>
+<footer>
+    <span>개발자 이메일 : human@gmail.com</span>
+    <span>대표 이름 : human</span>
+</footer>
+</body>
+
+</html>
+<script>
+    function addBulletin(){
+      location.href = "addFreeBulletin"
+    }
+</script>

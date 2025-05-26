@@ -31,11 +31,15 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	//아래는 JPA를 사용하기 위해 추가한 것이다.
+	// 아래는 JPA를 사용하기 위해 추가한 것이다.
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	//아래는 JUnit의 사용을 위해서 추가하는 것이다.
+	// 아래는 JUnit의 사용을 위해서 추가하는 것이다.
 	testImplementation 'org.junit.jupiter:junit-jupiter'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	// 아래는 스프링 시큐리티를 사용하기 위해 설치하는 것이다.
+//	implementation 'org.springframework.boot:spring-boot-starter-security'
+//	implementation 'org.springframework.boot:spring-boot-starter-web'
+//	implementation 'org.thymeleaf.extras:tyhmeleaf-extra-springsecurity6'
 }
 
 tasks.named('test') {
