@@ -1,9 +1,6 @@
 package com.cai.helppsy.controller;
 
-import com.cai.helppsy.inquiry.Answer;
-import com.cai.helppsy.inquiry.AnswerRepository;
-import com.cai.helppsy.inquiry.Question;
-import com.cai.helppsy.inquiry.QuestionRepository;
+import com.cai.helppsy.inquiry.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,7 +34,6 @@ public class InquiryController {
         question.setSubject(subject);
         question.setContent(content);
         question.setCreateDate(LocalDateTime.now());
-
         //Answer answer = new Answer();
         //answer.setQuestion(question);
         //answer.setCreateDate(LocalDateTime.now());
@@ -62,9 +58,12 @@ public class InquiryController {
 
 
     @GetMapping("respondent")   //문의 답변전체 페이지
-    public String listUsers(Model model) {
-        List<Question> users = q1.findAll();  // DB에서 모든 사용자 조회
-        model.addAttribute("users", users); // 모델에 담기
+    public String listUsers(Model model,
+                            @RequestParam(value="p", defaultValue = "1") Integer p) {// DB에서 모든 사용자 조회
+        List<Question> a = q1.findAll();
+        model.addAttribute("users", Paging.MemberList(p,a)); // 모델에 담기
+        model.addAttribute("pages", Paging.cnt(a.size()));
+        model.addAttribute("currentPage", p);
         return "respondent"; // 템플릿 파일명 (userList.html)
     }
 

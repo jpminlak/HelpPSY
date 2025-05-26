@@ -1,11 +1,13 @@
 package com.cai.helppsy.inquiry;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,15 @@ public class Question {
 
     @Column(columnDefinition = "TEXT")
     private LocalDateTime createDate;
+
+
+    @Builder
+    public void Posts(String writer, String subject, String content, String file){
+        this.writer = writer;
+        this.subject = subject;
+        this.content = content;
+        this.file = file;
+    }
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Answer> answers = new ArrayList<>();

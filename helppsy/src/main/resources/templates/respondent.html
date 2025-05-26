@@ -18,6 +18,15 @@
             width: 200px;
             height: 150px;
         }
+        #paging{
+        position: absolute;
+        top: 480px;
+        left: 45%
+
+        }
+        #currentPage{
+           display : none;
+        }
     </style>
 </head>
 <body>
@@ -42,16 +51,40 @@
             <td><a th:href="@{'/question/' + ${user.id}}" th:text="${user.id}"></a></td>
             <td th:text="${user.writer}"></td>
             <td th:text="${user.subject}"></td>
-            <td th:text="${#strings.length(user.content) > 3 ? #strings.substring(user.content, 0, 5) + '...' : user.content}"></td>
+            <!--            <td th:text="${#strings.length(user.content) > 3 ? #strings.substring(user.content, 0, 5) + '...' : user.content}"></td>-->
             <td th:text="${user.file}"></td>
             <td th:text="${#temporals.format(user.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
         </tr>
         </tbody>
     </table>
+    <button id="rp" type="submit">삭제</button>
 
-    <br>
-    <button type="submit">삭제</button>
+    <div id="paging">
+        <input type="button" value="◁" onclick="pageLeftBtn()">
+        <span th:each="page : ${pages}">
+            <a class="pageNum" th:text="${page}" th:href="@{/respondent(p=${page})}"></a>
+        </span>
+        <input type="button" value="▷" onclick="pageRightBtn()">
+        <br>
+
+    </div>
+    <p id="currentPage" th:text="${currentPage}"></p>
 </form>
 
 </body>
 </html>
+
+<script>
+    function pageLeftBtn(){
+        let num = Number(document.getElementById('currentPage').innerHTML)-1
+        if(num != 0)
+            location.href = "respondent?p="+num;
+    }
+
+        function pageRightBtn(){
+        let num = Number(document.getElementById('currentPage').innerHTML)+1
+        let lastPage = document.getElementsByClassName('pageNum').length
+        if(lastPage >= num)
+            location.href = "respondent?p="+num;
+    }
+</script>
