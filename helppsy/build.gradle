@@ -36,6 +36,8 @@ dependencies {
 	//아래는 JUnit의 사용을 위해서 추가하는 것이다.
 	testImplementation 'org.junit.jupiter:junit-jupiter'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	// Spring Boot Validation 라이브러리 - 입력값 검증
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 tasks.named('test') {

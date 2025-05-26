@@ -1,11 +1,154 @@
 <!DOCTYPE html>
+<!-- https://www.data.go.kr/data/3052419/openapi.do -->
+<!-- https://www.vworld.kr/dev/v4dv_opn2dmap2guide_s001.do -->
 <html lang=kor xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>지도</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>지도 실험장</title>
 </head>
+<script type="text/javascript"
+    src="https://map.vworld.kr/js/vworldMapInit.js.do?version=2.0&apiKey=CEB52025-E065-364C-9DBA-44880E3B02B8"></script>
+
 <body>
+    <!-- <div th:insert="~{/mainPage:: menu}"></div> --> <!-- th:insert / th:replace 도 가능 -->
     <h3>지도 페이지</h3>
-    <div th:replace="~{/map/2dmap :: 2dm}"></div> <!-- th:insert 도 가능 -->
+    <div style="display: flex;">
+        <div id="vmap" style="width:80%; height:80%; left:0px; top:0px"></div>
+        <div style="width:20%; height:80%; left:10px; top:0px">
+            <div>
+                <input type="hidden" name="apiKey" value="CEB52025-E065-364C-9DBA-44880E3B02B8" />
+                <p id="geoURL"></p>
+                <p><span style="margin: 10px;">지번위치 : </span><span id="geoAddress"></span> </p>
+                <p><span style="margin: 10px;">도로위치 : </span><span id="geoRoad"></span> </p>
+                <p style="margin: 10px;" id="gw"></p>
+            </div>
+        </div>
+    </div>
+    <div id="buttons">
+        <button type="button" onclick="javascript:move(14129709.590359,4512313.7639686,15);">여의도</button>
+        <button type="button" onclick="javascript:move(14679304.585522275, 4472545.1240446,14);">독도</button>
+    </div>
+    <div th:insert="~{/mainPage:: footer}"></div>
 </body>
+<script>
+    vw.ol3.MapOptions = {
+        basemapType: vw.ol3.BasemapType.GRAPHIC
+        , controlDensity: vw.ol3.DensityType.EMPTY
+        , interactionDensity: vw.ol3.DensityType.BASIC
+        , controlsAutoArrange: true
+        , homePosition: vw.ol3.CameraPosition
+        , initPosition: vw.ol3.CameraPosition
+    };
+    var vmap = new vw.ol3.Map("vmap", vw.ol3.MapOptions);
+
+    // PanZoomBar
+    var zoom = new vw.ol3.control.Zoom(vmap);
+    zoom.delta = 1;
+    zoom.sliderVisible = true;
+    zoom.site = vw.ol3.SiteAlignType.TOP_RIGHT;  // or   "center-right"
+    zoom.draw();
+    vmap.addControl(zoom);
+
+    // OverviewMap
+    var oMap = new vw.ol3.control.OverviewMap(vmap);
+    oMap.site = "bottom-right";  // or   vw.ol3.SiteAlignType.TOP_RIGHT
+    oMap.draw();
+
+    // 지도이동
+    function move(x, y, z) {
+        var _center = [x, y];
+        var z = z;
+        var pan = ol.animation.pan({
+            duration: 2000,
+            source: (vmap.getView().getCenter())
+        });
+        vmap.beforeRender(pan);
+        vmap.getView().setCenter(_center);
+        setTimeout("fnMoveZoom()", 3000);
+    }
+    function fnMoveZoom() {
+        zoom = vmap.getView().getZoom();
+        if (16 > zoom) {
+            vmap.getView().setZoom(14);
+        }
+    };
+
+    // popup
+    var pop = null;
+    vmap.on("click", function (evt) {
+        var coordinate = evt.coordinate;
+        var hdms = ol.coordinate.toStringHDMS(ol.proj.transform(coordinate, "EPSG:3857", "EPSG:4326"));
+        // var hdms = ol.coordinate.toStringHDMS(ol.proj.transform(coordinate, "EPSG:3857", "EPSG:4326"));
+        // var hdms = "팝업예제";
+        var content = hdms;
+        if (pop == null) {
+            pop = new vw.ol3.popup.Popup();
+        }
+        pop.title = "위치";
+        pop.content = "오픈 API 2.0 WEB";
+        vmap.addOverlay(pop);
+        pop.show(content, coordinate);
+
+        /* 지도이동 후 지오코더 호출  */
+        // let center = vmap.getView().getCenter();
+        // feature.getGeometry().setCoordinates(center)
+        // geocoder_reverse(center[0], center[1]);
+
+        let gw = document.getElementById("gw")
+        gw.innerHTML = hdms;
+    }
+    );
+
+    // 도로명 주소, 지번
+
+    // vmap.getView().setCenter([14146386.272122687, 4526001.583379886]);
+    // vmap.getView().setZoom(19);
+    // let feature = new ol.Feature({
+    //     geometry: new ol.geom.Point([14146386.272122687, 4526001.583379886]),
+    // });
+
+    let addr, road;
+    let geocoder_reverse = function (x, y) {
+        let geoResult, addr, road, roadNo, lawNo, law;
+        $('#geoRoad').html("");
+        $.ajax({
+            type: "get",
+            url: "https://api.vworld.kr/req/address?service=address&version=2.0&request=getaddress&format=json&type=both&crs=epsg:900913",
+            data: { apiKey: $('[name=apiKey]').val(), point: x + "," + y },
+            dataType: 'jsonp',
+            success: function (data) {
+                turl = x + "," + y;
+                $('#geoURL').html(`<a href="${turl}" target="_blank" style="color: red;">${turl}</a>`)
+
+                if (data.response.status == 'NOT_FOUND') {
+                    $('#geoRoad').html("검색결과 없음");
+                    $('#geoAddress').html("");
+                    return;
+                }
+                for (i in data.response.result) {
+                    addr = data.response.result[i].text;
+                    level4A = data.response.result[i].structure.level4A;
+                    level4AC = data.response.result[i].structure.level4AC;
+                    level4L = data.response.result[i].structure.level4L;
+                    level4LC = data.response.result[i].structure.level4LC;
+
+                    if (i == 0) { // 지번 주소 
+                        geoResult = `지 번 주소=${addr}`;
+                        $('#geoAddress').html(geoResult);
+
+                    } else if (i == 1) {//도로명 주소
+                        geoResult = `도로명 주소=${addr}`;
+                        $('#geoRoad').html(geoResult);
+                    }
+                }
+            },
+            beforeSend: function () {
+            }, complete: function () {
+            },
+            error: function (xhr, stat, err) { }
+        });
+    }
+</script>
 </html>
