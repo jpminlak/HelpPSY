@@ -57,11 +57,11 @@ public class InquiryController {
     }
 
 
-    @GetMapping("respondent")   //문의 답변전체 페이지
+    @GetMapping("respondent")   //문의 답변전체 페이지, 페이징
     public String listUsers(Model model,
-                            @RequestParam(value="p", defaultValue = "1") Integer p) {// DB에서 모든 사용자 조회
+                            @RequestParam(value="p", defaultValue = "1") Integer p) {
         List<Question> a = q1.findAll();
-        model.addAttribute("users", Paging.MemberList(p,a)); // 모델에 담기
+        model.addAttribute("users", Paging.MemberList(p,a));
         model.addAttribute("pages", Paging.cnt(a.size()));
         model.addAttribute("currentPage", p);
         return "respondent"; // 템플릿 파일명 (userList.html)
@@ -74,7 +74,7 @@ public class InquiryController {
                       @RequestParam(value = "question.id", required = false) Integer qid) { //question.id를 넘겨줌 변수명 : qid
 
         if ("delete".equals(action)) {      //action이 delete면
-            if (ids != null && !ids.isEmpty()) {    //ids가 빈값이 아니면 존재여부 확인
+            if (ids != null && !ids.isEmpty()) {    //ids가 빈값이 아니면 / 존재여부 확인
                 q1.deleteAllById(ids);  //해당 id(번호) 행 삭제
             }
         } else if ("answer".equals(action)) {   //action이 answer이면
@@ -116,6 +116,10 @@ public class InquiryController {
         model.addAttribute("question", question);
         model.addAttribute("answers",answerList);
         return "question_detail";
+    }
+    @GetMapping("/main")
+    public String main(){
+        return "main";
     }
 
 

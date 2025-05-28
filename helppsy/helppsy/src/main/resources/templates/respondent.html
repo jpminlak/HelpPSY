@@ -51,13 +51,13 @@
             <td><a th:href="@{'/question/' + ${user.id}}" th:text="${user.id}"></a></td>
             <td th:text="${user.writer}"></td>
             <td th:text="${user.subject}"></td>
-            <!--            <td th:text="${#strings.length(user.content) > 3 ? #strings.substring(user.content, 0, 5) + '...' : user.content}"></td>-->
+            <td th:text="${user.content}"></td>
             <td th:text="${user.file}"></td>
             <td th:text="${#temporals.format(user.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
         </tr>
         </tbody>
     </table>
-    <button id="rp" type="submit">삭제</button>
+    <button type="submit">삭제</button>
 
     <div id="paging">
         <input type="button" value="◁" onclick="pageLeftBtn()">
