@@ -21,6 +21,9 @@ public class SinupEntity {
     @Column(length = 15)
     private String alias; // 별명
 
+    @Column(length = 1000)
+    private String intro;   //소개글
+
 
 
 

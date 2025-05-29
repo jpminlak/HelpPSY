@@ -19,6 +19,7 @@
         </div>
         <div th:if="${session.userAlias} != null">
             <label th:text="${session.userAlias}+'님 환영합니다.'"></label>
+            <a href="profile"><input id="profile" type="button" value="정보" onclick=""></a>
             <a><input type="button" value="로그아웃" onclick="logout()"></a>
         </div>
     </div>

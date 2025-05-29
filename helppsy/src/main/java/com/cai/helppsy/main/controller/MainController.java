@@ -59,7 +59,7 @@ public class MainController {
             System.out.println(user.getAlias());
             System.out.println("-------------------");
 
-            session.setAttribute("userId", user.getId()); // 세션에 id저장
+            session.setAttribute("userId", user.getUserId()); // 세션에 id저장
             session.setAttribute("userAlias", user.getAlias()); // 세션에 별명저장
             session.setAttribute("userPass", user.getUserPass()); // 세션에 비밀번호 저장
         }
@@ -81,6 +81,40 @@ public class MainController {
         System.out.println(session.getAttribute("userId"));
         System.out.println(session.getAttribute("userPass"));
         return "redirect:/main";
+    }
+
+
+    @GetMapping("/profile")
+    public String profile(){
+        return "memberManager/profile";
+    }
+
+    @GetMapping("/profile_Update")
+    public String profile_Update(HttpSession session, Model model) {
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) return "redirect:/main";
+
+        SinupEntity user = sinupservice.login(userId);
+        model.addAttribute("user", user);
+        return "memberManager/profile_Update";
+    }
+
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute SinupEntity updatedUser, HttpSession session) {
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) return "redirect:/main";
+
+        SinupEntity user = sinupservice.login(userId);
+        if (user != null) {
+            user.setAlias(updatedUser.getAlias());
+            user.setUserPass(updatedUser.getUserPass());
+            user.setIntro(updatedUser.getIntro());
+            sinupservice.sinup(user);  // save()로 덮어쓰기
+            session.setAttribute("userAlias", user.getAlias());  // 세션도 업데이트
+        }
+
+        return "redirect:/profile";
     }
 
 }
