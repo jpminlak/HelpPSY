@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>사고 게시판</title>
+    <link rel="stylesheet" type="text/css" href="main/fragmentStyle.css">
+    <script src="main/fragment.js"></script>
+    <style>
+        /* 네비게이션 바 스타일 */
+        #bottomNav {
+            background-color: #f8f8f8;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #bottomNav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: left;
+            align-items: center;
+        }
+
+        #bottomNav li {
+            margin: 0 15px;
+        }
+
+        #bottomNav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #bottomNav a:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* 테이블 스타일 */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        th:nth-child(1), td:nth-child(1) {
+            width: 80px;
+        }
+
+        th:nth-child(3), td:nth-child(3) {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{main/mainPage:: header}"></div>
+<div th:replace="~{main/mainPage:: nav}"></div>
+<div id="bottomNav">
+    <ul>
+        <li><a th:href="@{/main}">메인 화면</a></li>
+        <li><a th:href="@{/accidenttype}">사고유형</a></li>
+        <li><a th:href="@{/accidentwriting}">글쓰기</a></li>
+    </ul>
+</div>
+<table>
+    <tr>
+        <th>번호</th>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>작성일</th>
+    </tr>
+    <tr th:each="list : ${writegetlist}">
+        <td th:text="${list.id}"></td>
+            <td >
+                <a th:href="@{'/accidentview/' + ${list.id}}" th:text="${list.title}"></a>
+            </td>
+        <td>회원가입 미작성</td>
+        <td th:text="${#temporals.format(list.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+    </tr>
+</table>
+
+<div th:replace="~{main/mainPage:: footer}"></div>
+</body>
+</html>
+<script>
+    window.onload = () => {
+        document.getElementById('mainTitle').innerHTML = '차량 사고 게시판'
+    }
+</script>

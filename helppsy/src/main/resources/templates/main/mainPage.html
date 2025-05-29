@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main/fragmentStyle.css">
+    <link rel="stylesheet" href="main/main.css">
+    <script src="main/fragment.js"></script>
+    <title>차량 사고 메인 화면</title>
+</head>
+
+<body>
+<div id="header" th:fragment="header">
+    <h1 id="mainTitle"></h1>
+    <div id="memberBox">
+        <div th:if="${session.userAlias} == null">
+            <a href="signInMain"><input id="signIn" type="button" value="로그인" onclick=""></a>
+            <a href="signUpMain"><input id="signUp" type="button" value="회원가입" onclick=""></a>
+        </div>
+        <div th:if="${session.userAlias} != null">
+            <label th:text="${session.userAlias}+'님 환영합니다.'"></label>
+            <a><input type="button" value="로그아웃" onclick="logout()"></a>
+        </div>
+    </div>
+</div>
+<div id="nav" th:fragment="nav">
+    <hr>
+    <div id="navMenus">
+        <a id="free" href="mainFreeBulletin">자유 게시판</a>
+        <!--        <div id="freeDropDown">-->
+        <!--            <p>없음</p>-->
+        <!--            <p>없음</p>-->
+        <!--            <p>없음</p>-->
+        <!--        </div>-->
+        <a id="accident" href="accidentmain">사고 게시판</a>
+        <!--        <div id="accidentDropDown">-->
+        <!--            <p>없음</p>-->
+        <!--            <p>없음</p>-->
+        <!--            <p>없음</p>-->
+        <!--        </div>-->
+        <a id="inquiry" href="inquiry">문의하기</a>
+        <!--        <div id="inquiryDropDown">-->
+        <!--            <p>없음</p>-->
+        <!--            <p>없음</p>-->
+        <!--            <p>없음</p>-->
+        <!--        </div>-->
+        <a id="accidentLocation" href="">지도상 사고난 위치</a>
+        <!--        <div id="accidentLocationDropDown">-->
+        <!--            <p>없음</p>-->
+        <!--            <p>없음</p>-->
+        <!--            <p>없음</p>-->
+        <!--        </div>-->
+    </div>
+    <hr>
+</div>
+<div id="main">
+    <h2>핫한 게시물</h2>
+    <div id="hotBulletin">
+
+    </div>
+    <h2>인기 게시물</h2>
+    <div id="popularBulletin">
+        <div id="popularMenu">
+            <a href="">사고 게시판</a>
+            <a href="">자유 게시판</a>
+        </div>
+    </div>
+</div>
+<div id="adv">
+
+</div>
+<div id="footer" th:fragment="footer">
+    <hr>
+    <p>개발자 이메일 : human@gmail.com / 대표 이름 : human</p>
+</div>
+</body>
+
+</html>
+
+<script>
+    window.onload = () => {
+        document.getElementById('mainTitle').innerHTML = '차량 사고 커뮤니티'
+    }
+</script>

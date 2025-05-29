@@ -1,0 +1,106 @@
+ #header {
+            height: 50px;
+        }
+
+        * {
+            user-select: none;
+            /* 전체에 | 깜빡임 방지 */
+        }
+
+        #footer {
+            height: 100px;
+        }
+
+        /* _header */
+
+        #header h1 {
+            text-align: center;
+            margin-top: 90px;
+            font-size: 40px;
+        }
+
+        /* #leftTopImg {
+            position: absolute;
+            margin-left: 20%;
+            margin-top: -2%;
+        } */
+
+        #mainTitle {    /* 로그인, 회원가입 로그아웃 버튼*/
+            text-decoration: none;
+            color: black;
+        }
+
+        #memberBox {    /* 로그인, 회원가입 로그아웃 버튼 위치치*/
+            position: absolute;
+            margin-left: 75%;
+            margin-top: -5%;
+        }
+
+        #signIn {
+            background-color: white;
+            border: 1px solid;
+            border-radius: 10px;
+        }
+
+        #signUp {
+            background-color: white;
+            border: 1px solid;
+            border-radius: 10px;
+        }
+
+        #signIn:hover {
+            background-color: gray;
+            color: white;
+        }
+
+        #signUp:hover {
+            background-color: gray;
+            color: white;
+        }
+
+        /* _nav */
+
+        #navMenus {
+            /* margin-left: 25%; */
+            text-align: center;
+            margin:auto;
+            width: 600px;
+        }
+
+        #nav a {
+            font-size: 20px;
+            margin-left: 5%;
+            margin-top: 10px;
+            text-decoration: none;
+            color: rgb(0, 0, 0);
+        }
+
+        #nav a:hover {
+            color: blue;
+        }
+
+        #nav hr {
+            background: rgb(172, 177, 177);
+            height: 1px;
+            border: none;
+        }
+
+        #nav p {
+            text-align: center;
+        }
+
+        /* _footer */
+        #footer p {
+            text-align: center;
+        }
+
+        #footer hr {
+            background: rgb(172, 177, 177);
+            height: 1px;
+            border: none;
+        }
+
+        #nav {
+            height: 50px;
+            margin-top: 100px;
+        }

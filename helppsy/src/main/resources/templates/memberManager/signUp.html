@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up</title>
+</head>
+<style>
+    body {
+        background-color: #f0f0f0;
+        margin-top: 130px;
+        /* 상단 여백 */
+        padding: 100px;
+        background-image : url("https://images.unsplash.com/photo-1554034483-04fda0d3507b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDEyfHx3YWxscGFwZXJ8ZW58MHx8fHwxNjg2MDM2Mzc2fDA&ixlib=rb-4.0.3&q=80&w=2000");
+    }
+
+    table {
+        margin: auto;
+    }
+
+    .idpw td {
+        padding: 10px;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    td {
+        padding: 20px;
+        /* text-align: center; */
+    }
+
+    /* 로그인 버튼 */
+    input[type="button"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #45449b;
+        color: white;
+        /* 흰색 글자 */
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    input[type="button"]:hover {
+        background-color: #888cc4;
+        /* 마우스 오버 시 색상 변경 */
+    }
+
+    #title1 {
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold;
+        color: #45449b;
+
+        /* 제목 색상 */
+    }
+
+    .signBox {
+        width: 500px;
+        padding: 10px;
+        /* margin-left: -15px; */
+        box-sizing: border-box;
+        /* 패딩과 테두리를 포함한 너비 계산 */
+    }
+
+    .signBox {
+        padding : 20px;
+        /* 테이블 안쪽 여백 */
+        background-color: #ffffff;
+        /* 흰색 배경 */
+        border-radius: 8px;
+        /* 테두리 둥글게 */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        /* 그림자 효과 */
+    }
+    * {
+        user-select: none;
+        /* 전체에 | 깜빡임 방지 */
+    }
+    #id,
+    #pass,
+    #passCk,
+    #alias {
+
+        width: 100%;
+        padding: 10px;
+        margin-left: -15px;
+        box-sizing: border-box;
+        border: #45449b 2px solid;
+        /* 패딩과 테두리를 포함한 너비 계산 */
+    }
+</style>
+<body>
+<form id="form" action="signUp" method="post">
+    <table class="signBox">
+        <tr id="title1">
+            <td colspan="2">sign up</td>
+        </tr>
+        <tr class="idpw">
+            <td>아이디</td>
+            <td><input id="id" type="text" name="userId" placeholder="아이디를 입력하세요"></td>
+        </tr>
+        <tr class="idpw">
+            <td>비밀번호</td>
+            <td><input id="pass" type="password" name="userPass" placeholder="비밀번호를 입력하세요"></td>
+        </tr>
+        <tr class="idpw">
+            <td>비밀번호 확인</td>
+            <td><input id="passCk" type="password" placeholder="비밀번호 확인"></td>
+        </tr>
+        <tr class="idpw">
+            <td>별명</td>
+            <td><input id="alias" type="text" name="alias" placeholder="별명을 입력하세요"></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input id="submitBtn" type="button" value="가입하기" onclick="submitToServer()"></td>
+        </tr>
+    </table>
+</form>
+</body>
+
+</html>
+<script>
+    function submitToServer() {
+        let id = document.getElementById('id').value
+        let pass = document.getElementById('pass').value
+        let passCk = document.getElementById('passCk').value
+        let alias = document.getElementById('alias').value
+        let form = document.getElementById('form')
+
+        if (id == '') {
+            alert('아이디를 입력하세요')
+            return
+        }
+        if (pass == '') {
+            alert('비밀번호를 입력하세요')
+            return
+        }
+        if (passCk == '') {
+            alert('비밀번호 확인을 입력하세요')
+            return
+        }
+        if (alias == '') {
+            alert('별명을 입력하세요')
+            return
+        }
+        if(pass != passCk){
+            alert('비밀번호가 일치하지 않습니다')
+            return
+        }
+
+        form.submit()
+    }
+</script>

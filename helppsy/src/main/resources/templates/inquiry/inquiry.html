@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>문의 기능 테스트 뷰</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 600;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        input[type="submit"] {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0b5ed7;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>문의</h1>
+    <form action="ddd" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="writer">작성자</label>
+            <input type="text" id="writer" name="writer">
+        </div>
+        <div>
+            <label for="subject">제목</label>
+            <input type="text" id="subject" name="subject">
+        </div>
+        <div>
+            <label for="content">내용</label>
+            <textarea id="content" name="content"></textarea>
+        </div>
+        <div>
+            <label for="file">첨부파일</label>
+            <input type="file" id="file" name="file" accept="image/*">
+        </div>
+        <div style="text-align: right;">
+            <input value="전송" type="submit">
+        </div>
+    </form>
+</div>
+</body>
+</html>

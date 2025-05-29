@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="kor">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+
+<style>
+    body {
+        background-color: #f0f0f0;
+        margin-top: 150px;
+        /* 상단 여백 */
+        padding: 100px;
+        background-image : url("https://images.unsplash.com/photo-1554034483-04fda0d3507b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDEyfHx3YWxscGFwZXJ8ZW58MHx8fHwxNjg2MDM2Mzc2fDA&ixlib=rb-4.0.3&q=80&w=2000");
+    }
+
+    table {
+        width: 400px;
+        height : 400px;
+        /* 테이블 너비 */
+        margin: auto;
+        /* border-collapse: collapse; */
+    }
+
+    .idpw td {
+        padding: 10px;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    td {
+        padding: 10px;
+        /* text-align: center; */
+    }
+
+    /* 로그인 버튼 */
+    input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #45449b;
+        color: white;
+        /* 흰색 글자 */
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #888cc4;
+        /* 마우스 오버 시 색상 변경 */
+    }
+
+    #title1 {
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold;
+        color: #45449b;
+
+        /* 제목 색상 */
+    }
+
+    #id,
+    #pass {
+        width: 100%;
+        padding: 10px;
+        margin-left: -15px;
+        box-sizing: border-box;
+        border: #45449b 2px solid;
+        /* 패딩과 테두리를 포함한 너비 계산 */
+    }
+
+    #LoginBox {
+        padding : 20px;
+        /* 테이블 안쪽 여백 */
+        background-color: #ffffff;
+        /* 흰색 배경 */
+        border-radius: 8px;
+        /* 테두리 둥글게 */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        /* 그림자 효과 */
+    }
+    * {
+        user-select: none;
+        /* 전체에 | 깜빡임 방지 */
+    }
+    #LoginBox tr.acount.for {
+        text-align: center;
+        font-size: 15px;
+        color: #747475;
+        /* 계정 안내 문구 색상 */
+    }
+    .explanation{
+        text-align: center;
+        font-size: 15px;
+        color: #747475;
+        /* 설명 문구 색상 */
+    }
+    /* #imgicon{
+        position: absolute;
+    } */
+
+</style>
+
+<body>
+<form action="login" method="post">
+    <table id="LoginBox">
+        <tr id="title1">
+            <td colspan="2">Login</td>
+        </tr>
+        <tr class="explanation">
+            <td colspan="2">본인 human 계정을 사용하세요</td>
+        </tr>
+        <tr class="idpw">
+            <td>ID</td>
+            <td><input id="id" type="text" name="userId" placeholder="ID를 입력하세요"></td>
+        </tr>
+        <tr class="idpw">
+            <td>PW</td>
+            <td><input id="pass" type="password" name="userPass" placeholder="PW를 입력하세요"></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input id="submitBtn" type="submit" value="로그인"></td>
+        </tr>
+    </table>
+</form>
+</body>
+
+</html>

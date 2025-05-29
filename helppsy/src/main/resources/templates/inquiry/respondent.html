@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>답변</title>
+    <style>
+        table {
+            border: 1px solid black;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            text-align: center;
+            padding: 5px;
+        }
+        label {
+            width: 200px;
+            height: 150px;
+        }
+    </style>
+</head>
+<body>
+<h1>문의 답변</h1>
+
+<form action="/delete" method="post">
+    <table>
+        <thead>
+        <tr>
+            <th>선택</th>
+            <th>번호</th>
+            <th>작성자</th>
+            <th>제목</th>
+            <th>내용</th>
+            <th>파일명</th>
+            <th>작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td><input type="checkbox" name="ids" th:value="${user.id}"></td>
+            <td><a th:href="@{'/question/' + ${user.id}}" th:text="${user.id}"></a></td>
+            <td th:text="${user.writer}"></td>
+            <td th:text="${user.subject}"></td>
+            <td th:text="${user.content}"></td>
+            <td th:text="${user.file}"></td>
+            <td th:text="${#temporals.format(user.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <br>
+    <button type="submit">삭제</button>
+</form>
+
+</body>
+</html>

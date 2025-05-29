@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+<html lang="kor">
+<style>
+    div{
+        border: 1px solid;
+        height: 170px;
+    }
+    table {
+    border-collapse: collapse;
+}
+
+tr, td, th {
+    border: 1px solid black;
+    width: 150px;
+}
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<table>
+    <tr>
+        <td>글번호</td>
+        <td>제목</td>
+        <td>사고 분류</td>
+        <td>사고 지역</td>
+        <td>차량 등급</td>
+        <td>차량 종류</td>
+    </tr>
+    <tr>
+        <td th:text="${view.id}"></td>
+        <td th:text="${view.title}"></td>
+        <td th:text="${view.accident}"></td>
+        <td th:text="${view.region}"></td>
+        <td th:text="${view.rating}"></td>
+        <td th:text="${view.type}"></td>
+    </tr>
+    <tr th:each="filelist : ${filename}">
+        <td>
+            <img th:src="@{/files/accidentBulletin/{fileName}(fileName=${filelist.filename})}" alt="파일 이미지" style="max-width:150px; max-height:150px;"/>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

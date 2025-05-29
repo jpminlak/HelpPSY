@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>사고 등록 폼</title>
+    <style>
+        /* 폼 전체 영역 가운데 정렬 및 넓이 지정 */
+        body {
+            font-family: 'Malgun Gothic', Arial, sans-serif;
+            background-color: #fafafa;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        table {
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            width: 480px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* 테이블 각 셀 */
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: middle;
+        }
+
+        /* 첫 번째 칸 제목 스타일 */
+        td:first-child {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            width: 140px;
+            text-align: right;
+            padding-right: 20px;
+            font-size: 14px;
+        }
+
+        /* input, select, textarea 스타일 */
+        input[type="text"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 7px 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        /* focus 시 */
+        input[type="text"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #6ca0dc;
+            background-color: #f0f8ff;
+        }
+
+        /* 첨부파일 input은 기본 스타일 유지 */
+        input[type="file"] {
+            font-size: 13px;
+        }
+
+        /* 제출 버튼 */
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px 0;
+            font-size: 16px;
+            background-color: #5a9bf6;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #3d7ddb;
+        }
+
+        /* colspan 2 영역 중앙 정렬 */
+        td[colspan="2"] {
+            padding: 20px 15px;
+            text-align: center;
+            border-bottom: none;
+        }
+
+        /* 짝수 행 색깔 살짝 다르게 */
+        tr:nth-child(even) td:first-child {
+            background-color: #e9e9e9;
+        }
+
+    </style>
+</head>
+<body>
+<form action="/registration" method="post" enctype="multipart/form-data">
+    <table>
+        <tr>
+            <td>제목</td>
+            <td><input type="text" name="title" id="title"></td>
+        </tr>
+        <tr>
+            <td>사고 분류</td>
+            <td>
+                <select name="accident">
+                    <option value="차량 간 충돌사고">차량 간 충돌사고</option>
+                    <option value="차량 간 사람사고">차량 간 사람사고</option>
+                    <option value="차량 단독 사고">차량 단독 사고</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>사고 지역</td>
+            <td>
+                <select name="region">
+                    <option value="서울">서울</option>
+                    <option value="부산">부산</option>
+                    <option value="인천">인천</option>
+                    <option value="대구">대구</option>
+                    <option value="대전">대전</option>
+                    <option value="광주">광주</option>
+                    <option value="울산">울산</option>
+                    <option value="세종">세종</option>
+                    <option value="경기">경기</option>
+                    <option value="강원">강원</option>
+                    <option value="충북">충북</option>
+                    <option value="충남">충남</option>
+                    <option value="전북">전북</option>
+                    <option value="전남">전남</option>
+                    <option value="경북">경북</option>
+                    <option value="경남">경남</option>
+                    <option value="제주">제주</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>차량 등급(크기)</td>
+            <td>
+                <select name="rating">
+                    <option value="경차">경차</option>
+                    <option value="소형차">소형차</option>
+                    <option value="준중형차">준중형차</option>
+                    <option value="중형차">중형차</option>
+                    <option value="준대형차">준대형차</option>
+                    <option value="대형차">대형차</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>차량 종류</td>
+            <td><input type="text" name="type"></td>
+        </tr>
+        <tr>
+            <td>내 용</td>
+            <td><textarea name="detail" rows="8" cols="40"></textarea></td>
+        </tr>
+        <tr>
+            <td>첨부파일</td>
+            <td><input type="file" name="file" accept="image/*"></td>
+        </tr>
+        <tr>
+            <td>첨부파일</td>
+            <td><input type="file" name="file" accept="image/*"></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="등록">
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
