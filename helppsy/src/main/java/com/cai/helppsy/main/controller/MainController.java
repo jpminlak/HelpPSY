@@ -4,13 +4,9 @@ import com.cai.helppsy.main.entity.SinupEntity;
 import com.cai.helppsy.main.service.sinupService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.util.ToStringUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @Controller
@@ -120,5 +116,19 @@ public class MainController {
 
         return "redirect:/profile";
     }
+
+    @GetMapping("/note")
+    public String note(){
+        return "memberManager/note";
+    }
+
+
+    @GetMapping("/checkId")
+    @ResponseBody
+    public String checkId(@RequestParam String userId) {
+        boolean exists = sinupservice.existsById(userId); // 여기 사용 가능
+        return exists ? "DUPLICATE" : "OK";
+    }
+
 
 }

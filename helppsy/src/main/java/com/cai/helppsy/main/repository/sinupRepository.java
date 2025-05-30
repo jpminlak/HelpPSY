@@ -8,4 +8,7 @@ public interface sinupRepository extends JpaRepository<SinupEntity,String> {
 
     SinupEntity findByuserId(String userId);
 
+    boolean existsByUserId(String userId);
+
+
 }

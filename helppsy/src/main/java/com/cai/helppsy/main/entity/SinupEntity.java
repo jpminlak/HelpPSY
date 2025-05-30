@@ -4,6 +4,8 @@ package com.cai.helppsy.main.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 public class SinupEntity {
@@ -24,7 +26,8 @@ public class SinupEntity {
     @Column(length = 1000)
     private String intro;   //소개글
 
-
+    @Column(length = 1000)
+    private String note;    //쪽지
 
 
 }

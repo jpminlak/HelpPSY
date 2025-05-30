@@ -98,7 +98,13 @@
         </tr>
         <tr class="idpw">
             <td>아이디</td>
-            <td><input id="id" type="text" name="userId" placeholder="아이디를 입력하세요"></td>
+            <td>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <input id="id" type="text" name="userId" placeholder="아이디를 입력하세요" style="flex: 1;">
+                    <button type="button" onclick="checkId()" style="white-space: nowrap;">중복확인</button>
+                </div>
+                <div id="idCheckResult" style="font-size: 14px; color: red; margin-top: 5px;"></div>
+            </td>
         </tr>
         <tr class="idpw">
             <td>비밀번호</td>
@@ -121,34 +127,71 @@
 
 </html>
 <script>
+    let idAvailable = false;
+
+    document.getElementById('id').addEventListener('input', function () {
+        idAvailable = false;
+        document.getElementById('idCheckResult').innerText = '';
+    });
+
+    function checkId() {
+        const id = document.getElementById('id').value;
+        const result = document.getElementById('idCheckResult');
+
+        if (id.trim() === '') {
+            result.style.color = 'red';
+            result.innerText = '아이디를 입력해주세요.';
+            idAvailable = false;
+            return;
+        }
+
+        fetch('/checkId?userId=' + encodeURIComponent(id))
+            .then(res => res.text())
+            .then(data => {
+                if (data === 'OK') {
+                    result.style.color = 'green';
+                    result.innerText = '사용 가능한 아이디입니다.';
+                    idAvailable = true;
+                } else {
+                    result.style.color = 'red';
+                    result.innerText = '이미 존재하는 아이디입니다.';
+                    idAvailable = false;
+                }
+            });
+    }
+
     function submitToServer() {
-        let id = document.getElementById('id').value
-        let pass = document.getElementById('pass').value
-        let passCk = document.getElementById('passCk').value
-        let alias = document.getElementById('alias').value
-        let form = document.getElementById('form')
+        let id = document.getElementById('id').value;
+        let pass = document.getElementById('pass').value;
+        let passCk = document.getElementById('passCk').value;
+        let alias = document.getElementById('alias').value;
+        let form = document.getElementById('form');
 
-        if (id == '') {
-            alert('아이디를 입력하세요')
-            return
+        if (id === '') {
+            alert('아이디를 입력하세요');
+            return;
         }
-        if (pass == '') {
-            alert('비밀번호를 입력하세요')
-            return
+        if (!idAvailable) {
+            alert('아이디 중복 확인을 해주세요.');
+            return;
         }
-        if (passCk == '') {
-            alert('비밀번호 확인을 입력하세요')
-            return
+        if (pass === '') {
+            alert('비밀번호를 입력하세요');
+            return;
         }
-        if (alias == '') {
-            alert('별명을 입력하세요')
-            return
+        if (passCk === '') {
+            alert('비밀번호 확인을 입력하세요');
+            return;
         }
-        if(pass != passCk){
-            alert('비밀번호가 일치하지 않습니다')
-            return
+        if (alias === '') {
+            alert('별명을 입력하세요');
+            return;
+        }
+        if (pass !== passCk) {
+            alert('비밀번호가 일치하지 않습니다');
+            return;
         }
 
-        form.submit()
+        form.submit();
     }
 </script>
