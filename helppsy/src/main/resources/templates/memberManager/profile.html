@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="https://www.thymeleaf.org">
 
@@ -71,7 +70,12 @@
     </div>
     <div class="profile-section">
         <h2>소개글</h2>
-        <p>소개글 작성란</p>
+        <div th:if="${session.Intro} == null">
+            <p>소개글이 비어있습니다</p>
+        </div>
+        <div th:if="${session.Intro} != null">
+            <p><label th:text="${session.Intro}"></label></p>
+        </div>
     </div>
     <div class="profile-section">
         <h2>게시글</h2>

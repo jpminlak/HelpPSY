@@ -57,11 +57,13 @@ public class MainController {
             System.out.println(user.getUserId());
             System.out.println(user.getUserPass());
             System.out.println(user.getAlias());
+            System.out.println(user.getIntro());
             System.out.println("-------------------");
 
             session.setAttribute("userId", user.getUserId()); // 세션에 id저장
             session.setAttribute("userAlias", user.getAlias()); // 세션에 별명저장
             session.setAttribute("userPass", user.getUserPass()); // 세션에 비밀번호 저장
+            session.setAttribute("Intro",user.getIntro());  //세션에 소개글 저장
         }
         model.addAttribute("user", session);
         return "redirect:/main";
@@ -77,6 +79,7 @@ public class MainController {
         session.removeAttribute("userId"); // 세션 userid값 삭제
         session.removeAttribute("userPass"); // 세션 pass삭제
         session.removeAttribute("userAlias");
+        session.removeAttribute("Intro");
         System.out.println("들어왔어!!!!!!!!!!!!!!!!!!!!");
         System.out.println(session.getAttribute("userId"));
         System.out.println(session.getAttribute("userPass"));
@@ -112,6 +115,7 @@ public class MainController {
             user.setIntro(updatedUser.getIntro());
             sinupservice.sinup(user);  // save()로 덮어쓰기
             session.setAttribute("userAlias", user.getAlias());  // 세션도 업데이트
+            session.setAttribute("Intro", user.getIntro());
         }
 
         return "redirect:/profile";
