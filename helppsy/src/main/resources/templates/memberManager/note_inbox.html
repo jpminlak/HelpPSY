@@ -1,0 +1,27 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>받은 쪽지함</title>
+</head>
+<body>
+<h1>받은 쪽지 목록</h1>
+<table border="1">
+  <thead>
+  <tr>
+    <th>보낸 사람</th>
+    <th>제목</th>
+    <th>보낸 시간</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="note : ${notes}">
+    <td th:text="${note.senderId}"></td>
+    <td><a th:href="@{'/note/view/' + ${note.id}}" th:text="${note.title}"></a></td>
+    <td th:text="${#temporals.format(note.sentAt, 'yyyy-MM-dd HH:mm')}"></td>
+  </tr>
+  </tbody>
+</table border="1">
+<a href="/main"><button>홈으로</button></a>
+</body>
+</html>
+>

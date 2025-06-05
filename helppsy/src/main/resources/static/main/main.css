@@ -1,0 +1,61 @@
+    /* 시멘틱 태그로 구성한 구조 스타일 */
+
+    #main {
+        /* width: 800px; */
+        /* height: 1000px; */
+        /* margin-left: 20%; */
+        margin-top: 50px;
+    }
+
+    #adv {
+        /* border: 1px solid; */
+        height: 100px;
+    }
+
+
+    /* #adv h1 {
+        text-align: center;
+    } */
+
+    /* ----- 세부적인 스타일 설정 ↓ ----- */
+
+    /* _main */
+    #hotBulletin {
+        width: 1400px;
+        height: 700px;
+        margin: 0 auto;
+        margin-top: 10px;
+        border: 1px solid;
+        border-radius: 10px;
+        border-color: gray;
+    }
+
+    #popularBulletin {
+        width: 1400px;
+        height: 700px;
+        margin: 0 auto;
+        margin-top: 10px;
+        border: 1px solid;
+        border-radius: 10px;
+        border-color: gray;
+    }
+
+    #popularMenu {
+        /* position: absolute; */
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+
+    #popularMenu a {
+        margin-left: 20px;
+        text-decoration: none;
+        color: black;
+    }
+
+    #popularMenu a:hover {
+        color: blue;
+    }
+
+    #main h2 {
+        text-align: center;
+    }

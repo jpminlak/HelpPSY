@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 상세보기</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8f9fa;
+            margin: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        .post-header h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .info-table th, .info-table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        .images {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .images img {
+            max-width: 150px;
+            max-height: 150px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .comment-section {
+            margin-top: 30px;
+        }
+
+        .comment-form input[type="text"] {
+            width: 70%;
+            padding: 8px;
+        }
+
+        .comment-form input[type="submit"] {
+            padding: 8px 16px;
+            margin-left: 10px;
+        }
+
+        .comment {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comment strong {
+            color: #007bff;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+            display: inline-block;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<body>
+<div class="container">
+    <div class="post-header">
+        <h2>게시글 상세보기</h2>
+        <input type="submit" value="좋아요">
+        <form action="/deleteAccident" method="post">
+            <input type="submit" value="게시글삭제">
+            <input type="hidden" name="id" th:value="${view.id}"/>
+            <input type="hidden" name="alias" th:value="${view.alias}"/>
+        </form>
+    </div>
+
+    <table class="info-table">
+        <tr>
+            <th>글번호</th>
+            <td th:text="${view.id}"></td>
+        </tr>
+        <tr>
+            <th>작성자</th>
+            <td th:text="${view.alias}"></td>
+        </tr>
+        <tr>
+            <th>제목</th>
+            <td th:text="${view.title}"></td>
+        </tr>
+        <tr>
+            <th>사고 분류</th>
+            <td th:text="${view.accident}"></td>
+        </tr>
+        <tr>
+            <th>사고 지역</th>
+            <td th:text="${view.region}"></td>
+        </tr>
+        <tr>
+            <th>차량 등급</th>
+            <td th:text="${view.rating}"></td>
+        </tr>
+        <tr>
+            <th>차량 종류</th>
+            <td th:text="${view.type}"></td>
+        </tr>
+    </table>
+
+    <div class="images" th:each="filelist : ${filename}">
+        <img th:src="@{/files/accidentBulletin/{fileName}(fileName=${filelist.filename})}" alt="첨부 이미지"/>
+    </div>
+
+    <div class="comment-section">
+        <h3>댓글 작성</h3>
+        <form class="comment-form" action="/comment" method="post">
+            <input type="text" name="comment" placeholder="댓글을 입력하세요">
+            <input type="hidden" name="alias" th:value="${session.userAlias}"/>
+            <input type="hidden" name="registrationId" th:value="${view.id}"/>
+            <input type="submit" value="등록">
+        </form>
+
+        <h3 style="margin-top: 20px;">댓글 목록</h3>
+        <div th:each="commentlist : ${commenet}" class="comment">
+            <strong th:text="${commentlist.alias}"></strong> :
+            <span th:text="${commentlist.comment}"></span>
+
+            <form action="/commentdelete" method="post">
+                <input type="hidden" name="commentId" th:value="${commentlist.id}"/>
+                <input type="hidden" name="userAlias" th:value="${commentlist.alias}"/>
+                <input type="hidden" name="registrationId" th:value="${view.id}"/>
+                <input type="submit" value="삭제">
+            </form>
+
+
+            <button class="commentBtn" type="button" th:attr="data-comment-id=${commentlist.id}">대댓글</button>
+
+            <!-- 대댓글 입력하기 -->
+            <div class="commentReply" style="display: none;" th:attr="data-comment-id=${commentlist.id}">
+                <form class="comment-reply-form" data-comment-id="[[${commentlist.id}]]">
+                    <input type="text" name="comment" placeholder="대댓글을 입력하세요">
+                    <input type="hidden" name="alias" th:value="${session.userAlias}"/>
+                    <input type="hidden" name="commentId" th:value="${commentlist.id}"/>
+                    <input type="submit" value="대댓글등록">
+                    <!-- 대댓글 목록을 보여줄 영역 -->
+                    <div class="reply-list" th:attr="data-comment-id=${commentlist.id}"></div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+
+    <a th:href="@{/main}">← 메인 화면으로 돌아가기</a>
+</div>
+</body>
+</html>
+<script>
+    // 대댓글 입력창 토글
+$(document).on('click', '.commentBtn', function () {
+    const commentId = $(this).data('comment-id');
+    const $commentReply = $('.commentReply[data-comment-id="' + commentId + '"]');  // 대댓글 입력창을 선택
+
+    // 대댓글 입력란을 보이게/숨기게
+    $commentReply.toggle(); // toggle을 이용해 보이거나 숨기기
+});
+
+// 대댓글 목록을 가져오는 로직 (여기서부터는 이미 잘 작성된 것 같음)
+$(document).on('click', '.commentBtn', function () {
+    const commentId = $(this).data('comment-id');
+    const $replyListContainer = $('.reply-list[data-comment-id="' + commentId + '"]');  // 대댓글 목록을 보여줄 곳 찾기
+
+    // 대댓글 목록이 비어 있으면 서버에서 대댓글 목록을 가져옵니다.
+    if ($replyListContainer.is(':empty')) {
+        $.ajax({
+            url: '/getReplies',
+            type: 'GET',
+            data: { commentId: commentId },
+            dataType: 'json',
+            success: function (response) {
+                console.log(response); // 응답 데이터를 콘솔로 확인
+
+                // 대댓글 목록을 출력할 HTML을 준비
+                let repliesHtml = '';
+                response.forEach(function (reply) {
+                    repliesHtml += `
+                        <div class="reply">
+                            <strong>${reply.alias}</strong> :
+                            <span>${reply.comment}</span>
+                        </div>
+                    `;
+                });
+
+                // 대댓글 목록을 DOM에 추가
+                $replyListContainer.html(repliesHtml);
+            },
+            error: function () {
+                alert('대댓글을 불러오는 데 실패했습니다.');
+            }
+        });
+    }
+});
+
+// 대댓글 비동기 전송
+    $(document).on('submit', '.comment-reply-form', function (e) {
+        e.preventDefault();
+        // .comment-reply-form폼에 submit 발생하면 이벤트 발생
+        // preventDefault()=페이지 새로고침 실행을 멈춰줌
+        const form = $(this);
+        const data = form.serialize();
+        const commentId = form.data('comment-id');
+
+        $.ajax({
+            url: '/reply', // 실제 컨트롤러 주소
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function (response) {
+                console.log("Ajax 응답:", response);
+               // alert('대댓글이 등록되었습니다!');
+                form[0].reset(); // 폼 초기화
+
+                // 대댓글 HTML 생성
+                const replyHtml = `
+                    <div class="reply">
+                        <strong>${response.alias}</strong> :
+                        <span>${response.comment}</span>
+                    </div>
+                `;
+
+                // 해당 댓글의 대댓글 목록 영역에 추가
+                $(`.reply-list[data-comment-id="${response.commentId}"]`).append(replyHtml);
+            },
+            error: function () {
+                alert('대댓글 등록에 실패했습니다.');
+            }
+        });
+    });
+
+</script>

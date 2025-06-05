@@ -1,0 +1,16 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>답장 작성</title>
+</head>
+<body>
+<h2 th:text="'To: ' + ${receiverId}"></h2>
+<form action="/note/reply/send" method="post">
+  <input type="hidden" name="receiverId" th:value="${receiverId}">
+  <label>제목: <input type="text" name="title"></label><br>
+  <label>내용:<br><textarea name="content" rows="10" cols="50"></textarea></label><br>
+  <button type="submit">답장 보내기</button>
+</form>
+<a href="/note/inbox"><button>목록으로</button></a>
+</body>
+</html>

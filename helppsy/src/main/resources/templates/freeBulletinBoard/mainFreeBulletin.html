@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main/fragmentStyle.css">
+    <script src="main/fragment.js"></script>
+    <title>자유 게시판</title>
+</head>
+<style>
+    main {
+<!--        display: inline-block;-->
+<!--        width: 750px;-->
+        height: 800px;
+        border: 1px solid;
+    }
+
+    #poppularBulletin {
+        position: absolute;
+        margin-left: 0px;
+        margin-top: 10px;
+        border: 1px solid;
+        width: 750px;
+        height: 200px;
+    }
+
+    #wholeBulletin {
+        position: absolute;
+        margin-left: 0px;
+        margin-top: 230px;
+        border: 1px solid;
+        width: 750px;
+        height: 550px;
+    }
+
+    #searchWord {
+        position: absolute;
+        width: 400px;
+        height: 25px;
+        margin-left: 50px;
+        margin-top: 30px;
+    }
+
+    #searchBtn {
+        position: absolute;
+        width: 80px;
+        height: 30px;
+        margin-left: 470px;
+        margin-top: 30px;
+    }
+    #newBulletin {
+        position: absolute;
+        width: 120px;
+        height: 30px;
+        margin-left: 580px;
+        margin-top: 30px;
+        background-color: rgb(66, 148, 34);
+        font-size: 15px;
+        color: rgb(3, 3, 3);
+        border: none;
+    }
+    #newBulletin:hover {
+        background-color: rgb(72, 170, 33);
+        color: rgb(255, 255, 255);
+    }
+    #bulletins {
+        position: absolute;
+        border: 1px solid;
+        width: 650px;
+        height: 450px;
+        margin-left: 50px;
+        margin-top: 80px;
+    }
+    #allListV_v1 td {
+      border: 1px solid;
+      height: 20px;
+      text-align: center;
+    }
+
+    #mainTitle {
+        text-decoration: none;
+        color: black;
+    }
+
+    #paginBox {
+        position: absolute;
+        margin-left: 80px;
+        margin-top: 20px;
+    }
+
+    .pageNums {
+        text-decoration: none;
+        margin-left: 5px;
+        margin-right: 5px;
+        color: black;
+        font-size: 18px;
+    }
+    #paginBox td{
+        width: 30px;
+        text-align: center;
+    }
+</style>
+
+<body>
+<div th:replace="~{main/mainPage:: header}"></div>
+<div th:replace="~{main/mainPage:: nav}"></div>
+<main>
+    <div id="poppularBulletin">
+        <h1>(추천 게시물) 공사중...</h1>
+    </div>
+    <div id="wholeBulletin">
+        <input id="searchWord" type="text" placeholder="검색어를 입력하세요">
+        <input id="searchBtn" type="button" value="검색">
+        <input id="newBulletin" type="button" value="게시글 작성" onclick="addBulletin()">
+        <div id="bulletins">
+            <table id="allListV_v1">
+                <tr>
+                    <th>게시글 번호</th>
+                    <th>조회수</th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>작성일자</th>
+                </tr>
+                <tr th:each="bulletinOne : ${bulletin}">
+                    <td id="col1" th:text="${bulletinOne.no}"></td>
+                    <td id="col2" th:text="${bulletinOne.views}"></td>
+                    <td id="col3"><a th:text="${bulletinOne.title}"
+                                     th:href="@{specificBulletin(no=${bulletinOne.no})}"></a></td>
+                    <td id="col4" th:text="${bulletinOne.writer}">작성자 없음</td>
+                    <td id="col5" th:text="${#temporals.format(bulletinOne.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                </tr>
+            </table>
+            <div id="paginBox">
+
+                <table>
+                    <tr>
+                        <td><input type="button" value="<<" onclick="leftPageNumListNum()"></td>
+                        <td><input type="button" value="<" onclick="leftPaging()"></td>
+                        <td th:each="num : ${numList}">
+                            <a class="pageNums" th:text="${num}"
+                               th:href="@{mainFreeBulletin(page=${num}, currentPages=${currentPages})}"></a>
+                        </td>
+                        <td><input type="button" value=">" onclick="rightPaging()"></td>
+                        <td><input type="button" value=">>" onclick="RightPageNumListNum()"></td>
+                    </tr>
+                </table>
+                <input id="currentPage" type="hidden" th:value="${currentPage}">
+                <input id="currentPages" type="hidden" th:value="${currentPages}">
+                <input id="pageNumListNumCnt" type="hidden" th:value="${pageNumListNumCnt}">
+                <input id="allPages" type="hidden" th:value="${allPages}">
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="~{main/mainPage:: footer}"></div>
+</body>
+
+<script>
+    window.onload = () => {
+        document.getElementById('mainTitle').innerHTML = '자유 게시판'
+        onloadPaging()
+    }
+    function onloadPaging(){
+        let pages = document.getElementsByClassName('pageNums')
+        let currentPage = document.getElementById('currentPage').value
+
+        for(let i = 0; i < pages.length; i++){
+            if(Number(pages[i].innerHTML) == currentPage){
+                pages[i].style.color = "blue"
+                return
+            }
+        }
+    }
+    function addBulletin(){
+      location.href = "addFreeBulletin"
+    }
+    function leftPaging(){
+        let currentPages =  Number(document.getElementById('currentPages').value)
+        let currentPage =  Number(document.getElementById('currentPage').value)
+        let pages = document.getElementsByClassName('pageNums')
+        let firstPageIncurrentPages = Number(pages[0].innerHTML)
+
+        if(currentPage > 1){
+            currentPage--
+            if(firstPageIncurrentPages > currentPage){
+                currentPages--
+                location.href = 'mainFreeBulletin?page='+currentPage+'&currentPages='+currentPages
+            }else {
+                location.href = 'mainFreeBulletin?page='+currentPage+'&currentPages='+currentPages
+            }
+        }
+    }
+    function rightPaging(){
+        let currentPages =  Number(document.getElementById('currentPages').value)
+        let currentPage =  Number(document.getElementById('currentPage').value)
+        let allPages = Number(document.getElementById('allPages').value)
+        let pages = document.getElementsByClassName('pageNums')
+        let LastPageIncurrentPages = Number(pages[pages.length-1].innerHTML)
+
+
+        if(currentPage < allPages){
+            currentPage++
+            if(currentPage > LastPageIncurrentPages){
+                currentPages++
+                location.href = 'mainFreeBulletin?page='+currentPage+'&currentPages='+currentPages
+            }else {
+                  location.href = 'mainFreeBulletin?page='+currentPage+'&currentPages='+currentPages
+            }
+        }
+    }
+
+    function leftPageNumListNum(){
+        let currentPages =  Number(document.getElementById('currentPages').value)
+        let cnt = document.getElementsByClassName('pageNums').length
+
+        if(currentPages > 1){
+            currentPages -= 1
+            let page = (currentPages-1) * cnt +1
+            location.href = 'mainFreeBulletin?page='+page+'&currentPages='+currentPages
+        }
+    }
+    function RightPageNumListNum(){
+        let currentPages =  Number(document.getElementById('currentPages').value)
+        let pageNumListNumCnt = Number(document.getElementById('pageNumListNumCnt').value)
+        let cnt = document.getElementsByClassName('pageNums').length
+
+
+        if(currentPages <= pageNumListNumCnt){
+            currentPages += 1
+            let page = (currentPages-1) * cnt + 1
+            location.href = 'mainFreeBulletin?page='+page+'&currentPages='+currentPages
+        }
+    }
+</script>
+</html>
