@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="kor" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>차량 사고 메인 화면</title>
+</head>
+<style>
+    /* 시멘틱 태그로 구성한 구조 스타일 */
+    #header {
+        height: 50px;
+    }
+
+    #nav {
+        text-align: center;
+        height: 50px;
+        margin-top: 100px;
+    }
+
+    #main {
+        display: inline-block;
+        width: 950px;
+        height: 750px;
+        margin-left: 20%;
+        margin-top: 50px;
+    }
+
+    #aside {
+        position: absolute;
+        display: inline-block;
+        width: 250px;
+        height: 650px;
+        margin-left: 2%;
+        margin-top: 140px;
+        border: 1px solid;
+        border-radius: 10px;
+        border-color: gray;
+    }
+
+    #adv {
+        /* border: 1px solid; */
+        height: 100px;
+    }
+
+
+    #adv h1 {
+        text-align: center;
+    }
+
+    #footer {
+        height: 100px;
+    }
+
+    /* ----- 세부적인 스타일 설정 ↓ ----- */
+
+    /* header */
+
+    #header h1 {
+        text-align: center;
+        margin-top: 70px;
+        font-size: 40px;
+    }
+
+    #leftTopImg {
+        position: absolute;
+        margin-left: 20%;
+        margin-top: -2%;
+    }
+
+    /* nav */
+
+    #nav a {
+        font-size: 20px;
+        margin-left: 50px;
+        margin-top: 10px;
+        text-decoration: none;
+        color: rgb(0, 0, 0);
+    }
+
+    #nav a:hover {
+        color: blue;
+    }
+
+    #nav hr {
+        background: rgb(172, 177, 177);
+        height: 1px;
+        border: none;
+    }
+
+    #freeDropDown {
+        position: absolute;
+        margin-left: 670px;
+        margin-top: 10px;
+        width: 100px;
+        /* height: ; */
+        background-color: rgb(255, 255, 255);
+        display: none;
+    }
+
+    #accidentDropDown {
+        position: absolute;
+        margin-left: 820px;
+        margin-top: 10px;
+        width: 100px;
+        /* height: ; */
+        background-color: rgb(255, 255, 255);
+        display: none;
+    }
+
+    #inquiryDropDown {
+        position: absolute;
+        margin-left: 960px;
+        margin-top: 10px;
+        width: 100px;
+        /* height: ; */
+        background-color: rgb(255, 255, 255);
+        display: none;
+    }
+
+    #accidentLocationDropDown {
+        position: absolute;
+        margin-left: 1130px;
+        margin-top: 10px;
+        width: 100px;
+        /* height: ; */
+        background-color: rgb(255, 255, 255);
+        display: none;
+    }
+
+    #free:hover~#freeDropDown {
+        display: block;
+    }
+
+    #accident:hover~#accidentDropDown {
+        display: block;
+    }
+
+    #inquiry:hover~#inquiryDropDown {
+        display: block;
+    }
+
+    #accidentLocation:hover~#accidentLocationDropDown {
+        display: block;
+    }
+
+    #nav p {
+        text-align: center;
+    }
+
+    /* main */
+
+    #recomBulletin {
+        width: 800px;
+        height: 650px;
+        margin-left: 80px;
+        margin-top: 10px;
+        border: 1px solid;
+        border-radius: 10px;
+        border-color: gray;
+    }
+
+    #recomMenu {
+        /* position: absolute; */
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+
+    #recomMenu a {
+        margin-left: 20px;
+        text-decoration: none;
+        color: black;
+    }
+
+    #recomMenu a:hover {
+        color: blue;
+    }
+
+    #main h1 {
+        text-align: center;
+    }
+
+    /* aside */
+
+    #signInfoBox {
+        position: absolute;
+        margin-top: 100px;
+    }
+
+    #inputId {
+        position: absolute;
+        margin-left: 5px;
+        width: 120px;
+    }
+
+    #inputPass {
+        position: absolute;
+        width: 120px;
+        margin-left: 5px;
+        margin-top: 25px;
+    }
+
+    #loginBtn {
+        position: absolute;
+        width: 100px;
+        height: 45px;
+        margin-left: 140px;
+        margin-top: 0px;
+        background-color: rgb(201, 201, 231);
+        border: none;
+    }
+
+    #loginBtn:hover {
+        background-color: rgb(142, 142, 187);
+    }
+
+    #signUp {
+        position: absolute;
+        margin-left: 10px;
+        margin-top: 50px;
+        text-decoration: none;
+        color: black;
+        width: 100px;
+    }
+
+    #signUp:hover {
+        color: blue;
+    }
+
+    #findIdOrPass {
+        position: absolute;
+        margin-left: 80px;
+        margin-top: 50px;
+        text-decoration: none;
+        color: black;
+        width: 120px;
+    }
+
+    #findIdOrPass:hover {
+        color: blue;
+    }
+
+
+    /* footer */
+
+    #footer p {
+        text-align: center;
+    }
+
+    #footer hr {
+        background: rgb(172, 177, 177);
+        height: 1px;
+        border: none;
+    }
+</style>
+
+<body>
+    <div id="header">
+        <img id="leftTopImg" src="https://cdn-icons-png.flaticon.com/512/1576/1576372.png" width="200">
+        <h1>차량 사고 커뮤니티</h1>
+    </div>
+    <div id="nav">
+        <hr>
+        <a id="free" href="free">자유 게시판</a>
+        <div id="freeDropDown">
+            <p>없음</p>
+            <p>없음</p>
+            <p>없음</p>
+        </div>
+        <a id="accident" href="accident">사고 게시판</a>
+        <div id="accidentDropDown">
+            <p>없음</p>
+            <p>없음</p>
+            <p>없음</p>
+        </div>
+        <a id="inquiry" href="inquiry">문의하기</a>
+        <div id="inquiryDropDown">
+            <p>없음</p>
+            <p>없음</p>
+            <p>없음</p>
+        </div>
+        <a id="accidentLocation" href="/map">지도상 사고난 위치</a>
+        <div id="accidentLocationDropDown">
+            <p>없음</p>
+            <p>없음</p>
+            <p>없음</p>
+        </div>
+        <hr>
+    </div>
+    <div id="main">
+        <h1>추천 게시물</h1>
+        <div id="recomBulletin">
+            <div id="recomMenu">
+                <a href="">사고 게시판</a>
+                <a href="">자유 게시판</a>
+            </div>
+        </div>
+    </div>
+    <div id="aside">
+        <div id="signInfoBox">
+            <input id="inputId" type="text" placeholder="아이디를 입력하세요">
+            <input id="inputPass" type="password" placeholder="비밀번호를 입력하세요">
+            <input id="loginBtn" type="button" value="로그인">
+            <a id="signUp" href="">회원가입</a>
+            <a id="findIdOrPass" href="">아이디/비번 찾기</a>
+        </div>
+    </div>
+    <div id="adv">
+        <h1>광고 공사중...</h1>
+    </div>
+    <div id="footer" th:fragment="footer">
+        <hr>
+        <p>개발자 이메일 : human@gmail.com / 대표 이름 : human</p>
+    </div>
+</body>
+
+</html>
+
+<script>
+
+</script>
