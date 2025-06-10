@@ -16,57 +16,68 @@ public class NoteController {
 
     private final NoteService noteService;
 
-    // 쪽지 작성 폼 (상대방 프로필에서 진입)
+    /*쪽지 작성 폼 이동 */
     @GetMapping("/note/{receiverId}")
-    public String noteForm(@PathVariable String receiverId, Model model) {
+    public String noteForm(@PathVariable String receiverId, HttpSession session, Model model) {
+        String senderId = (String) session.getAttribute("userId");
+        if (senderId == null) return "redirect:/login";
+
         model.addAttribute("receiverId", receiverId);
-        return "memberManager/note/note_form";
+        return "memberManager/note_form";
     }
 
-    // 쪽지 전송
+    /*쪽지 전송 */
     @PostMapping("/note/send")
     public String sendNote(@RequestParam String receiverId,
                            @RequestParam String title,
                            @RequestParam String content,
                            HttpSession session) {
         String senderId = (String) session.getAttribute("userId");
+        if (senderId == null) return "redirect:/login";
+
         noteService.sendNote(senderId, receiverId, title, content);
-        return "redirect:/profile/" + receiverId;
+        return "redirect:/main";
     }
 
-    // 받은 쪽지 목록
-    @GetMapping("/note/inbox")
+    /*받은 쪽지함 보기 */
+    @GetMapping("/note_inbox")
     public String noteInbox(HttpSession session, Model model) {
         String userId = (String) session.getAttribute("userId");
         List<Note> notes = noteService.getReceivedNotes(userId);
         model.addAttribute("notes", notes);
-        return "note/note_inbox";
+        return "memberManager/note_inbox";
     }
 
-    // 쪽지 상세 보기
-    @GetMapping("/note/view/{id}")
-    public String viewNote(@PathVariable Long id, Model model, HttpSession session) {
-        Note note = noteService.findById(id);
-        if (note == null || !note.getReceiverId().equals(session.getAttribute("userId"))) {
-            return "redirect:/note/inbox";
-        }
+
+    /*쪽지 상세 보기 */
+    @GetMapping("/note/view/{noteId}")
+    public String viewNote(@PathVariable Long noteId, HttpSession session, Model model) {
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null)
+            return "redirect:/login";
+
+        Note note = noteService.getNote(noteId);
+        if (!userId.equals(note.getReceiverId()))
+            return "redirect:/note/inbox";  // 권한 체크
+
         model.addAttribute("note", note);
-        return "note/note_view";
+        return "memberManager/note_view";
     }
 
-    // 쪽지 답장 작성 폼
+    /*쪽지 답장 폼 */
     @GetMapping("/note/reply/{noteId}")
-    public String replyForm(@PathVariable Long noteId, Model model, HttpSession session) {
-        Note original = noteService.findById(noteId);
-        if (original == null || !original.getReceiverId().equals(session.getAttribute("userId"))) {
-            return "redirect:/note/inbox";
-        }
+    public String replyForm(@PathVariable Long noteId, HttpSession session, Model model) {
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) return "redirect:/login";
+
+        Note original = noteService.getNote(noteId);
+        if (!userId.equals(original.getReceiverId())) return "redirect:/note/inbox";
+
         model.addAttribute("receiverId", original.getSenderId());
-        model.addAttribute("originalNote", original);
-        return "note/note_reply_form";
+        model.addAttribute("originalTitle", original.getTitle());
+        return "memberManager/note_form";
     }
 
-    // 쪽지 답장 전송
     @PostMapping("/note/reply/send")
     public String sendReply(@RequestParam String receiverId,
                             @RequestParam String title,
@@ -76,4 +87,5 @@ public class NoteController {
         noteService.sendNote(senderId, receiverId, title, content);
         return "redirect:/note/inbox";
     }
+
 }

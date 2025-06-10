@@ -4,7 +4,7 @@
   <title>쪽지 작성</title>
 </head>
 <body>
-<h2 th:text="'To: ' + ${receiverId}"></h2>
+<h2 th:text="'To. ' + ${receiverId}"></h2>
 <form action="/note/send" method="post">
   <input type="hidden" name="receiverId" th:value="${receiverId}">
   <label>제목: <input type="text" name="title"></label><br>

@@ -74,17 +74,25 @@
             <p>별명 : <label th:text="${member.alias}"></label></p>
             <p>구분 : <label th:text="${member.division}"></label></p>
             <p>고유번호 : <label th:text="${member.dNum}"></label></p>
-            <a href="profile_Update"><input id="profile_Update" type="button" value="편집" onclick=""></a>
-            <a href="note"><input id="note" type="button" value="쪽지" onclick=""></a>
+            <div th:if="${session.userId} == ${member.userId}">
+                <a href="profile_Update"><input id="profile_Update" type="button" value="프로필 편집" onclick=""></a>
+                <a href="note_inbox"><input id="note_inbox" type="button" value="쪽지함"></a>
+            </div>
+            <div th:if="${session.userId} != ${member.userId}">
+                <a th:href="@{/note/{receiverId}(receiverId=${member.userId})}">
+                    <input id="note_form" type="button" value="쪽지">
+                </a>
+
+            </div>
         </div>
     </div>
     <div class="profile-section">
         <h2>소개글</h2>
-        <div th:if="${session.Intro} == null">
+        <div th:if="${member.Intro} == null">
             <p>소개글이 비어있습니다</p>
         </div>
-        <div th:if="${session.Intro} != null">
-            <p><label th:text="${session.Intro}"></label></p>
+        <div th:if="${member.Intro} != null">
+            <p><label th:text="${member.Intro}"></label></p>
         </div>
     </div>
     <div class="profile-section">
