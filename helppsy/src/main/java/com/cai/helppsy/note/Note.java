@@ -10,13 +10,13 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class Note {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     private Long id;
 
-    private String senderId;      // 발신자
-    private String receiverId;    // 수신자
-    private String title;         // 제목
-    private String content;       // 내용
-    private LocalDateTime sentAt; // 발신일
+    @Column(nullable = false)
+    private String receiverId;   //수신자
+    private String senderId;  //발신자
+    private String title;   //제목
+    private String content; //내용
+    private LocalDateTime sentAt;
 }

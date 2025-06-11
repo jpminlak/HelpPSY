@@ -10,8 +10,6 @@
             /* 전체에 | 깜빡임 방지 */
         }
 
-
-
         body {
             font-family: Arial, sans-serif;
             background-color: #f5f5f5;
@@ -21,7 +19,6 @@
             margin: 0;
             padding: 20px;
             background-image : url("https://images.unsplash.com/photo-1554034483-04fda0d3507b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDEyfHx3YWxscGFwZXJ8ZW58MHx8fHwxNjg2MDM2Mzc2fDA&ixlib=rb-4.0.3&q=80&w=2000");
-
         }
 
         .profile-container {
@@ -75,9 +72,18 @@
             <p>구분 : <label th:text="${member.division}"></label></p>
             <p>고유번호 : <label th:text="${member.dNum}"></label></p>
             <div th:if="${session.userId} == ${member.userId}">
-            <a href="profile_Update"><input id="profile_Update" type="button" value="프로필 편집" onclick=""></a>
+                <a href="profile_Update"><input id="profile_Update" type="button" value="프로필 편집" onclick=""></a>
+                <a href="note_inbox"><input id="note_inbox" type="button" value="쪽지함"></a>
             </div>
-            <a href="note"><input id="note" type="button" value="쪽지" onclick=""></a>
+            <div th:if="${session.userId} != ${member.userId}">
+                <a th:href="@{/note/{receiverId}(receiverId=${member.userId})}">
+                    <input id="note_form" type="button" value="쪽지">
+                </a>
+            </div>
+<!--            <div th:if="${session.userId} == ${member.userId}">-->
+<!--            <a href="profile_Update"><input id="profile_Update" type="button" value="프로필 편집" onclick=""></a>-->
+<!--            </div>-->
+<!--            <a href="note"><input id="note" type="button" value="쪽지" onclick=""></a>-->
         </div>
     </div>
     <div class="profile-section">

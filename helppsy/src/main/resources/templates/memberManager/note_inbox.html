@@ -8,9 +8,11 @@
 <table border="1">
   <thead>
   <tr>
-    <th>보낸 사람</th>
+    <th>발신자</th>
     <th>제목</th>
-    <th>보낸 시간</th>
+    <th>발신일</th>
+    <th>내용</th>
+
   </tr>
   </thead>
   <tbody>
@@ -18,10 +20,10 @@
     <td th:text="${note.senderId}"></td>
     <td><a th:href="@{'/note/view/' + ${note.id}}" th:text="${note.title}"></a></td>
     <td th:text="${#temporals.format(note.sentAt, 'yyyy-MM-dd HH:mm')}"></td>
+    <td th:text="${note.content}"></td>
   </tr>
   </tbody>
-</table border="1">
+</table>
 <a href="/main"><button>홈으로</button></a>
 </body>
 </html>
->
