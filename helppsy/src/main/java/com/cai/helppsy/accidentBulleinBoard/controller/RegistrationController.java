@@ -53,12 +53,15 @@ public class RegistrationController {
     public String list(Model model, @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "currentPageNum", defaultValue = "1") int currentPageNum) {
         List<RegistrationEntity> writegetlist = registrationService.writegetlist();
-        model.addAttribute("writegetlist", writegetlist);
+//        model.addAttribute("writegetlist", writegetlist);
 
         // 페이징
         Paging paging = new Paging();
         paging.setPerPageList(10, page, currentPageNum, 5, writegetlist);
-        model.addAttribute("perPageList", paging.getPerPageList());
+        System.out.println("_________________99_________________");
+        System.out.println(paging.getPerPageList().size());
+        System.out.println("_________________99_________________");
+        model.addAttribute("writegetlist", paging.getPerPageList());
         model.addAttribute("allPageNumCnt", paging.getAllPageNumCnt());
         model.addAttribute("currentPageNums", paging.getCurrentPageNums());
         model.addAttribute("currentPage", page);

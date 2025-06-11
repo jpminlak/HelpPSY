@@ -79,6 +79,25 @@
         td:nth-child(3) {
             width: 100px;
         }
+
+    /*페이징 스타일 추가*/
+    #paginBox {
+        position: absolute;
+        margin-left: 80px;
+        margin-top: 20px;
+    }
+
+    .pageNums {
+        text-decoration: none;
+        margin-left: 5px;
+        margin-right: 5px;
+        color: black;
+        font-size: 18px;
+    }
+    #paginBox td{
+        width: 30px;
+        text-align: center;
+    }
     </style>
 </head>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -120,7 +139,7 @@
                 <td><input type="button" value="<" onclick="leftPaging()"></td>
                 <td th:each="num : ${currentPageNums}">
                     <a class="pageNums" th:text="${num}"
-                        th:href="@{accidentmain(page=${num}, currentPageNum=${currentPageNum})}"></a>
+                        th:href="@{return(page=${num}, currentPageNum=${currentPageNum})}"></a>
                 </td>
                 <td><input type="button" value=">" onclick="rightPaging()"></td>
                 <td><input type="button" value=">>" onclick="RightPageNumListNum()"></td>
@@ -155,7 +174,19 @@
     });
 
     window.onload = () => {
-        document.getElementById('mainTitle').innerHTML = '사고 게시판'
+        document.getElementById('mainTitle').innerHTML = '사고 게시판';
+           onloadPaging();
+    }
+        function onloadPaging(){
+        let pages = document.getElementsByClassName('pageNums')
+        let currentPage = document.getElementById('currentPage').value
+
+        for(let i = 0; i < pages.length; i++){
+            if(Number(pages[i].innerHTML) == currentPage){
+                pages[i].style.color = "blue"
+                return
+            }
+        }
     }
 
     function leftPaging() {
@@ -167,9 +198,9 @@
             currentPage--
             if (firstPageIncurrentPageNum > currentPage) {
                 currentPageNum--
-                location.href = 'mainFreeBulletin?page=' + currentPage + '&currentPageNum=' + currentPageNum
+                location.href = 'return?page=' + currentPage + '&currentPageNum=' + currentPageNum
             } else {
-                location.href = 'mainFreeBulletin?page=' + currentPage + '&currentPageNum=' + currentPageNum
+                location.href = 'return?page=' + currentPage + '&currentPageNum=' + currentPageNum
             }
         }
     }
@@ -183,9 +214,9 @@
             currentPage++
             if (currentPage > LastPageIncurrentPageNum) {
                 currentPageNum++
-                location.href = 'mainFreeBulletin?page=' + currentPage + '&currentPageNum=' + currentPageNum
+                location.href = 'return?page=' + currentPage + '&currentPageNum=' + currentPageNum
             } else {
-                location.href = 'mainFreeBulletin?page=' + currentPage + '&currentPageNum=' + currentPageNum
+                location.href = 'return?page=' + currentPage + '&currentPageNum=' + currentPageNum
             }
         }
     }
@@ -195,7 +226,7 @@
         if (currentPageNum > 1) {
             currentPageNum -= 1
             let page = (currentPageNum - 1) * cnt + 1
-            location.href = 'mainFreeBulletin?page=' + page + '&currentPageNum=' + currentPageNum
+            location.href = 'return?page=' + page + '&currentPageNum=' + currentPageNum
         }
     }
     function RightPageNumListNum() {
@@ -205,7 +236,7 @@
         if (currentPageNum < pageNumSetCnt) {
             currentPageNum += 1
             let page = (currentPageNum - 1) * cnt + 1
-            location.href = 'mainFreeBulletin?page=' + page + '&currentPageNum=' + currentPageNum
+            location.href = 'return?page=' + page + '&currentPageNum=' + currentPageNum
         }
     }
 </script>
