@@ -73,9 +73,7 @@ public class FreeBulletinController {
         if (freeBulletinComment.getWriter() == "") {
             freeBulletinComment.setWriter("guest");
         }
-
         freeBulletinService.addComment(freeBulletinComment, fkNo);
-
         return "succeeded";
     }
 
@@ -86,9 +84,7 @@ public class FreeBulletinController {
         if (freeBulletinCommentInComment.getWriter() == "") {
             freeBulletinCommentInComment.setWriter("guest");
         }
-
         freeBulletinService.addCommentInComment(freeBulletinCommentInComment, fkNo);
-
         return "succeeded";
     }
 
@@ -104,9 +100,6 @@ public class FreeBulletinController {
         List<FreeBulletinReplyDTO> list = new ArrayList<>();
 
         for (int i = 0; i < replyList.size(); i++) {
-            System.out.println("_____________________23_________________");
-            System.out.println(replyList.get(i).getNo());
-            System.out.println("_____________________23_________________");
             FreeBulletinReplyDTO freeBulletinReplyDTO = new FreeBulletinReplyDTO();
             freeBulletinReplyDTO.setNo(replyList.get(i).getNo());
             freeBulletinReplyDTO.setFkNo(replyList.get(i).getFreeBulletinComment().getNo());
@@ -118,7 +111,7 @@ public class FreeBulletinController {
             list.add(freeBulletinReplyDTO);
         }
 
-        for(FreeBulletinReplyDTO fbrDTO : list){
+        for (FreeBulletinReplyDTO fbrDTO : list){
             System.out.println(fbrDTO.getNo());
             System.out.println(fbrDTO.getLikes());
             System.out.println(fbrDTO.getType());

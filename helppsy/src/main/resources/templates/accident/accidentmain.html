@@ -80,24 +80,25 @@
             width: 100px;
         }
 
-    /*페이징 스타일 추가*/
-    #paginBox {
-        position: absolute;
-        margin-left: 80px;
-        margin-top: 20px;
-    }
+        /*페이징 스타일 추가*/
+        #paginBox {
+            position: absolute;
+            margin-left: 80px;
+            margin-top: 20px;
+        }
 
-    .pageNums {
-        text-decoration: none;
-        margin-left: 5px;
-        margin-right: 5px;
-        color: black;
-        font-size: 18px;
-    }
-    #paginBox td{
-        width: 30px;
-        text-align: center;
-    }
+        .pageNums {
+            text-decoration: none;
+            margin-left: 5px;
+            margin-right: 5px;
+            color: black;
+            font-size: 18px;
+        }
+
+        #paginBox td {
+            width: 30px;
+            text-align: center;
+        }
     </style>
 </head>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -158,7 +159,6 @@
     // 게시글 조회수 (게시글리스트 제목 클릭시 조회수 측정)
     $(document).on('click', '.post-title', function (e) {
         const postId = $(this).data('post-id');
-
         $.ajax({
             url: '/Accident/Views',
             type: 'POST',
@@ -175,14 +175,13 @@
 
     window.onload = () => {
         document.getElementById('mainTitle').innerHTML = '사고 게시판';
-           onloadPaging();
+        onloadPaging();
     }
-        function onloadPaging(){
+    function onloadPaging() {
         let pages = document.getElementsByClassName('pageNums')
         let currentPage = document.getElementById('currentPage').value
-
-        for(let i = 0; i < pages.length; i++){
-            if(Number(pages[i].innerHTML) == currentPage){
+        for (let i = 0; i < pages.length; i++) {
+            if (Number(pages[i].innerHTML) == currentPage) {
                 pages[i].style.color = "blue"
                 return
             }

@@ -59,7 +59,7 @@
         <button type="button" onclick="javascript:hidePopup();">마커팝업닫기</button>
         <input type="text" id="param" value="" size="20" />
     </div>
-    <div class="search_div">
+    <div class="search_div">`
         <span>
             <select class='search_type'>
                 <option value="both">지번/도로명</option>
@@ -70,43 +70,11 @@
         <span><input type="text" id="search" placeholder="검색할 장소를 입력하세요."></span>
         <span><button class="search_btn">검색</button></span>
     </div><br>
+
     <div id="buttons">
         <button type="button" onclick="javascript:move(14129709.590359,4512313.7639686,15);">여의도</button>
         <button type="button" onclick="javascript:move(14679304.585522275, 4472545.1240446,14);">독도</button>
     </div>
-
-    <div>
-        <form id="searchForm" action="#" class="form_data" onsubmit="return false;search();">
-            <input type="hidden" name="page" value="1" />
-            <!-- <input type="hidden" name="type" value="PLACE" /> -->
-            <select id="typeSelect" name="type" onchange="searchSetting(this.value);"
-                style="margin-bottom: 10px; height: 30px;">
-                <option value="place" selected="selected">POI 검색</option>
-                <option value="address">주소검색</option>
-            </select>
-            <select name="category_select" style="display: none;margin-bottom: 10px; height: 30px;">
-                <option value="parcel">지번주소</option>
-                <option value="road">도로명주소</option>
-            </select>
-            <input type="hidden" name="category" value="" />
-            <input type="hidden" name="request" value="search" />
-            <input type="hidden" name="domain" value="http://localhost:8080">
-            <input type="hidden" name="crs" value="EPSG:4326" />
-            <input type="hidden" name="bbox" value="" />
-            <div>
-                <input type="text" id="searchValue" name="query" value="야탑역" style="width: 100px; height: 30px;" /> <a
-                    href="javascript:search();">검색</a>
-                현재지도내 검색 <input type="checkbox" id="bbox_check">
-            </div>
-        </form>
-    </div>
-    <div>
-        <ul id="result">
-            <li>
-            </li>
-        </ul>
-    </div>
-
     <!-- <div th:text="|${#lists.size(mapMarkerList)}개의 좌표가 있습니다.|" id="markerSize"></div> -->
     <div th:each="list, loop : ${mapMarkerList}" id="mml" style="display: none;">
         <span class="loadNum" th:text="${list.num}"></span> &emsp;
@@ -116,6 +84,39 @@
         <span class="loadLat" th:text="${list.lat}"></span> &emsp;
         <span class="loadContent" th:text="${list.content}"></span>
     </div>
+    <!-- <button type="button" onclick="removeMarker()">마커 지우기</button> -->
+
+    <!-- <form id="searchForm" action="#" class="form_data" onsubmit="return false;search();">
+        <input type="hidden" name="page" value="1" />
+        <input type="hidden" name="type" value="PLACE" />
+        <select id="typeSelect" name="type" onchange="searchSetting(this.value);"
+            style="margin-bottom: 10px; height: 30px;">
+            <option value="place" selected="selected">POI 검색</option>
+            <option value="address">주소검색</option>
+        </select>
+        <select name="category_select" style="display: none;margin-bottom: 10px; height: 30px;">
+            <option value="parcel">지번주소</option>
+            <option value="road">도로명주소</option>
+        </select>
+        <input type="hidden" name="category" value="" />
+        <input type="hidden" name="request" value="search" />
+        <input type="hidden" name="apiKey" value="CEB52025-E065-364C-9DBA-44880E3B02B8">
+        <input type="hidden" name="domain" value="http://localhost:8080">
+        <input type="hidden" name="crs" value="EPSG:4326" />
+        <input type="hidden" name="bbox" value="" />
+        <div>
+            <input type="text" id="searchValue" name="query" value="야탑역" style="width: 100px; height: 30px;" /> <a
+                href="javascript:search();">검색</a>
+            현재지도내 검색 <input type="checkbox" id="bbox_check">
+        </div>
+    </form>
+    <div>
+        <ul id="result">
+            <li>
+            </li>
+        </ul>
+    </div> -->
+
     <div th:replace="~{/main/mainPage:: footer}"></div>
 </body>
 <script>
@@ -158,23 +159,23 @@
     oMap.draw();
 
     // 지도이동
-    // function move(x, y, z) {
-    //     var _center = [x, y];
-    //     var z = z;
-    //     var pan = ol.animation.pan({
-    //         duration: 2000,
-    //         source: (vmap.getView().getCenter())
-    //     });
-    //     vmap.beforeRender(pan);
-    //     vmap.getView().setCenter(_center);
-    //     setTimeout("fnMoveZoom()", 3000);
-    // }
-    // function fnMoveZoom() {
-    //     zoom = vmap.getView().getZoom();
-    //     if (16 > zoom) {
-    //         vmap.getView().setZoom(14);
-    //     }
-    // };
+    function move(x, y, z) {
+        var _center = [x, y];
+        var z = z;
+        var pan = ol.animation.pan({
+            duration: 2000,
+            source: (vmap.getView().getCenter())
+        });
+        vmap.beforeRender(pan);
+        vmap.getView().setCenter(_center);
+        setTimeout("fnMoveZoom()", 3000);
+    }
+    function fnMoveZoom() {
+        zoom = vmap.getView().getZoom();
+        if (16 > zoom) {
+            vmap.getView().setZoom(14);
+        }
+    };
 
     let selX; let selY;
     var tansform = []   // 좌표 변환 (경도[0], 위도[1])
@@ -323,9 +324,9 @@
         addr1 = '';
     };
 
-    // let loadLon = $('.loadLon')[0].innerHTML; let loadLat = $('.loadLat')[0].innerHTML;
-    // let loadX = $('.loadX')[0].innerHTML; let loadY = $('.loadY')[0].innerHTML;
-    // let loadNum; let loadContent = $('.loadContent')[0].innerHTML; let markerLength = $('.loadContent').length
+    let loadLon = $('.loadLon')[0].innerHTML; let loadLat = $('.loadLat')[0].innerHTML;
+    let loadX = $('.loadX')[0].innerHTML; let loadY = $('.loadY')[0].innerHTML;
+    let loadNum; let loadContent = $('.loadContent')[0].innerHTML; let markerLength = $('.loadContent').length
     // let loadNum; let loadLon ; let loadLat; let loadX; let loadY; let loadContent; let markerLength;
 
     function setLocation() {    // DB에서 불러온 지점에 마커 놓기
@@ -407,6 +408,8 @@
         addr0 = '';
         addr1 = '';
     }
+
+
 
     function isSelectMarker() {
         if (markerLayer == null) {
@@ -553,121 +556,6 @@
         }
         location.href = "/map";
     }
-
-    // 추가 (3D 지도생성에서 가져옴)
-    // 지도가 그려지는 영역 조정
-    // 검색 API의 파라미터를 설정하는 form 영역
-    // let mapOptions = new vw.MapOptions(
-    //     vw.BasemapType.GRAPHIC, //2D 전용
-    //     "", //layersArr 미사용 옵션
-    //     vw.DensityType.FULL, //controlsDensity 2D 전용
-    //     vw.DensityType.BASIC, //interactionDensity 2D 전용
-    //     false, //controlAutoArrange 2D 전용
-    //     new vw.CameraPosition(
-    //         new vw.CoordZ(126.92775802528264, 37.52501881993892, 12416), //초기 위치 설정(경도, 위도, 높이 값)   
-    //         new vw.Direction(0, -90, 0)
-    //     ), //home
-    //     new vw.CameraPosition(
-    //         new vw.CoordZ(126.92775802528264, 37.52501881993892, 12416), //초기 위치 설정(경도, 위도, 높이 값)   
-    //         new vw.Direction(0, -90, 0)
-    //     )// initPosition
-    // );
-    // let map = new vw.Map("vmap", mapOptions);
-
-    // 검색
-    // let search = function () {
-    //     //검색 API 검색 설정
-    //     let chk = false;
-    //     chk = $('[name=category_select]').is(":visible");
-    //     if (chk) {
-    //         $('[name=category]').val($('[name=category_select]').val());
-    //     } else {
-    //         $('[name=category]').val("");
-    //     }
-    //     let bboxCheck = $('#bbox_check').is(":checked");
-
-    //     //현재 화면 검색 설정
-    //     if (bboxCheck) {
-    //         var viewRect = ws3d.viewer.scene.camera.computeViewRectangle();
-    //         var _html = "";
-    //         var West = ws3d.common.CesiumMath.toDegrees(viewRect.west).toFixed(7) //long min
-    //         var South = ws3d.common.CesiumMath.toDegrees(viewRect.south).toFixed(7) //lan min
-    //         var East = ws3d.common.CesiumMath.toDegrees(viewRect.east).toFixed(7) //long max
-    //         var North = ws3d.common.CesiumMath.toDegrees(viewRect.north).toFixed(7) //lan max
-    //         $('[name=bbox]').val(`${West},${South},${East},${North}`);
-    //     } else {
-
-    //     }
-    //     // jquery ajax 비동기 통신
-    //     $.ajax({
-    //         type: "get",
-    //         url: "http://api.vworld.kr/req/search",
-    //         data: $('#searchForm').serialize(),
-    //         dataType: 'jsonp', //cors 우회를 위해 jsonp 이용
-    //         async: false,
-    //         beforeSend: vmap.clear(),
-    //         success: function (data) {
-    //             var resultHtml = "";
-    //             if (data.response.status == "NOT_FOUND") {
-    //                 resultHtml = `<li>검색결과가 없습니다.</li>`;
-    //             } else {
-    //                 for (let o in data.response.result.items) {
-    //                     let mx = data.response.result.items[o].point.x * 1;
-    //                     let my = data.response.result.items[o].point.y * 1;
-    //                     if (o == 0) {
-    //                         //첫번째인자로 이동
-    //                         move(mx, my, 500);
-    //                     }
-    //                     var title = data.response.result.items[o].title;// map.getLayerNmElement( title ) 제어 가능
-    //                     var bldnm = data.response.result.items[o].address.bldnm;
-    //                     var parcel = data.response.result.items[o].address.parcel;
-    //                     var road = data.response.result.items[o].address.road;
-    //                     var markerhtml = "";
-
-    //                     if (!chk) {
-    //                         markerhtml = `<div class="vworld-info-window"><h2>${title}</h2><p><b>검색 주소</b>${parcel}<br></p>`;
-    //                         resultHtml += `<li style="margin: 10px"><p onclick='move(${mx},${my},500)'>${(o * 1 + 1)} parcel: ${parcel} road : ${road} 
-	// 						${title == null ? '' : 'title : ' + title}</p></li>`;
-    //                     } else {
-    //                         title = data.response.result.items[o].id;
-    //                         if ($('[name=category]').val() == "parcel") {
-    //                             markerhtml = `<div class="vworld-info-window"><h2>${bldnm}</h2><p><b>검색 주소</b>${parcel}<br></p>`
-    //                         } else {
-    //                             markerhtml = `<div class="vworld-info-window"><h2>${bldnm}</h2><p><b>검색 주소</b>${road}<br></p>`
-    //                         }
-    //                         resultHtml += `<li style="margin: 10px"><p onclick='move(${mx},${my},500)'>${(o * 1 + 1)} parcel: ${parcel} road : ${road} 
-	// 						${bldnm == null ? '' : 'bldnm : ' + bldnm}</p></li>`;
-    //                     }
-    //                     vmap.createMarker(title // text 안나옴 
-    //                         , mx
-    //                         , my
-    //                         , markerhtml
-    //                         , "http://map.vworld.kr/images/op02/map_point.png"
-    //                     );
-    //                 }
-    //             }//else 종료
-    //             $('#result').html(resultHtml);
-    //         },
-    //         complete: function () {
-    //         },
-    //         error: function (xhr, stat, err) { }
-    //     });
-    // }
-    // //이동함수 구현
-    // let move = function (x, y, z) {
-    //     var movePo = new vw.CoordZ(x, y, z);
-    //     var mPosi = new vw.CameraPosition(movePo, new vw.Direction(0, -90, 0));
-    //     vmap.moveTo(mPosi);
-    // }
-
-    // let searchSetting = function (thisVal) {
-    //     console.log(thisVal);
-    //     if ("address" == thisVal) {
-    //         $('[name=category_select]').show();
-    //     } else {
-    //         $('[name=category_select]').hide();
-    //     }
-    // }
 </script>
 
 </html>

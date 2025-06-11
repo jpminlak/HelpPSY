@@ -41,7 +41,7 @@ public class RegistrationController {
     @PostMapping("/registration")
     public String writing(@ModelAttribute RegistrationEntity registrationEntity
             ,@RequestParam("file") MultipartFile[] file) throws Exception {
-//        registrationEntity.setAlias(session.getAttribute("userAlias").toString());
+        // registrationEntity.setAlias(session.getAttribute("userAlias").toString());
         // session.getAttribute("userAlias").toString() 세션에 저장되어있는 별명을 바로 엔티티에 저장
         registrationService.write(registrationEntity); // 작성글 서비스단 보내기
         registrationService.files(file, registrationEntity); // 사진 서비스단 보내기
@@ -53,14 +53,11 @@ public class RegistrationController {
     public String list(Model model, @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "currentPageNum", defaultValue = "1") int currentPageNum) {
         List<RegistrationEntity> writegetlist = registrationService.writegetlist();
-//        model.addAttribute("writegetlist", writegetlist);
+        //model.addAttribute("writegetlist", writegetlist);
 
         // 페이징
         Paging paging = new Paging();
         paging.setPerPageList(10, page, currentPageNum, 5, writegetlist);
-        System.out.println("_________________99_________________");
-        System.out.println(paging.getPerPageList().size());
-        System.out.println("_________________99_________________");
         model.addAttribute("writegetlist", paging.getPerPageList());
         model.addAttribute("allPageNumCnt", paging.getAllPageNumCnt());
         model.addAttribute("currentPageNums", paging.getCurrentPageNums());
@@ -76,9 +73,6 @@ public class RegistrationController {
     public String accidentview(Model model, @PathVariable("id") Integer id) {
         // @ 글작성 정보 가져오기
         //@PathVariable=RUL 경로의 값을 메서드 파라미터로 바인딩
-        System.out.println("-----------------------------글정보 보기에요");
-        System.out.println(id);
-        System.out.println("-----------------------------");
         Optional<RegistrationEntity> viewOptional = registrationService.getaccidentview(id);
         // RegistrationEntity의 id값을 Optional로 받아옴
         // Optional = findById()는 항상 Optional<엔티티>를 반환하는 것이 권장
