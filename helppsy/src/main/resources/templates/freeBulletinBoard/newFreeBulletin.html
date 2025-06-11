@@ -103,6 +103,7 @@
     <header>
         <h1>자유 게시판 작성</h1>
     </header>
+    <div th:replace="~{main/mainPage:: nav}"></div>
     <main>
         <form onsubmit="return false" id="bulletinForm" enctype="multipart/form-data" action="addFreeBulletin"
             method="post">
@@ -195,10 +196,7 @@
         if (addImgFileTag.files.length != 0)
             fileReader.readAsDataURL(addImgFileTag.files[0]);
         fileReader.onload = (e) => {
-            if (addImgFileTag.files[0].type == 'image/png'
-                || addImgFileTag.files[0].type == 'image/jpg'
-                || addImgFileTag.files[0].type == 'image/jpeg'
-                || addImgFileTag.files[0].type == 'image/gif') {
+            if (addImgFileTag.files[0].type.startsWith('image/')) {
                 type = 'img';
             } else {
                 type = 'video';

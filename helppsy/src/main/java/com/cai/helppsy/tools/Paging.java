@@ -60,12 +60,6 @@ public class Paging {
         int currentPageNumInitialValue = (currentPageNumsetNum-1)*perPageNumCnt+1;
         int currentPageNumConditionV = currentPageNumsetNum*perPageNumCnt;
 
-        System.out.println("______________________________55_________________________________");
-        System.out.println(pageNumSetCnt);
-        System.out.println(perPageNumCnt);
-        System.out.println(currentPageNumInitialValue);
-        System.out.println(currentPageNumConditionV);
-        System.out.println("______________________________55_________________________________");
 
         for(int i = currentPageNumInitialValue; i <= currentPageNumConditionV && i <= allPageNumCnt; i++){
             currentPageNums.add(i);
