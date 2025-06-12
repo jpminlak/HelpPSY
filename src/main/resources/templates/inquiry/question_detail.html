@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>질문 상세 보기</title>
+    <style>
+<!--        table {-->
+<!--            border: 1px solid #ccc;-->
+<!--            border-collapse: collapse;-->
+<!--            width: 100%;-->
+<!--        }-->
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+        .file-preview img {
+            max-width: 300px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+<h1>질문 상세 보기</h1>
+
+<!-- 질문 정보 출력 -->
+<table>
+    <tr>
+        <th>번호</th>
+        <td th:text="${question.id}"></td>
+    </tr>
+    <tr>
+        <th>작성자</th>
+        <td th:text="${question.writer}"></td>
+    </tr>
+    <tr>
+        <th>제목</th>
+        <td th:text="${question.subject}"></td>
+    </tr>
+    <tr>
+        <th>내용</th>
+        <td th:text="${question.content}"></td>
+    </tr>
+    <tr>
+        <th>작성일</th>
+        <td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+    </tr>
+    <tr th:if="${question.file != null}">
+        <th>첨부파일</th>
+        <td class="file-preview">
+            <!-- 이미지일 경우 미리보기 -->
+            <div th:if="${#strings.endsWith(question.file.toLowerCase(), '.jpg')
+                      or #strings.endsWith(question.file.toLowerCase(), '.jpeg')
+                      or #strings.endsWith(question.file.toLowerCase(), '.png')
+                      or #strings.endsWith(question.file.toLowerCase(), '.gif')}">
+                <img id="aaa" th:src="@{/files/inquiry/{file}(file=${question.file})}" alt="첨부 이미지">
+            </div>
+
+            <!-- 그 외 파일은 다운로드 링크 -->
+            <div th:unless="${#strings.endsWith(question.file.toLowerCase(), '.jpg')
+                         or #strings.endsWith(question.file.toLowerCase(), '.jpeg')
+                         or #strings.endsWith(question.file.toLowerCase(), '.png')
+                         or #strings.endsWith(question.file.toLowerCase(), '.gif')}">
+                <a th:href="@{'/' + ${question.file}}" th:text="${question.file}" download></a>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<br>
+
+<h2>답변 목록</h2>
+<div th:if="${#lists.isEmpty(answers)}">
+    <p>등록된 답변이 없습니다.</p>
+</div>
+<div th:if="${!#lists.isEmpty(answers)}">
+    <table>
+        <thead>
+        <tr>
+            <th>번호</th>
+            <th>답변자</th>
+            <th>제목</th>
+            <th>내용</th>
+            <th>작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="answer : ${answers}">
+            <td th:text="${answer.id}"></td>
+            <td th:text="${answer.respondent}"></td>
+            <td th:text="${answer.title}"></td>
+            <td th:text="${answer.content2}"></td>
+            <td th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!-- 답변 작성 폼 -->
+<h2>답변 작성</h2>
+<form action="/kkk" method="post">
+    <!-- 질문 번호 연결 -->
+    <input type="hidden" name="question.id" th:value="${question.id}">
+
+    <label>
+        답변자:
+        <input type="text" name="respondent" placeholder="관리자 이름">
+    </label>
+    <br><br>
+
+    <label>
+        제목:
+        <input type="text" name="title" placeholder="답변 제목">
+    </label>
+    <br><br>
+
+    <label>
+        내용:<br>
+        <textarea name="content2" placeholder="답변 내용 입력" cols="50" rows="10"></textarea>
+    </label>
+    <br><br>
+
+    <button type="submit" name="action" value="answer">전송</button>
+</form>
+
+<br>
+<a href="/respondent">전체 목록</a> 
+
+</body>
+</html>

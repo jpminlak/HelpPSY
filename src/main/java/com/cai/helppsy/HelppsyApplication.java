@@ -8,6 +8,6 @@ public class HelppsyApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(HelppsyApplication.class, args);
-		System.out.println("서버 시작");
+		System.out.println("시작");
 	}
 }
