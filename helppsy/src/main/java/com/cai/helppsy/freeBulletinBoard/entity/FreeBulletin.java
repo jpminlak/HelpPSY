@@ -17,8 +17,7 @@ public class FreeBulletin {
     @Column(length = 30)
     private String title;
 
-    // 자료형이 MEDIUMTEXT로 된다. 용량 약 16MB 제한.
-    @Column(length = 200000)
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
 
     @Column(length = 15)

@@ -26,7 +26,7 @@ public class RegistrationEntity {
     @Column(length = 30)
     private String accident; // 사고분류
 
-    @Column(length = 15)
+    @Column(length = 50)
     private String region; // 지역
 
     @Column(length = 15)
@@ -34,6 +34,9 @@ public class RegistrationEntity {
 
     @Column(length = 15)
     private String type; // 차종류
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String content; // 내용
 
     @Column(nullable = false) // nullable = false : null 방지
     private Integer postViews = 0; // 조회수
@@ -57,7 +60,7 @@ public class RegistrationEntity {
     private List<RegistrationLikeEntity> likeEntities;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sinup_entity_id")
+    @JoinColumn(name = "singup_entity_id")
     // Join되는거 service쪽 fileEntity.setRegistrationEntity(registrationEntity);에서 연결
     private SignupEntity signupEntity;
 }

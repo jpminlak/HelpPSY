@@ -23,7 +23,7 @@ public class RegistrationController {
 
     private final RegistrationService registrationService;
     private final CommentService commentservice;
-    private final RegistrationLikeService likeService;
+    //private final RegistrationLikeService likeService;
 
     // 사고 게시판 메인화면
     @GetMapping("accidentmain")
@@ -39,12 +39,13 @@ public class RegistrationController {
 
     // 사고 게시판 작성글 db업로드
     @PostMapping("/registration")
-    public String writing(@ModelAttribute RegistrationEntity registrationEntity
-            ,@RequestParam("file") MultipartFile[] file) throws Exception {
+    public String writing(@ModelAttribute RegistrationEntity registrationEntity){
+//    public String writing(@ModelAttribute RegistrationEntity registrationEntity
+//            ,@RequestParam("file") MultipartFile[] file) throws Exception {
         // registrationEntity.setAlias(session.getAttribute("userAlias").toString());
         // session.getAttribute("userAlias").toString() 세션에 저장되어있는 별명을 바로 엔티티에 저장
         registrationService.write(registrationEntity); // 작성글 서비스단 보내기
-        registrationService.files(file, registrationEntity); // 사진 서비스단 보내기
+        //registrationService.files(file, registrationEntity); // 사진 서비스단 보내기
         return "redirect:/return";
     }
 

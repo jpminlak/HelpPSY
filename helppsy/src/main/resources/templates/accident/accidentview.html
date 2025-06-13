@@ -99,7 +99,7 @@
             </button>
 
             <!--게시글 수정-->
-            <form action="/aaa" method="post" th:if="${session.userAlias}!=null">
+            <form action="/UpdateAccident" method="post" th:if="${session.userAlias}!=null">
                 <input type="submit" value="게시글수정">
                 <input type="hidden" name="id" th:value="${view.id}" />
                 <input type="hidden" name="alias" th:value="${view.alias}" />
@@ -125,11 +125,7 @@
         </tr>
         <tr>
             <th>작성자</th>
-            <td th:text="${view.alias}"></td>
-        </tr>
-        <tr>
-            <th>제목</th>
-            <td th:text="${view.title}"></td>
+            <td th:text="${view.alias}"></td>   <!-- 제목 밑으로 뺌 -->
         </tr>
         <tr>
             <th>사고 분류</th>
@@ -149,6 +145,24 @@
         </tr>
     </table>
 
+    <!-- 작성글 제목, 내용-->
+    <!-- utext는 HTML 문자열을 렌더링 떄문에 클라이언트에선 HTML로 보내주고 서버,클라이언트 인코딩 작업이 없어도 됨 -->
+    <!-- <div th:utext="${view.content}"></div> -->
+    <table style="border: 1px solid #ccc; width: 70%;">
+        <h3>제목</h3>
+        <tr>
+            <td th:text="${view.title}"></td>
+        </tr>
+    </table>
+    <table style="border: 1px solid #ccc; width: 70%;">
+        <h3>내용</h3>
+        <tr>
+            <td>
+                <div th:utext="${view.content}"></div>
+            </td>
+        </tr>
+    </table>
+    <br>
     <div class="images" th:each="filelist : ${filename}">
         <img th:src="@{/files/accidentBulletin/{fileName}(fileName=${filelist.filename})}" alt="첨부 이미지" />
     </div>
@@ -538,8 +552,8 @@
                    </div>
                    `;
 
-                    // 해당 댓글의 대댓글 목록 영역에 추가
-                    $(`.reply-list[data-comment-id="${response.commentId}"]`).append(replyHtml);
+                // 해당 댓글의 대댓글 목록 영역에 추가
+                $(`.reply-list[data-comment-id="${response.commentId}"]`).append(replyHtml);
             },
             error: function () {
                 alert('대댓글 등록에 실패했습니다.');

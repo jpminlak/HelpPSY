@@ -33,37 +33,37 @@ public class RegistrationService{
     }
 
     //업로드 사진 db보내기
-    public void files(MultipartFile[] file, RegistrationEntity registrationEntity) {
-        // .getProperty 프로젝트 경로를 반환해주는 값
-        //  String projectPath = System.getProperty("user.dir") + "/src//main/resources/static/files";
-        String projectPath = System.getProperty("user.dir") + "/files/accidentBulletin";
-        // 디렉터리 없으면 생성
-        File directory = new File(projectPath);
-        if (!directory.exists()) {
-            directory.mkdirs(); // 폴더 없으면 생성
-        }
-        for(int i=0; i<file.length; i++){
-            if (file[i].getOriginalFilename()!=null){
-                try{
-                    UUID uuid = UUID.randomUUID(); // 유형 4(가상 난수 생성)
-                    String fileName = uuid.toString() +"_"+ file[i].getOriginalFilename(); // 파일 랜덤id+오리지날이름으로 결합
-                    File saveFile = new File(projectPath,fileName);
-                    file[i].transferTo(saveFile); //  .transferTo 업로드한 파일을 지정된 경로로 저장할 때 사용
-
-                    // @ N개의  사진을 db에 저장하기 위해선 새 RegistrationFileEntity객체를 생성해줘야함
-                    RegistrationFileEntity fileEntity = new RegistrationFileEntity();
-                    fileEntity.setFilename(fileName);
-
-                    fileEntity.setRegistrationEntity(registrationEntity); // fileEntity에  registrationEntity정보 연결
-
-                    filerepository.save(fileEntity);
-
-                } catch (IOException e){
-                    throw new RuntimeException("파일 저장 중 오류 발생",e);
-                }
-            }
-        }
-    }
+//    public void files(MultipartFile[] file, RegistrationEntity registrationEntity) {
+//        // .getProperty 프로젝트 경로를 반환해주는 값
+//        //  String projectPath = System.getProperty("user.dir") + "/src//main/resources/static/files";
+//        String projectPath = System.getProperty("user.dir") + "/files/accidentBulletin";
+//        // 디렉터리 없으면 생성
+//        File directory = new File(projectPath);
+//        if (!directory.exists()) {
+//            directory.mkdirs(); // 폴더 없으면 생성
+//        }
+//        for(int i=0; i<file.length; i++){
+//            if (file[i].getOriginalFilename()!=null){
+//                try{
+//                    UUID uuid = UUID.randomUUID(); // 유형 4(가상 난수 생성)
+//                    String fileName = uuid.toString() +"_"+ file[i].getOriginalFilename(); // 파일 랜덤id+오리지날이름으로 결합
+//                    File saveFile = new File(projectPath,fileName);
+//                    file[i].transferTo(saveFile); //  .transferTo 업로드한 파일을 지정된 경로로 저장할 때 사용
+//
+//                    // @ N개의  사진을 db에 저장하기 위해선 새 RegistrationFileEntity객체를 생성해줘야함
+//                    RegistrationFileEntity fileEntity = new RegistrationFileEntity();
+//                    fileEntity.setFilename(fileName);
+//
+//                    fileEntity.setRegistrationEntity(registrationEntity); // fileEntity에  registrationEntity정보 연결
+//
+//                    filerepository.save(fileEntity);
+//
+//                } catch (IOException e){
+//                    throw new RuntimeException("파일 저장 중 오류 발생",e);
+//                }
+//            }
+//        }
+//    }
 
     // Id값으로 테이블 리스트 조회
     public Optional<RegistrationEntity> getaccidentview(Integer id){
