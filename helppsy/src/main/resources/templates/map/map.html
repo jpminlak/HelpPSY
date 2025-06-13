@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<!-- https://www.data.go.kr/data/3052419/openapi.do -->
-<!-- https://www.vworld.kr/dev/v4dv_opn2dmap2guide_s001.do -->
 <html lang=kor xmlns:th="http://www.thymeleaf.org">
 
 <head>
@@ -10,14 +8,14 @@
     <script src="main/fragment.js"></script>
     <title>지도</title>
 </head>
-<!--마커 스타일 작게. 부트스트랩 형식의 크기와 어긋나게 된다.-->
+<!--마커 스타일 작게. 검색마커의 팝업 크기와 어긋나게 된다.-->
 <!-- <script type="text/javascript"
     src="https://map.vworld.kr/js/vworldMapInit.js.do?version=2.0&apiKey=CEB52025-E065-364C-9DBA-44880E3B02B8"></script> -->
 
 <!--마커 스타일 크게-->
 <script type="text/javascript"
     src="https://map.vworld.kr/js/webglMapInit.js.do?version=2.0&apiKey=CEB52025-E065-364C-9DBA-44880E3B02B8"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css" type="text/css">
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css" type="text/css">-->
 
 <body>
     <!--<div th:insert="~{/start:: menu}"></div> &lt;!&ndash; th:insert / th:replace 도 가능 &ndash;&gt;-->
@@ -25,10 +23,10 @@
     <div th:replace="~{main/mainPage:: nav}"></div>
     <div style="display: flex;">
         <div style="float: left; width: 70%;">
-            <div id="vmap" style="width: 100%; height: 100%;"></div>
+            <div id="vmap" style="width: 100%; height: 100%; margin-left: 20px;"></div>
         </div>
         <div style="float: left; width: 30%;">
-            <div style="width: 100%; height: 600px; padding: 20px;">
+            <div style="width: 100%; height: 700px; padding: 20px;">
                 <div style="margin: 10px;">
                     <!--<form th:action="@{/mapmarker}" th:object="${mapmarker}" method="post">-->
                     <div>
@@ -52,14 +50,13 @@
             </div>
         </div>
     </div>
-    <div>
+    <div style="margin-left: 20px; margin-top:10px;">
         <button type="button" onclick="javascript:addMarkerLayer();">등록마커부르기</button>
         <button type="button" onclick="javascript:hideMarker();">마커숨기기</button>
         <button type="button" onclick="javascript:showMarker();">마커보기</button>
         <button type="button" onclick="javascript:showAllMarker();">마커전체보기</button>
         <button type="button" onclick="javascript:hideAllMarker();">마커전체숨기기</button>
-    </div>
-    <div>
+        <br>
         <button type="button" onclick="javascript:removeMarkerLayer();">등록마커삭제</button>
         <button type="button" onclick="javascript:removeMarker();">마커삭제</button>
         <button type="button" onclick="javascript:removeAllMarker();">마커전체삭제</button>
@@ -67,18 +64,6 @@
         <button type="button" onclick="javascript:hidePopup();">마커팝업닫기</button>
         <input type="text" id="param" value="" size="20" />
     </div>
-    <div class="search_div">
-        <span>
-            <select class='search_type'>
-                <option value="both">지번/도로명</option>
-                <option value="parcel">지번</option>
-                <option value="road">도로명</option>
-            </select>
-        </span>
-        <span><input type="text" id="search" placeholder="검색할 장소를 입력하세요."></span>
-        <span><button class="search_btn">검색</button></span>
-    </div><br>
-
     <!-- <div th:text="|${#lists.size(mapMarkerList)}개의 좌표가 있습니다.|" id="markerSize"></div> -->
     <div th:each="list, loop : ${mapMarkerList}" id="mml" style="display: none;">
         <span class="loadNum" th:text="${list.num}"></span> &emsp;
@@ -88,30 +73,30 @@
         <span class="loadLat" th:text="${list.lat}"></span> &emsp;
         <span class="loadContent" th:text="${list.content}"></span>
     </div>
-    <div>
+    <div style="margin-left: 20px; margin-top:10px;">
         <form id="searchForm" action="#" class="form_data" onsubmit="return false;search();">
             <input type="hidden" name="page" value="1" />
             <!-- <input type="hidden" name="type" value="PLACE" /> -->
             <select id="typeSelect" name="type" onchange="searchSetting(this.value);"
-                style="margin-bottom: 10px; height: 30px;">
+                style="margin-bottom: 10px; height: 25px;">
                 <option value="place" selected="selected">장소 검색</option>
                 <option value="address">주소 검색</option>
             </select>
-            <select name="category_select" style="display: none;margin-bottom: 10px; height: 30px;">
+            <select name="category_select" style="display: none;margin-bottom: 10px; height: 25px;">
                 <option value="parcel">지번주소</option>
                 <option value="road">도로명주소</option>
             </select>
+            <span>
+                <input type="text" id="searchValue" name="query" placeholder="검색어를 입력하세요"
+                       style="width: 140px; height: 20px;" /> <a href="javascript:search();">검색</a>
+                <!-- 현재지도내 검색 <input type="checkbox" id="bbox_check"> -->
+            </span>
             <input type="hidden" name="category" value="" />
             <input type="hidden" name="request" value="search" />
             <input type="hidden" name="apiKey" value="CEB52025-E065-364C-9DBA-44880E3B02B8">
             <input type="hidden" name="domain" value="http://localhost:8080">
             <input type="hidden" name="crs" value="EPSG:4326" />
             <input type="hidden" name="bbox" value="" />
-            <div>
-                <input type="text" id="searchValue" name="query" placeholder="검색어를 입력하세요"
-                    style="width: 140px; height: 25px;" /> <a href="javascript:search();">검색</a>
-                <!-- 현재지도내 검색 <input type="checkbox" id="bbox_check"> -->
-            </div>
         </form>
     </div>
     <div>
@@ -251,19 +236,10 @@
     });
 
     let addr, road, geoResult, addr0, addr1;
-    var typeName = $('.search_type option:selected').val(); // 선택한 검색 종류 값
     function addMarker(lon, lat) {
         vmap.removeLayer(markerLayer);                        // 기존의 마커가 있다면 제거. 마커는 1개만 존재.
         markerLayer = new vw.ol3.layer.Marker(vmap);          // 마커 객체 생성
         selectMarker = null;
-        //var typeName = $('.search_type option:selected').val(); // 선택한 검색 종류 값
-        if (typeName == "both") {
-            titleName = "주소";
-        } else if (typeName == "parcel") {
-            titleName = "지번 주소";
-        } else if (typeName == "road") {
-            titleName = "도로명 주소";
-        }
 
         // (비동기)좌표를 주소로 변환하는 api, 도로명주소 검색의 경우 건물의 geometry 기반으로 도로명 주소값을 가지고 오기 때문에 건물 외의 것을 클릭하면 값이 없을 수 있습니다.
         // 브이월드 지도서비스에서 행정 주제도중 도로명주소건물 주제도에 해당 좌표값이 들어와야만 도로명 주소값을 리턴 받을 수 있습니다.
@@ -277,7 +253,7 @@
                 request: "getaddress",
                 format: "json",     // 결과 포멧으로 xml 또는 json 타입으로 받아볼 수 있다.
                 key: key,           // 브이월드 인증키
-                type: typeName,     // 검색 타입으로 '도로명:road' 또는 '지번:parcel' 또는 '둘다:both' 중 선택
+                type: "both",     // 검색 타입으로 '도로명:road' 또는 '지번:parcel' 또는 '둘다:both' 중 선택
                 crs: "epsg:3857",   // 브이월드 기본 좌표계
                 point: lon + "," + lat, // 좌표
                 zipcode: true,          // 우편번호 여부
@@ -285,36 +261,17 @@
             },
             success: function (json_data) {
                 if (json_data.response.status == "NOT_FOUND") {
-                    if (typeName == 'road') {
-                        $('#geoAddress').html('');
-                        $('#geoRoad').html('도로명 주소가 없습니다.');
-                    } else {
-                        $('#geoAddress').html("주소가 없습니다.");
-                        $('#geoRoad').html('');
-                    }
                     $('#gw').html("검색 결과가 없습니다.");
                 } else {
                     //text = json_data.response.result[0].text   // 받아온 json데이터에서 주소를 추출                    
-                    for (i in json_data.response.result) {
+                    for (let i in json_data.response.result) {
                         if (i == 0) { // 지번 주소
-                            if (typeName == 'both' || typeName == 'parcel') {
-                                addr0 = json_data.response.result[0].text;
-                                geoResult = `지번 주소: ${addr0}`;
-                                $('#geoAddress').html(geoResult);
-                                $('#geoRoad').html('');
-                            } else if (typeName == 'road') {
-                                addr1 = json_data.response.result[1].text;
-                                geoResult = `도로명 주소: ${addr1}`;
-                                $('#geoAddress').html('');
-                                $('#geoRoad').html(geoResult);
-                            }
-                        } else if (i == 1) {    // 도로명 주소
+                            addr0 = json_data.response.result[0].text;
+                        } else if (i == 1) {
                             addr1 = json_data.response.result[1].text;
-                            geoResult = `도로명 주소: ${addr1}`;
-                            $('#geoRoad').html(geoResult);
                         }
                     }
-                    //$('#gw').html(addr0 + "<br>" + addr1);
+                    $('#gw').html(addr0 + "<br>" + addr1);
                 }
                 vw.ol3.markerOption = {  // 마커 옵션 설정
                     x: lon,
@@ -326,7 +283,6 @@
                 };
                 markerLayer.addMarker(vw.ol3.markerOption); // 마커 옵션을 마커에 적용
                 vmap.addLayer(markerLayer);     // 마커를 vmap에 등록
-                //markerLayer.push(nowMarkerLayer);
 
                 // DB에 저장할 좌표 & 메모
                 regT0 = tansform[0]; regT1 = tansform[1];
@@ -391,27 +347,16 @@
             },
             success: function (json_data) {
                 if (json_data.response.status == "NOT_FOUND") {
-                    $('#geoAddress').html("주소가 없습니다.");
+                    $('#gw').html("주소가 없습니다.");
                 } else {
-                    for (i in json_data.response.result) {
+                    for (let i in json_data.response.result) {
                         if (i == 0) { // 지번 주소
-                            if (typeName == 'both' || typeName == 'parcel') {
-                                addr0 = json_data.response.result[0].text;
-                                geoResult = `지번 주소: ${addr0}`;
-                                $('#geoAddress').html(geoResult);
-                                $('#geoRoad').html('');
-                            } else if (typeName == 'road') {
-                                addr1 = json_data.response.result[1].text;
-                                geoResult = `도로명 주소: ${addr1}`;
-                                $('#geoAddress').html('');
-                                $('#geoRoad').html(geoResult);
-                            }
-                        } else if (i == 1) {    // 도로명 주소
+                            addr0 = json_data.response.result[0].text;
+                        } else if (i == 1) {
                             addr1 = json_data.response.result[1].text;
-                            geoResult = `도로명 주소: ${addr1}`;
-                            $('#geoRoad').html(geoResult);
                         }
                     }
+                    $('#gw').html(addr0 + "<br>" + addr1);
                 }
                 //$('#geoURL').html(loadLon + "<br>" + loadLat + "<br>" + selX + "<br>" + selY);
                 //$('#geoURL').html(selX + "<br>" + selY);
@@ -421,8 +366,6 @@
                 alert(xtr + " : " + status + " : " + error);
             }
         });
-        //addri = '';
-        //addr = '';
         addr0 = '';
         addr1 = '';
     }
