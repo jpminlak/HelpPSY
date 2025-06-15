@@ -19,4 +19,9 @@ public class MainController {
         System.out.println("메인 페이지");
         return "main/mainPage";
     }
+
+    @GetMapping("/")
+    public String map_cocoa(){
+        return "map/map_cocoa";
+    }
 }

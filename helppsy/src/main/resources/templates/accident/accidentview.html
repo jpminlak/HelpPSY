@@ -3,8 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>게시글 상세보기</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/main/fragmentStyle.css">
+    <script src="/main/fragment.js"></script>
+    <title>게시글 상세보기</title>
     <!--    <link rel="stylesheet" th:href="@{/style.css}">-->
     <style>
         body {
@@ -84,6 +86,14 @@
         }
     </style>
 </head>
+<!--minwoo-->
+<!-- <script type="text/javascript"
+        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=0b286c3340a1de99c4f466bb9bd54867&libraries=services,clusterer,drawing"></script> -->
+
+<!--junghwan-->
+<script type="text/javascript"
+    src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=ab86c1b266a48a762dbb0aa0a59d8967&libraries=services,clusterer,drawing"></script>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <body>
@@ -113,38 +123,46 @@
             <input type="hidden" name="alias" th:value="${view.alias}" />
         </form>
     </div>
-
-    <table class="info-table" id="table">
-        <tr>
-            <th>조회수</th>
-            <td th:text="${postviewsnum}"></td>
-        </tr>
-        <tr>
-            <th>글번호</th>
-            <td th:text="${view.id}"></td>
-        </tr>
-        <tr>
-            <th>작성자</th>
-            <td th:text="${view.alias}"></td>   <!-- 제목 밑으로 뺌 -->
-        </tr>
-        <tr>
-            <th>사고 분류</th>
-            <td th:text="${view.accident}"></td>
-        </tr>
-        <tr>
-            <th>사고 지역</th>
-            <td th:text="${view.region}"></td>
-        </tr>
-        <tr>
-            <th>차량 등급</th>
-            <td th:text="${view.rating}"></td>
-        </tr>
-        <tr>
-            <th>차량 종류</th>
-            <td th:text="${view.type}"></td>
-        </tr>
-    </table>
-
+    <div th:replace="~{main/mainPage:: nav}"></div>
+    <div style="display: flex;">
+        <div style="float: left; width: 50%; margin-top: 20px;">
+            <table class="info-table" id="table">
+                <tr>
+                    <th>조회수</th>
+                    <td th:text="${postviewsnum}"></td>
+                </tr>
+                <tr>
+                    <th>글번호</th>
+                    <td th:text="${view.id}"></td>
+                </tr>
+                <tr>
+                    <th>작성자</th>
+                    <td th:text="${view.alias}"></td> <!-- 제목 밑으로 뺌 -->
+                </tr>
+                <tr>
+                    <th>사고 분류</th>
+                    <td th:text="${view.accident}"></td>
+                </tr>
+                <tr>
+                    <th>사고 지역</th>
+                    <td th:text="${view.region}" id="loc"></td>
+                </tr>
+                <tr>
+                    <th>차량 등급</th>
+                    <td th:text="${view.rating}"></td>
+                </tr>
+                <tr>
+                    <th>차량 종류</th>
+                    <td th:text="${view.type}"></td>
+                </tr>
+            </table>
+        </div>
+        <!--지도-->
+        <div style="float: left; width: 50%;">
+            <div id="map" style="width:500px; height:400px; margin-top: 20px; margin-left: 20px;"></div>
+            <div id="result"></div>
+        </div>
+    </div>
     <!-- 작성글 제목, 내용-->
     <!-- utext는 HTML 문자열을 렌더링 떄문에 클라이언트에선 HTML로 보내주고 서버,클라이언트 인코딩 작업이 없어도 됨 -->
     <!-- <div th:utext="${view.content}"></div> -->
@@ -191,7 +209,6 @@
                 <div class="Commentlike-list" th:attr="data-commentlikeid=${commentlist.id}"></div>
             </button>
 
-
             <!--댓글 삭제하기-->
             <form action="/commentdelete" method="post">
                 <input type="hidden" name="commentId" th:value="${commentlist.id}" />
@@ -199,7 +216,6 @@
                 <input type="hidden" name="registrationId" th:value="${view.id}" />
                 <input type="submit" value="삭제">
             </form>
-
 
             <button class="commentBtn" type="button" th:attr="data-comment-id=${commentlist.id}">대댓글</button>
 
@@ -213,20 +229,47 @@
                     <!-- 대댓글 목록을 보여줄 영역 -->
                 </form>
                 <div class="reply-list" th:attr="data-comment-id=${commentlist.id}"></div>
-
-
             </div>
-
-
         </div>
     </div>
-
     <a th:href="@{/main}">← 메인 화면으로 돌아가기</a>
     </div>
 </body>
 
 </html>
 <script>
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+        mapOption = {
+            center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+            level: 3 // 지도의 확대 레벨
+        };
+
+    // 지도를 생성합니다
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+
+    // 주소-좌표 변환 객체를 생성합니다
+    var geocoder = new kakao.maps.services.Geocoder();
+
+    // 주소로 좌표를 검색합니다
+    var loc = $('#loc').html(); // 사고 위치
+    geocoder.addressSearch(loc, function (result, status) {
+        // 정상적으로 검색이 완료됐으면 
+        if (status === kakao.maps.services.Status.OK) {
+            var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+            // 결과값으로 받은 위치를 마커로 표시합니다
+            var marker = new kakao.maps.Marker({
+                map: map,
+                position: coords
+            });
+            // 인포윈도우로 장소에 대한 설명을 표시합니다
+            var infowindow = new kakao.maps.InfoWindow({
+                content: '<div style="width: 150px; text-align: center; padding: 6px 0;"><b>사고지역<b></div>'
+            });
+            infowindow.open(map, marker);
+            // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+            map.setCenter(coords);
+        }
+    });
 
     // -------------------------- 새로고침시 좋아요 -----------------------------------------------
     // 문서 로드 시 좋아요 이전 상태 유지 하기 (게시글,댓글,대댓글)
