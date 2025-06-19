@@ -5,6 +5,7 @@ import com.cai.helppsy.memberManager.SignupEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +30,12 @@ public class RegistrationEntity {
     @Column(length = 50)
     private String region; // 지역
 
+    @Column(length = 30)
+    private String latitude; // 지도(위도)
+
+    @Column(length = 30)
+    private String longitude; // 지도(경도)
+
     @Column(length = 15)
     private String rating; // 차등급(크기)
 
@@ -43,6 +50,9 @@ public class RegistrationEntity {
 
     @CreationTimestamp
     private LocalDateTime createDate; // 로컬 데이터 시간 표기
+
+    @UpdateTimestamp
+    private LocalDateTime modifiedDate; // 글 수정 시간
 
     // 1:N 관계에서 사용
     // 파일 리스트

@@ -34,4 +34,15 @@ public class CommentReplyService {
     public void deleteCommentReply(Integer id){
         commentReplyRepository.deleteById(id);
     }
+
+    // 대댓글 수정
+    public CommentReplyEntity replyUpdate(Integer commentReplyId, String commentReplyAlias,String commentReply){
+        CommentReplyEntity entity = commentReplyRepository.findByIdAndAlias(commentReplyId,commentReplyAlias);
+        entity.setComment(commentReply);
+        System.out.println("------------대댓글 수정 ");
+        System.out.println(entity.getComment());
+        System.out.println(entity.getAlias());
+        System.out.println("------------대댓글 수정 ");
+        return commentReplyRepository.save(entity);
+    }
 }

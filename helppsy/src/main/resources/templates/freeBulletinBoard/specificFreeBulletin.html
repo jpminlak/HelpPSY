@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="main/fragmentStyle.css">
-    <script src="main/fragment.js"></script>
+    <link rel="stylesheet" th:href="@{/main/head.css}">
+    <script th:src="@{/main/fragment.js}"></script>
     <script src="main/jquery.js"></script>
     <title>자유 게시판</title>
 </head>
@@ -125,7 +125,6 @@
 
 <body>
     <div th:replace="~{main/mainPage:: header}"></div>
-    <div th:replace="~{main/mainPage:: nav}"></div>
     <div id="main">
         <h1 id="title" th:text="'제목 : '+${bulletinOne.title}"></h1>
         <p th:text="'게시글 번호 : '+${bulletinOne.no}"></p>

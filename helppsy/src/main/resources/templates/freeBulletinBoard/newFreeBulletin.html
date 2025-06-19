@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="https://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/main/head.css}">
+<script th:src="@{/main/fragment.js}"></script>
 <script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
 
 <head>
@@ -103,7 +105,7 @@
     <header>
         <h1>자유 게시판 작성</h1>
     </header>
-    <div th:replace="~{main/mainPage:: nav}"></div>
+    <div th:replace="~{main/mainPage:: header}"></div>
     <main>
         <form onsubmit="return false" id="bulletinForm" enctype="multipart/form-data" action="addFreeBulletin"
             method="post">

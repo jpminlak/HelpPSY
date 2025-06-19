@@ -12,10 +12,10 @@ public class RegistrationLikeDTO {
     private int liked; // 좋아요 현재 상태
 
     public RegistrationLikeDTO(Integer id, String type, String alias, int liked){
-            this.id=id;
-            this.type=type;
-            this.alias=alias;
-            this.liked=liked;
+        this.id=id;
+        this.type=type;
+        this.alias=alias;
+        this.liked=liked;
 
     }
 }

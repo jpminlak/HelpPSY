@@ -4,74 +4,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="main/fragmentStyle.css">
-    <link rel="stylesheet" href="main/main.css">
-    <script src="main/fragment.js"></script>
+    <link rel="stylesheet" th:href="@{/main/head.css}">
+    <script th:src="@{/main/fragment.js}"></script>
     <title>차량 사고 메인 화면</title>
 </head>
 
 <body>
-    <div id="header" th:fragment="header">
-        <h1 id="mainTitle"></h1>
-        <div id="memberBox">
-            <div th:if="${session.userAlias} == null">
-                <a href="signInMain"><input id="signIn" type="button" value="로그인" onclick=""></a>
-                <a href="signUpMain"><input id="signUp" type="button" value="회원가입" onclick=""></a>
-            </div>
-            <div th:if="${session.userAlias} != null">
-                <label th:text="${session.userAlias}+'님 환영합니다.'"></label>
-                <a th:href="'/profile?alias='+ ${session.userAlias}"><input id="profile" type="button" value="정보"
-                        onclick=""></a>
-                <a><input type="button" value="로그아웃" onclick="logout()"></a>
-            </div>
-        </div>
-    </div>
-    <div id="nav" th:fragment="nav">
-        <hr>
-        <div id="navMenus">
-            <a id="main" href="/main">메인 화면</a>
-            <a id="free" href="/mainFreeBulletin">자유 게시판</a>
-            <!--        <div id="freeDropDown">-->
-            <!--            <p>없음</p>-->
-            <!--            <p>없음</p>-->
-            <!--            <p>없음</p>-->
-            <!--        </div>-->
-            <a id="accident" href="/accidentmain">사고 게시판</a>
-            <!--        <div id="accidentDropDown">-->
-            <!--            <p>없음</p>-->
-            <!--            <p>없음</p>-->
-            <!--            <p>없음</p>-->
-            <!--        </div>-->
-            <a id="inquiry" href="/inquiry">문의하기</a>
-                <!-- <div id="inquiryDropDown"> -->
-            <a href="/respondent">답변 (관리자)</a>
-                <!--            <p>없음</p>-->
-                <!--            <p>없음</p>-->
-                <!-- </div> -->
-            <a id="accidentLocation" href="/map">지도</a>
-            <!--        <div id="accidentLocationDropDown">-->
-            <!--            <p>없음</p>-->
-            <!--            <p>없음</p>-->
-            <!--            <p>없음</p>-->
-            <!--        </div>-->
-        </div>
-        <hr>
-    </div>
-    <div id="recommend">
-        <h2>핫한 게시물</h2>
-        <div id="hotBulletin">
-
-        </div>
-        <h2>인기 게시물</h2>
-        <div id="popularBulletin">
-            <div id="popularMenu">
-                <a href="">사고 게시판</a>
-                <a href="">자유 게시판</a>
+    <div class="wrapper">
+        <div class="header-container" th:fragment="header">
+            <div class="logo-nav-container">
+                <div class="logo-container">
+                    <img id="like" th:src="@{/LikeImg/차량사고 커뮤니티 로고.png}" width="150" alt="로고">
+                    <h2><b>Help PSY</b></h2>
+                </div>
+                <div class="nav-links">
+                    <a href="/main">메인 화면</a>
+                    <a href="/mainFreeBulletin">자유게시판</a>
+                    <a href="/accidentmain">사고게시판</a>
+                    <a href="/inquiry">문의하기</a>
+                    <a href="/respondent">답변 (관리자)</a>
+                    <a href="/map">지도</a>
+                </div>
+                <div class="login-section">
+                    <div id="memberBox">
+                        <div th:if="${session.userAlias == null}">
+                            <a href="/signInMain"><input type="button" value="로그인"></a>
+                            <a href="/signUpMain"><input type="button" value="회원가입"></a>
+                        </div>
+                        <div th:if="${session.userAlias != null}">
+                            <label th:text="${session.userAlias} + '님 환영합니다.'"></label>
+                            <a th:href="@{'/profile?alias=' + ${session.userAlias}}"><input type="button"
+                                    value="정보"></a>
+                            <input type="button" value="로그아웃" onclick="logout()">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div id="adv">
-
+        <main>
+            <div class="welcome-message">
+                Help PSY 커뮤니티에 오신 것을 환영합니다.
+            </div>
+            <div class="best-sections">
+                <div class="best-section">
+                    <h3 style="text-align: center;">자유게시판 추천글</h3>
+                    <!-- 좋아요 개수 상위 3개 -->
+                    <ul th:each="top3ViewLikes : ${top3ViewLikes}">
+                        <span th:text="${top3ViewLikes.no}" class="freeNumber" style="display: none;"></span>
+                        <li><a th:text="${top3ViewLikes.title}"
+                                th:href="@{specificBulletin(no=${top3ViewLikes.no}, userName=${session.userAlias})}"></a>
+                        </li>
+                    </ul>
+                    <!-- 조회수 상위 3개 -->
+                    <ul th:each="top3ViewFree : ${top3ViewFree}">
+                        <!-- <li><a th:if="${top3ViewFree.no} != $('.freeNumber').html()" -->
+                        <li><a th:text="${top3ViewFree.title}"
+                                th:href="@{specificBulletin(no=${top3ViewFree.no}, userName=${session.userAlias})}"></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="best-section">
+                    <h3 style="text-align: center;">사고게시판 추천글</h3>
+                    <ul th:each="top3ViewAccident : ${top3ViewAccident}">
+                        <li><a th:text="${top3ViewAccident.title}"
+                                th:href="@{'/accidentview/' + ${top3ViewAccident.id}}"></a>
+                        </li> <!--session은 개별 게시물에서 처리?-->
+                    </ul>
+                </div>
+            </div>
+        </main>
     </div>
     <div id="footer" th:fragment="footer">
         <hr>
@@ -80,13 +81,8 @@
 </body>
 
 </html>
-
 <script>
-    window.onload = () => {
-        document.getElementById('mainTitle').innerHTML = '차량 사고 커뮤니티'
-    }
-
     function logout() {
-        location.href = 'logout'
+        location.href = '/logout'
     }
 </script>

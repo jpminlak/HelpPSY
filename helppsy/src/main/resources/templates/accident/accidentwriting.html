@@ -4,15 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <title>사고 등록 폼</title>
+    <link rel="stylesheet" th:href="@{/main/head.css}">
+    <script th:src="@{/main/fragment.js}"></script>
     <style>
         /* 폼 전체 영역 가운데 정렬 및 넓이 지정 */
-        body {
+        /*body {
             font-family: 'Malgun Gothic', Arial, sans-serif;
             padding: 30px;
             display: flex;
             justify-content: center;
             background-image: url("https://images.unsplash.com/photo-1554034483-04fda0d3507b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDEyfHx3YWxscGFwZXJ8ZW58MHx8fHwxNjg2MDM2Mzc2fDA&ixlib=rb-4.0.3&q=80&w=2000");
-        }
+        }*/
 
         table {
             border-collapse: collapse;
@@ -102,16 +104,18 @@
         }
     </style>
     <!--minwoo-->
-    <!-- <script type="text/javascript"
-        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=0b286c3340a1de99c4f466bb9bd54867&libraries=services,clusterer,drawing"></script> -->
-    
-    <!--junghwan-->
     <script type="text/javascript"
-        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=ab86c1b266a48a762dbb0aa0a59d8967&libraries=services,clusterer,drawing"></script>
+        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=0b286c3340a1de99c4f466bb9bd54867&libraries=services,clusterer,drawing"></script>
+
+    <!--junghwan-->
+    <!-- <script type="text/javascript"
+    src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=ab86c1b266a48a762dbb0aa0a59d8967&libraries=services,clusterer,drawing"></script> -->
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
+    <div th:replace="~{main/mainPage:: header}"></div>
     <form id="postForm" action="/registration" method="post" enctype="multipart/form-data">
         <table>
             <!-- 글 제목 -->
@@ -194,6 +198,7 @@
             </tr>
         </table>
     </form>
+    <div th:replace="~{main/mainPage:: footer}"></div>
 </body>
 
 </html>

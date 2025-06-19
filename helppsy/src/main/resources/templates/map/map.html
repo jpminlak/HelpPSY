@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="main/fragmentStyle.css">
-    <script src="main/fragment.js"></script>
+    <link rel="stylesheet" th:href="@{/main/head.css}">
+    <script th:src="@{/main/fragment.js}"></script>
     <title>지도</title>
 </head>
 <!--마커 스타일 작게. 검색마커의 팝업 크기와 어긋나게 된다.-->
@@ -20,7 +20,6 @@
 <body>
     <!--<div th:insert="~{/start:: menu}"></div> &lt;!&ndash; th:insert / th:replace 도 가능 &ndash;&gt;-->
     <div th:replace="~{main/mainPage:: header}"></div>
-    <div th:replace="~{main/mainPage:: nav}"></div>
     <div style="display: flex;">
         <div style="float: left; width: 70%;">
             <div id="vmap" style="width: 100%; height: 100%; margin-left: 20px;"></div>
@@ -129,25 +128,7 @@
         , homePosition: vw.ol3.CameraPosition
         , initPosition: vw.ol3.CameraPosition
     };
-    var vmap = new vw.ol3.Map("vmap", vw.ol3.MapOptions);   // 기본 지도 생성 
-
-    // 3D 지도 옵션?
-    // let mapOptions = new vw.MapOptions(
-    //     vw.BasemapType.GRAPHIC, //2D 전용
-    //     "", //layersArr 미사용 옵션
-    //     vw.DensityType.FULL, //controlsDensity 2D 전용
-    //     vw.DensityType.BASIC, //interactionDensity 2D 전용
-    //     false, //controlAutoArrange 2D 전용
-    //     new vw.CameraPosition(
-    //         new vw.CoordZ(126.92775802528264, 37.52501881993892, 12416), //초기 위치 설정(경도, 위도, 높이 값)   
-    //         new vw.Direction(0, -90, 0)
-    //     ), //home
-    //     new vw.CameraPosition(
-    //         new vw.CoordZ(126.92775802528264, 37.52501881993892, 12416), //초기 위치 설정(경도, 위도, 높이 값)   
-    //         new vw.Direction(0, -90, 0)
-    //     )// initPosition
-    // );
-    // let map = new vw.Map("vmap", mapOptions);
+    var vmap = new vw.ol3.Map("vmap", vw.ol3.MapOptions);   // 기본 지도 생성
 
     // PanZoomBar
     var zoom = new vw.ol3.control.Zoom(vmap);
@@ -320,11 +301,14 @@
                     font: '12px Calibri,sans-serif',
                     fill: { color: '#000' },
                     stroke: { color: '#fff', width: 2 },
-                    text: '등록마커위치'
+                    //text: '등록마커위치'
+                    //마커에 text로 총 개수를 직접 쓰면 지도가 느려지고 개수가 나타나지도 않음.
+                    //text: textLayer.getMarkerCount()  // 실행 안되는 변수
                 },
                 attr: { "num": loadNum, "longitude": loadLonTemp, "latitude": loadLatTemp }
             };
             markerLayer.addMarker(vw.ol3.markerOption); // 마커 옵션을 마커에 적용
+            //$('#gw').html(markerLayer.values_.source.revision_);  // 마커 총 개수
         }
     }
 

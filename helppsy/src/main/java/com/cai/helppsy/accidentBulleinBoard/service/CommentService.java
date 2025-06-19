@@ -43,4 +43,11 @@ public class CommentService {
         commentrepository.deleteById(id);
         // Repository에 있는 메서드라 Repository에 따로 작성하지 않아도 됩니다
     }
+
+    // 댓글 수정하기
+    public CommentEntity UpdateComment(String commentEdit, Integer commentEditId, String commentEditAlias){
+        CommentEntity entity = commentrepository.findByIdAndAlias(commentEditId,commentEditAlias);
+        entity.setComment(commentEdit);
+        return commentrepository.save(entity);
+    }
 }

@@ -1,5 +1,9 @@
 package com.cai.helppsy.memberManager;
 
+import com.cai.helppsy.accidentBulleinBoard.entity.RegistrationEntity;
+import com.cai.helppsy.accidentBulleinBoard.service.RegistrationService;
+import com.cai.helppsy.freeBulletinBoard.entity.FreeBulletin;
+import com.cai.helppsy.freeBulletinBoard.repository.FreeBulletinRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -7,11 +11,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Controller
 public class memberController {
+    private final RegistrationService registrationService;
     private final signupRepository signupRepository;
     private final signupService signupservice;
+    private final FreeBulletinRepository freeBulletinRepository;
+    private final MemberService memberService;
 
     @GetMapping("signUpMain")
     public String sinupMain() {
@@ -52,6 +61,7 @@ public class memberController {
                 session.setAttribute("dNum", user.getDNum());   // 세션에 설계사 번호 저장
                 session.setAttribute("userPass", user.getUserPass()); // 세션에 비밀번호 저장
                 session.setAttribute("Intro", user.getIntro());  //세션에 소개글 저장
+
             }
             model.addAttribute("user", session);
         }
@@ -75,22 +85,21 @@ public class memberController {
         return "redirect:/main";
     }
 
-
     @GetMapping("/profile")
 //    public String profile(){
     public String profile(@RequestParam(value = "alias", required = false) String alias, Model model) {
         SignupEntity signupEntity = signupRepository.findByAlias(alias);
-//        if(sinupEntity != null) {
-//            System.out.println(sinupEntity.getId());
-//            System.out.println(sinupEntity.getUserId());
-//            System.out.println(sinupEntity.getAlias());
-//        }
-//        System.out.println(sinupEntity.getDivision());
         System.out.println("-----------1------------ -");
         System.out.println(signupEntity);
         System.out.println(alias);
         System.out.println("------------2----------- -");
         model.addAttribute("member", signupEntity);
+        // 사고게시판 글 리스트 추가
+        List<RegistrationEntity> accidentPosts = memberService.getPostsByAlias(alias);
+        model.addAttribute("accidentPosts", accidentPosts);
+        // 자유게시판 글 리스트 추가
+        List<FreeBulletin> freeBulletins = freeBulletinRepository.findByWriter(alias);
+        model.addAttribute("freePosts", freeBulletins);
         return "memberManager/profile";
     }
 

@@ -6,7 +6,9 @@ import com.cai.helppsy.accidentBulleinBoard.service.CommentService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,5 +35,15 @@ public class CommentContorller {
             commentservice.deleteComment(id);
         }
         return "redirect:/accidentview/" + registration_entity_id;
+    }
+
+    // 댓글 수정하기
+    @PostMapping("/commentEdit")
+    public String commentEdit(@RequestParam("commentEdit") String commentEdit,
+                                @RequestParam("commentEditId") Integer commentEditId,
+                              @RequestParam("commentEditAlias") String commentEditAlias,
+                              @RequestParam("registrationId") Integer registrationId){
+        CommentEntity UpdateComment = commentservice.UpdateComment(commentEdit,commentEditId,commentEditAlias);
+        return "redirect:/accidentview/" + registrationId;
     }
 }

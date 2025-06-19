@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -129,15 +129,15 @@
             <td>별명</td>
             <td><input id="alias" type="text" name="alias" placeholder="별명을 입력하세요"></td>
         </tr>
-        <tr class="idpw">
-            <td>
-                <input class="division" name="division" type="checkbox" onclick="checkOnlyOne(this)" value="설계사">설계사
-                <input class="division" name="division" type="checkbox" onclick="checkOnlyOne(this)" checked value="일반인">일반인
-            </td>
-            <td>
-                <input id="division" type="text" name="dNum" placeholder="고유번호 14자리를 입력하세요" maxlength="14" style="display: none;">
-            </td>
-        </tr>
+<!--        <tr class="idpw">-->
+<!--            <td>-->
+<!--                <input class="division" name="division" type="checkbox" onclick="checkOnlyOne(this)" value="설계사">설계사-->
+<!--                <input class="division" name="division" type="checkbox" onclick="checkOnlyOne(this)" checked value="일반인">일반인-->
+<!--            </td>-->
+<!--            <td>-->
+<!--                <input id="division" type="text" name="dNum" placeholder="고유번호 14자리를 입력하세요" maxlength="14" style="display: none;">-->
+<!--            </td>-->
+<!--        </tr>-->
         <tr>
             <td colspan="2"><input id="submitBtn" type="button" value="가입하기" onclick="submitToServer()"></td>
         </tr>
@@ -187,11 +187,8 @@
         let alias = document.getElementById('alias').value;
         let form = document.getElementById('form');
 
-        const DV = document.querySelector('input[name="division"]:checked').value === "설계사";
-        let division = document.getElementById('division').value;
-
-
-
+        //const DV = document.querySelector('input[name="division"]:checked').value === "설계사";
+        //let division = document.getElementById('division').value;
 
         if (id === '') {
             alert('아이디를 입력하세요');
@@ -218,28 +215,22 @@
             return;
         }
 
-        if (DV) {
+        /*if (DV) {
         if (division.length !== 14) {
             alert('설계사 고유번호는 14자리여야 합니다.');
             return;
             }
         }
-
-        form.submit();
+        form.submit();*/
     }
 
-    function checkOnlyOne(clickcheckbox) {
+    /*function checkOnlyOne(clickcheckbox) {
         const checkboxes = document.getElementsByName("division");
-
         checkboxes.forEach((checkbox) => {
             checkbox.checked = false;
         });
-
         clickcheckbox.checked = true;
-
-
         let DV = document.getElementsByClassName('division');
-
         for(let i = 0 ; i<DV.length ; i++){
             if(DV[i].checked == true){
                 DV[i].setAttribute('name',"division");
@@ -249,7 +240,6 @@
             let dt = document.getElementById('division')
             dt.placeholder = "설계사 고유번호 14자리를 입력하세요";
             dt.style.display = "table-row";
-
             const division = document.getElementById('division').value;
             if (division.length !== 14) {
                 return false;
@@ -259,7 +249,6 @@
         else if(checkboxes[1].checked){
             let dt = document.getElementById('division')
             dt.style.display = "none";
-
         }
-    }
+    }*/
 </script>

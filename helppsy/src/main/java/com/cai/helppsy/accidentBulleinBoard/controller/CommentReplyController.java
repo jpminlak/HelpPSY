@@ -81,4 +81,20 @@ public class CommentReplyController {
             commentReplyService.deleteCommentReply(id);
         }
     }
+
+    // 대댓글 수정하기
+    @PostMapping("/reply/update")
+    @ResponseBody
+    public ReplyDTO replyUpdate(
+            @RequestParam("commentReplyId") Integer commentReplyId,
+            @RequestParam("commentReplyAlias") String commentReplyAlias,
+            @RequestParam("commentReply") String commentReply){
+        // 1. Repl에 대댓글 객체 저장후
+        CommentReplyEntity Repl = commentReplyService.replyUpdate(commentReplyId,commentReplyAlias,commentReply);
+
+        ReplyDTO dto =
+                new ReplyDTO(Repl.getId(),Repl.getComment(),Repl.getAlias(), Repl.getCommentEntity().getId());
+
+        return dto;  // Ajax 성공 시 호출될 응답
+    }
 }
