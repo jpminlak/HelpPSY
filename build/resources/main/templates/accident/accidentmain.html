@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="kor">
+
+<head>
+    <meta charset="UTF-8">
+    <title>사고 게시판</title>
+    <!--    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">-->
+    <link rel="stylesheet" type="text/css" href="main/fragmentStyle.css">
+    <script src="main/fragment.js"></script>
+    <style>
+        /* 제목 스타일 */
+        h3 {
+            text-align: center;
+            font-size: 24px;
+            color: #444;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+        }
+
+        /* 네비게이션 바 스타일 */
+        nav {
+            background-color: #f8f8f8;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: left;
+            align-items: center;
+        }
+
+        nav li {
+            margin: 0 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* 테이블 스타일 */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        th:nth-child(1),
+        td:nth-child(1) {
+            width: 80px;
+        }
+
+        th:nth-child(3),
+        td:nth-child(3) {
+            width: 100px;
+        }
+    </style>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<body>
+    <div th:replace="~{main/mainPage:: header}"></div>
+    <div th:replace="~{main/mainPage:: nav}"></div>
+    <nav>
+        <ul>
+            <li><a th:href="@{/main}">메인 화면</a></li>
+            <li><a th:href="@{/accidenttype}">사고유형</a></li>
+            <li th:if="${session.userAlias}!=null">><a th:href="@{/accidentwriting}">글쓰기</a></li>
+        </ul>
+    </nav>
+
+
+    <table>
+        <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>조회수</th>
+        </tr>
+        <tr th:each="list : ${writegetlist}">
+            <!--        <tr th:each="list : ${perPageList}"></tr>-->
+            <td th:text="${list.id}" class="ListId"></td>
+            <td>
+                <a th:href="@{'/accidentview/' + ${list.id}}" th:text="${list.title}" th:attr="data-post-id=${list.id}"
+                    class="post-title"></a>
+            </td>
+            <td><a th:href="@{'/profile?alias=' + ${list.alias}}" th:text="${list.alias}"></a></td>
+            <td th:text="${#temporals.format(list.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+            <td class="Views-list" th:attr="id='views-' + ${list.id}" th:text="${list.postViews}"></td>
+        </tr>
+    </table>
+
+    <!-- 페이징 버튼 -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link">Previous</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+
+</html>
+<script>
+    // 문서 시작시
+
+    $(document).ready(function () {
+        document.getElementById('mainTitle').innerHTML = '사고 게시판'
+
+    });
+
+
+    // 게시글 조회수 (게시글리스트 제목 클릭시 조회수 측정)
+    $(document).on('click', '.post-title', function () {
+        const postId = $(this).data('post-id');
+
+        $.ajax({
+            url: '/Accident/Views',
+            type: 'POST',
+            data: { postId: postId },
+            success: function (updatedViews) {
+                // 조회수 셀 업데이트
+                $(`#views-${postId}`).text(updatedViews);
+            },
+            error: function () {
+                alert('조회수 증가에 실패했습니다.');
+            }
+        });
+    });
+
+</script>

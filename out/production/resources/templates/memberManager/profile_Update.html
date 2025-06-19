@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>프로필 수정</title>
+    <style>
+        * {
+            user-select: none;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .form-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .form-buttons input[type="submit"],
+        .form-buttons input[type="button"] {
+            padding: 10px 20px;
+            font-size: 14px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        .form-buttons input[type="button"] {
+            background-color: #777;
+        }
+
+        .form-buttons input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .form-buttons input[type="button"]:hover {
+            background-color: #5f5f5f;
+        }
+    </style>
+</head>
+<body>
+
+<div class="profile-container">
+    <h1>프로필 수정</h1>
+
+    <form action="/update" method="post">
+        <label>
+            아이디:
+            <input type="text" name="userId" th:value="${user.userId}" readonly>
+        </label>
+
+        <label>
+            새 비밀번호:
+            <input type="password" name="userPass" th:value="${user.userPass}">
+        </label>
+
+        <label>
+            별명:
+            <input type="text" name="alias" th:value="${user.alias}">
+        </label>
+
+        <label>
+            구분:
+<!--            <input class="division" name="division" type="checkbox" onclick="checkOnlyOne(this)" value="설계사" readonly>설계사-->
+<!--            <input class="division" name="division" type="checkbox" onclick="checkOnlyOne(this)" value="일반인" readonly>일반인-->
+            <input type="text" name="division" th:value="${user.division}" readonly>
+        </label>
+        <label>
+            고유번호:
+            <input type="text" name="dNum" th:value="${user.dNum}" readonly>
+        </label>
+
+        <label>
+            소개글:
+            <textarea name="intro" rows="5" cols="50" th:text="${user.intro}"></textarea>
+        </label>
+
+        <div class="form-buttons">
+            <a href="main"><input type="button" value="홈"></a>
+            <input type="submit" value="수정하기">
+        </div>
+    </form>
+</div>
+</body>
+</html>
+
+<script>
+    function checkOnlyOne(clickcheckbox) {
+        const checkboxes = document.getElementsByName("division");
+
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = false;
+        });
+
+        clickcheckbox.checked = true;
+
+
+        let DV = document.getElementsByClassName('division')
+
+        for(let i = 0 ; i<DV.length ; i++){
+            if(DV[i].checked == true){
+                DV[i].setAttribute('name',"division");
+            }
+        }
+    }
+</script>
