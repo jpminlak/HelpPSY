@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="main/fragmentStyle.css">
+    <script src="main/fragment.js"></script>
+    <script src="main/jquery.js"></script>
+    <title>자유 게시판</title>
+</head>
+<style>
+    #main {
+        border: 1px solid;
+        border-radius: 10px;
+        width: 900px;
+        margin: 0px auto;
+    }
+
+    /* id가 main인 엘리먼트 내부 요소 스타일 */
+
+    #title {
+        /*      border: 1px solid; */
+        width: 800px;
+        margin: 0px auto;
+    }
+
+    #mainImg {
+        /*       border: 1px solid; */
+        width: 800px;
+        text-align: center;
+    }
+
+    #mainContent {
+        /*        border: 1px solid; */
+        width: 800px;
+        margin: 0px auto;
+    }
+
+    /* 댓글 */
+    #addCommentBox {
+        border: 1px solid;
+        border-radius: 10px;
+        width: 800px;
+        height: 100px;
+        margin: 0px auto;
+        overflow-y: auto;
+    }
+
+    .comments {
+        margin: 0px auto;
+        border: 1px solid;
+        border-radius: 10px;
+        width: 800px;
+    }
+
+    #commentContent {
+        margin-left: 10px;
+        margin-top: 10px;
+        width: 600px;
+        height: 75px;
+        font-size: 18px;
+    }
+
+    #addCommentBtn {
+        position: absolute;
+        margin-left: 5px;
+        margin-top: 10px;
+        ;
+        width: 170px;
+        height: 80px;
+        font-size: 20px;
+    }
+
+    /* 대댓글 */
+
+    .addCommenInCommenttBox {
+        border: 1px solid;
+        border-radius: 10px;
+        width: 700px;
+        height: 50px;
+        margin: 0px auto;
+        overflow-y: auto;
+    }
+
+    .commentsInComment {
+        margin: 0px auto;
+        border: 1px solid;
+    }
+
+    .commentContentInComment {
+        width: 560px;
+        height: 33px;
+        margin-top: 5px;
+        margin-left: 5px;
+        font-size: 15px;
+    }
+
+    .addCommentInCommentBtn {
+        position: absolute;
+        width: 120px;
+        height: 40px;
+        margin-top: 5px;
+        margin-left: 5px;
+    }
+
+    .showCommentInComment {
+        display: block;
+    }
+
+    .hideCommentInComment {
+        display: none;
+    }
+
+    .commentsInComment {
+        margin-left: 30px;
+        border: 1px solid;
+        border-radius: 10px;
+    }
+
+    #likesDiv {
+        margin-left: 30px;
+    }
+</style>
+
+<body>
+    <div th:replace="~{main/mainPage:: header}"></div>
+    <div th:replace="~{main/mainPage:: nav}"></div>
+    <div id="main">
+        <h1 id="title" th:text="'제목 : '+${bulletinOne.title}"></h1>
+        <p th:text="'게시글 번호 : '+${bulletinOne.no}"></p>
+        <p th:text="'조회수 : '+${bulletinOne.views}"></p>
+        <div id="bulletinLikesDiv">
+            <img id="bulletinLikesImg" src="" th:onclick="'bulletinClickLike('+${bulletinOne.no}+')'"
+                width="50">
+            <p id="bulletinLikes" th:text="${bulletinOne.likes}"></p>
+            <input id="isPressedBulletinLike" th:value="${isPressedBulletinLike}" type="hidden">
+        </div>
+        <p th:text="'작성자 : '+${bulletinOne.writer}"></p>
+        <a th:if="${bulletinOne.writer == session.userAlias}" th:href="'deleteBulletin?no='+${bulletinOne.no}"><input type="button" value="삭제"></a>
+        <p th:text="'게시글 등록일자 : '+${#temporals.format(bulletinOne.createDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
+        <blockquote id="content"></blockquote>
+        <input id="contentBeforeProcessing" type="hidden" th:value="${bulletinOne.content}">
+        <form id="commentForm" action="freeBulletin/addComment" method="post">
+            <div id="addCommentBox">
+                <div id="addComment"></div>
+                <textarea id="commentContent" name="content"></textarea>
+                <input id="addCommentBtn" type="button" value="올리기" th:onclick="'addComment('+${bulletinOne.no}+')'">
+                <input id="commentWriter" type="hidden" th:value="${session.userAlias}" name="writer">
+                <input id="commentType" type="hidden" value="free" name="type">
+            </div>
+        </form>
+        <div th:id="'comment'+${commentOne.no}" class="comments" th:each="commentOne : ${commentList}">
+            <p th:text="'작성자 : '+${commentOne.writer}"></p>
+            <a th:if="${commentOne.writer == session.userAlias}" th:href="'deleteComment?no='+${commentOne.no}
+            +'&bulletinNo='+${bulletinOne.no}+'&userName='+${session.userAlias}">
+                <input type="button" value="삭제"></a>
+            <div class="commentLikesDiv">
+                <img th:id="'commentLikesImg'+${commentOne.no}" src="" th:onclick="'commentClickLike('+${commentOne.no}+')'"
+                     width="50">
+                <p th:id="'commentLikes'+${commentOne.no}" th:text="${commentOne.likes}"></p>
+                <input th:value="${commentOne.isPressedCommentLike}" type="hidden">
+                <input th:value="${commentOne.no}" type="hidden">
+            </div>
+            <p th:text="'내용 : '+${commentOne.content}"></p>
+            <p th:text="'작성일 : '+${#temporals.format(commentOne.createDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
+
+            <form th:id="commentInCommentForm+${commentOne.no}" action="freeBulletin/addCommentInComment" method="post">
+                <div class="addCommenInCommenttBox">
+                    <textarea th:id="'cicComment'+${commentOne.no}" class="commentContentInComment"
+                        name="content"></textarea>
+                    <input class="addCommentInCommentBtn" type="button" value="올리기"
+                        th:onclick="'addCommentInComment('+${commentOne.no}+')'">
+                    <input th:id="'cicWriter'+${commentOne.no}" type="hidden" th:value="${session.userAlias}"
+                        name="writer">
+                    <input th:id="'cicType'+${commentOne.no}" type="hidden" value="free" name="type">
+                </div>
+            </form>
+            <input th:id="'showCommentInComment'+${commentOne.no}" class="showCommentInComment" value="답글 보기"
+                type="button" th:onclick="'showCommentInComment('+${commentOne.no}+')'">
+            <input th:id="'hideCommentInComment'+${commentOne.no}" class="hideCommentInComment" value="답글 숨기기"
+                type="button" th:onclick="'hideCommentInComment('+${commentOne.no}+')'">
+        </div>
+    </div>
+    <div th:replace="~{main/mainPage:: footer}"></div>
+</body>
+
+</html>
+<script>
+    let commentInCommentList = [];
+    let bulletinLikeFlag;
+    let commentLikeFlag = new Map();
+    let replyFlag = new Map();
+
+    window.onload = () => {
+        document.getElementById('mainTitle').innerHTML = '자유 게시판'
+
+        let isPressedBulletinLike = Number(document.getElementById('isPressedBulletinLike').value);
+        let commentLikesDivs = document.getElementsByClassName('commentLikesDiv');
+
+        for(let i = 0; i < commentLikesDivs.length; i++){
+            let children = commentLikesDivs[i].children;
+
+            if(children[2].value == '1'){
+                children[0].src = '/LikeImg/filledHeart.png';
+                commentLikeFlag.set(Number(children[3].value), true);
+            }else{
+                children[0].src = '/LikeImg/unFilledHeart.png';
+                 commentLikeFlag.set(Number(children[3].value), false);
+            }
+
+        }
+
+        if(isPressedBulletinLike == '1'){
+            document.getElementById('bulletinLikesImg').src = '/LikeImg/filledHeart.png';
+            bulletinLikeFlag = true;
+        }else{
+            document.getElementById('bulletinLikesImg').src = '/LikeImg/unFilledHeart.png';
+            bulletinLikeFlag = false;
+        }
+
+        // 아래는 인코딩된 게시글 내용을 디코딩하여 보여주시 위한 코드
+        let contentBeforeProcessing = document.getElementById('contentBeforeProcessing').value;
+        let content = document.getElementById('content');
+        let contentAfterProcessing = decodeURIComponent(contentBeforeProcessing);
+        content.innerHTML = contentAfterProcessing;
+
+    }
+
+    function bulletinClickLike(no){
+
+        if(bulletinLikeFlag){
+            bulletinLikeFlag = false;
+        }else{
+            bulletinLikeFlag = true;
+        }
+
+        $.ajax({
+            type: 'post',
+            url: '/bulletinLikesUpAndDown',
+            async: true,
+            dataType: 'text',
+            data: {
+                type: 'freeBulletin',
+                userName: document.getElementById('commentWriter').value,
+                fkNo: no,
+                flag: bulletinLikeFlag
+            },
+            success: function (result) {
+                console.log('성공 결과 : ' + result);
+
+                let bulletinLikes = document.getElementById('bulletinLikes');
+                bulletinLikes.innerHTML = result;
+
+                if(bulletinLikeFlag){
+                    document.getElementById('bulletinLikesImg').src = '/LikeImg/filledHeart.png';
+                }else{
+                    document.getElementById('bulletinLikesImg').src = '/LikeImg/unFilledHeart.png';
+                }
+            },
+            error: function (error) {
+                console.log('에러 : ' + error);
+            }
+        })
+    }
+    function commentClickLike(no){
+
+        if(commentLikeFlag.get(no)){
+            commentLikeFlag.set(no, false);
+        }else{
+           commentLikeFlag.set(no, true);
+        }
+
+        $.ajax({
+            type: 'post',
+            url: '/commentLikesUpAndDown',
+            async: true,
+            dataType: 'text',
+            data: {
+                type: 'freeComment',
+                userName: document.getElementById('commentWriter').value,
+                fkNo: no,
+                flag: commentLikeFlag.get(no)
+            },
+            success: function (result) {
+                console.log('성공 결과 : ' + result);
+
+                let commentLikes = document.getElementById('commentLikes'+no);
+                commentLikes.innerHTML = result;
+                if(commentLikeFlag.get(no)){
+                    document.getElementById('commentLikesImg'+no).src = '/LikeImg/filledHeart.png';
+                }else{
+                    document.getElementById('commentLikesImg'+no).src = '/LikeImg/unFilledHeart.png';
+                }
+            },
+            error: function (error) {
+                console.log('에러 : ' + error);
+            }
+        })
+    }
+
+    function addComment(no) {
+        let content = document.getElementById('commentContent').value;
+
+        if (content == '') {
+            alert('내용을 입력해주세요.');
+            return;
+        }
+
+        $.ajax({
+            type: 'post',
+            url: '/freeBulletin/addComment',
+            async: false,
+            dataType: 'text',
+            data: {
+                fkNo: no,
+                writer: document.getElementById('commentWriter').value,
+                content: document.getElementById('commentContent').value,
+                type: document.getElementById('commentType').value,
+                userName: document.getElementById('commentWriter').value
+            },
+            success: function (result) {
+                console.log('성공 결과 : ' + result);
+                document.getElementById('commentContent').value = '';
+                location.href = '/specificBulletin?no='+no+'&userName'+document.getElementById('commentWriter').value;
+            },
+            error: function (error) {
+                console.log('에러 : ' + error);
+            }
+        })
+    }
+    function addCommentInComment(no) {
+        let content = document.getElementById('cicComment' + no).value;
+
+        if (content == '') {
+            alert('내용을 입력해주세요.');
+            return;
+        }
+
+        $.ajax({
+            type: 'post',
+            url: '/freeBulletin/addCommentInComment',
+            async: true,
+            dataType: 'text',
+            data: {
+                fkNo: no,
+                writer: document.getElementById('cicWriter' + no).innerHTML,
+                content: document.getElementById('cicComment' + no).value,
+                type: document.getElementById('cicType' + no).value
+            },
+            success: function (result) {
+                console.log('성공 결과 : ' + result);
+                document.getElementById('cicComment' + no).value = '';
+                if (document.getElementById('showCommentInComment' + no).style.display == 'none') {
+                    deleteCommentInComment(no);
+                    showCommentInComment(no);
+                }
+            },
+            error: function (error) {
+                console.log('에러 : ' + error);
+            }
+        })
+    }
+
+    function showCommentInComment(no) {
+        let showingButton = document.getElementById('showCommentInComment' + no).style.display = 'none';
+        let hidingButton = document.getElementById('hideCommentInComment' + no).style.display = 'block';
+
+        $.ajax({
+            type: 'post',
+            url: '/showReply',
+            async: true,
+            dataType: 'json',
+            data: {
+                no: no,
+                userName: document.getElementById('commentWriter').value
+            },
+            success: function (result) {
+                commentInCommentList = result;
+                console.log('성공 결과 : ' + result);
+                insertReply(no);
+            },
+            error: function (error) {
+                console.log('에러 : ' + error);
+            }
+
+        })
+    }
+    function insertReply(no) {
+            for (let i = 0; i < commentInCommentList.length; i++) {
+            let comment = document.getElementById('comment' + no);
+
+            let div = document.createElement('div');
+            div.setAttribute('class', 'commentsInComment' + no);
+
+            let div2 = document.createElement('div');
+            div2.setAttribute('class', 'commentsInComment');
+
+            let writerElement = document.createElement('p');
+            writerElement.innerHTML = '작성자 : ' + commentInCommentList[i].writer;
+
+            let divForLikes = document.createElement('div');
+            divForLikes.setAttribute('class', 'replyLikesDiv');
+
+            let likeImg = document.createElement('img')
+            likeImg.setAttribute('id', 'replyLikesImg'+commentInCommentList[i].no);
+            likeImg.setAttribute('width','50')
+            if(commentInCommentList[i].isPressedReplyLike == 1){
+                likeImg.setAttribute('src', 'LikeImg/filledHeart.png');
+                replyFlag.set(commentInCommentList[i].no,true);
+            }else{
+                likeImg.setAttribute('src', 'LikeImg/unFilledHeart.png');
+                replyFlag.set(commentInCommentList[i].no,false);
+            }
+            likeImg.setAttribute('onclick', 'clickReplyLike('+commentInCommentList[i].no+')');
+
+            let likeCnt = document.createElement('p');
+            likeCnt.setAttribute('id','replyLikesCnt'+commentInCommentList[i].no)
+            likeCnt.innerHTML = commentInCommentList[i].likes;
+
+            let contentElement = document.createElement('p');
+            contentElement.innerHTML = '내용 : ' + commentInCommentList[i].content;
+
+            let createDateElement = document.createElement('p');
+            createDateElement.innerHTML = '작성일 : ' + commentInCommentList[i].createDate;
+
+            divForLikes.appendChild(likeImg);
+            divForLikes.appendChild(likeCnt);
+            div2.appendChild(writerElement);
+            div2.appendChild(divForLikes);
+            div2.appendChild(contentElement);
+            div2.appendChild(createDateElement);
+            div.appendChild(div2);
+            comment.appendChild(div);
+        }
+    }
+    function clickReplyLike(no){
+        if(replyFlag.get(no) == true){
+            replyFlag.set(no, false);
+        }else{
+            replyFlag.set(no, true);
+        }
+
+        $.ajax({
+            type: 'post',
+            url: '/ReplyLikesUp',
+            async: true,
+            dataType: 'json',
+            data: {
+                type: 'freeReply',
+                userName: document.getElementById('commentWriter').value,
+                fkNo: no,
+                flag: replyFlag.get(no)
+            },
+            success: function (result) {
+                console.log('성공 결과 : ' + result);
+                document.getElementById('replyLikesCnt'+no).innerHTML = result;
+
+                if(replyFlag.get(no) == true)
+                    document.getElementById('replyLikesImg'+no).src = 'LikeImg/filledHeart.png';
+                else
+                    document.getElementById('replyLikesImg'+no).src = 'LikeImg/unFilledHeart.png';
+            },
+            error: function (error) {
+                console.log('에러 : ' + error);
+            }
+        })
+    }
+    function hideCommentInComment(no) {
+        let showingButton = document.getElementById('showCommentInComment' + no).style.display = 'block';
+        let hidingButton = document.getElementById('hideCommentInComment' + no).style.display = 'none';
+
+        deleteCommentInComment(no);
+    }
+    function deleteCommentInComment(no) {
+        let commentsInComment = document.getElementsByClassName('commentsInComment' + no);
+
+        for (let i = commentsInComment.length - 1; i >= 0; i--) {
+            commentsInComment[i].remove();
+        }
+    }
+</script>

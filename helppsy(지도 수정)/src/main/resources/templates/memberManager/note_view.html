@@ -1,0 +1,19 @@
+<html lang="kor" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>쪽지 보기</title>
+</head>
+<body>
+    <h2 th:text="${note.title}"></h2>
+    <p><strong>보낸 사람:</strong> <span th:text="${note.senderId}"></span></p>
+    <p><strong>내용:</strong></p>
+    <p th:text="${note.content}" style="white-space: pre-line"></p>   <!-- white-space 코드로 들여쓰기 표현 가능 -->
+    <p><strong>보낸 시간:</strong> <span th:text="${#temporals.format(note.sentAt, 'yyyy-MM-dd HH:mm')}"></span></p>
+    <a th:href="@{'/note/reply/' + ${note.id}}">
+        <button>답장하기</button>
+    </a>
+    <a href="/main">
+        <button>홈으로</button>
+    </a>
+</body>
+</html>

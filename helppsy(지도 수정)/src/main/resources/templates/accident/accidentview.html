@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 상세보기</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--    <link rel="stylesheet" th:href="@{/style.css}">-->
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8f9fa;
+            margin: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .post-header h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .info-table th,
+        .info-table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        .images {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .images img {
+            max-width: 150px;
+            max-height: 150px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .comment-section {
+            margin-top: 30px;
+        }
+
+        .comment-form input[type="text"] {
+            width: 70%;
+            padding: 8px;
+        }
+
+        .comment-form input[type="submit"] {
+            padding: 8px 16px;
+            margin-left: 10px;
+        }
+
+        .comment {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comment strong {
+            color: #007bff;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+            display: inline-block;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<body>
+    <div class="container">
+        <div class="post-header">
+            <h2>게시글 상세보기</h2>
+
+            <!--게시글 좋아요버튼-->
+            <button class="like-btn">
+                <img id="like" src="/LikeImg/LikeFalse.jpg" alt="좋아요">
+                <input type="hidden" id="UserAlias" th:value="${session.userAlias}">
+                <div class="like-list"></div>
+            </button>
+
+            <!--게시글 수정-->
+            <form action="/aaa" method="post" th:if="${session.userAlias}!=null">
+                <input type="submit" value="게시글수정">
+                <input type="hidden" name="id" th:value="${view.id}" />
+                <input type="hidden" name="alias" th:value="${view.alias}" />
+            </form>
+        </div>
+
+        <!--게시글 삭제-->
+        <form action="/deleteAccident" method="post" th:if="${session.userAlias}!=null">
+            <input type="submit" value="게시글삭제">
+            <input type="hidden" name="id" th:value="${view.id}" />
+            <input type="hidden" name="alias" th:value="${view.alias}" />
+        </form>
+    </div>
+
+    <table class="info-table" id="table">
+        <tr>
+            <th>조회수</th>
+            <td th:text="${postviewsnum}"></td>
+        </tr>
+        <tr>
+            <th>글번호</th>
+            <td th:text="${view.id}"></td>
+        </tr>
+        <tr>
+            <th>작성자</th>
+            <td th:text="${view.alias}"></td>
+        </tr>
+        <tr>
+            <th>제목</th>
+            <td th:text="${view.title}"></td>
+        </tr>
+        <tr>
+            <th>사고 분류</th>
+            <td th:text="${view.accident}"></td>
+        </tr>
+        <tr>
+            <th>사고 지역</th>
+            <td th:text="${view.region}"></td>
+        </tr>
+        <tr>
+            <th>차량 등급</th>
+            <td th:text="${view.rating}"></td>
+        </tr>
+        <tr>
+            <th>차량 종류</th>
+            <td th:text="${view.type}"></td>
+        </tr>
+    </table>
+
+    <div class="images" th:each="filelist : ${filename}">
+        <img th:src="@{/files/accidentBulletin/{fileName}(fileName=${filelist.filename})}" alt="첨부 이미지" />
+    </div>
+
+    <div class="comment-section">
+        <h3>댓글 작성</h3>
+        <form class="comment-form" action="/comment" method="post">
+            <input type="text" name="comment" placeholder="댓글을 입력하세요">
+            <input type="hidden" name="alias" th:value="${session.userAlias}" />
+            <input type="hidden" name="registrationId" th:value="${view.id}" />
+            <input type="submit" value="등록">
+        </form>
+
+        <h3 style="margin-top: 20px;">댓글 목록</h3>
+        <div th:each="commentlist : ${commenet}" class="comment" id="commentlistId">
+            <strong th:text="${commentlist.alias}"></strong> :
+            <span th:text="${commentlist.comment}"></span>
+
+            <!-- 댓글 좋아요 -->
+            <button class="Comment-like-btn" th:attr="data-commentlikeid=${commentlist.id}">
+                <img class="comment-like-img" th:attr="data-commentlikeid=${commentlist.id}"
+                    src="/LikeImg/LikeFalse.jpg" alt="좋아요">
+                <input type="hidden" class="CommentUserAlias" th:value="${session.userAlias}">
+                <input type="hidden" id="commentId" name="commentId" th:value="${commentlist.id}" />
+                <!-- 총개수 영역-->
+                <div class="Commentlike-list" th:attr="data-commentlikeid=${commentlist.id}"></div>
+            </button>
+
+
+            <!--댓글 삭제하기-->
+            <form action="/commentdelete" method="post">
+                <input type="hidden" name="commentId" th:value="${commentlist.id}" />
+                <input type="hidden" name="userAlias" th:value="${commentlist.alias}" />
+                <input type="hidden" name="registrationId" th:value="${view.id}" />
+                <input type="submit" value="삭제">
+            </form>
+
+
+            <button class="commentBtn" type="button" th:attr="data-comment-id=${commentlist.id}">대댓글</button>
+
+            <!-- 대댓글 입력하기 -->
+            <div class="commentReply" style="display: none;" th:attr="data-comment-id=${commentlist.id}">
+                <form class="comment-reply-form" data-comment-id="[[${commentlist.id}]]">
+                    <input type="text" name="comment" placeholder="대댓글을 입력하세요">
+                    <input type="hidden" name="alias" th:value="${session.userAlias}" />
+                    <input type="hidden" name="commentId" th:value="${commentlist.id}" />
+                    <input type="submit" value="대댓글등록">
+                    <!-- 대댓글 목록을 보여줄 영역 -->
+                </form>
+                <div class="reply-list" th:attr="data-comment-id=${commentlist.id}"></div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <a th:href="@{/main}">← 메인 화면으로 돌아가기</a>
+    </div>
+</body>
+
+</html>
+<script>
+
+    // -------------------------- 새로고침시 좋아요 -----------------------------------------------
+    // 문서 로드 시 좋아요 이전 상태 유지 하기 (게시글,댓글,대댓글)
+    $(document).ready(function () { // 스코프 잘 확인하기
+
+        //-------------------------------(댓글 좋아요 상태유지)-------------------------------------
+        $('input[name="commentId"]').each(function () {  // name="commentId"를 가진 <input> 요소들을 모두 선택 반복작업 실행
+            const commentId = $(this).val();
+            //  this는 .each() 내부에서 현재 처리 중인 <input> 요소를
+            // .each() 순회중인 input 요소의 값(value) 을 변수 commentId에 저장
+            // 꼭 알아야 할것 !! 비동기는 .ajax에 순차적으로 요청을 보내나 서버 응답속도에 따라 반응은 달리함
+            // 다만 하나의  $.ajax()안에 순회하는 작업이 있다면  $.ajax()안의 순회는 순차적으로 이루어짐
+
+            const CommentUserAlias = document.getElementById("UserAlias").value; // 유저 별명
+            $.ajax({
+                url: '/Commentlike/revert',
+                type: 'POST',
+                data: {
+                    commentId: commentId,
+                    CommentUserAlias: CommentUserAlias
+                },
+                dataType: 'json',
+                success: function (res) {
+                    console.log('댓글 좋아요 새로고침 성공 ');
+                    // 좋아요 이미지 설정
+                    if (res.CommentlikedStatus === 1) {
+                        $(`img.comment-like-img[data-commentlikeid="${commentId}"]`).attr('src', '/LikeImg/LikeTrue.jpg');
+                    } else {
+                        $(`img.comment-like-img[data-commentlikeid="${commentId}"]`).attr('src', '/LikeImg/LikeFalse.jpg');
+                    }
+
+                    // 좋아요 개수 설정
+                    const LikeHtml = `
+                <div class="Commentlike-list" data-commentlikeid="${commentId}">
+                    <strong>${res.CommentlikeCount}</strong>
+                </div>
+            `;
+                    $(`.Commentlike-list[data-commentlikeid="${commentId}"]`).html(LikeHtml);
+
+                },
+                error: function () {
+                    console.log('댓글 좋아요 초기화 실패 (commentId: ' + commentId + ')');
+                }
+            });
+        });
+
+        // ---------------------------(게시글 좋아요 상태유지)-----------------------------------
+        const table = document.getElementById('table');
+        const registration_entity_id = table.rows[1].cells[1].childNodes[0].textContent;
+        const alias = document.getElementById("UserAlias").value;
+        $.ajax({
+            url: '/like/revert',
+            type: 'POST',
+            data: {
+                registration_entity_id: registration_entity_id,
+                alias: alias
+            },
+            dataType: 'json',
+            success: function (response) {
+                console.log(response.likeCount)
+                console.log(response.liked)
+                // 좋아요 갯수 생성
+                const LikeHtml = `
+                   <div class="like-list">
+                       <strong>${response.likeCount}</strong>
+                   </div>
+               `;
+                // 해당 댓글의 대댓글 목록 영역에 추가
+                $(".like-list").html(LikeHtml);
+                if (response.liked === 1) {
+                    $('#like').attr('src', '/LikeImg/LikeTrue.jpg');
+                } else {
+                    $('#like').attr('src', '/LikeImg/LikeFalse.jpg');
+                }
+
+            },
+            error: function () {
+                console.log("초기 좋아요 상태 불러오기 실패");
+
+            }
+        });
+    });
+
+
+    // ---------------------대댓글 좋아요----------------------
+    $(document).on('click', '.reply-like-btn', function (e) {
+        e.preventDefault(); // 새로고침 막기
+        console.log('대댓글 좋아요들어왔냐')
+
+        const replyId = $(this).data('reply-id'); // 대댓글 번호
+        const alias = document.getElementById("UserAlias").value; // 세션 별명
+        let liked = 1; // 게시글 좋아요 상태 게시글 별로 동작해야 하기에 지역변수 선언
+
+        $.ajax({
+            url: '/replylike',
+            type: 'POST',
+            data: {
+                type: "accident",
+                replyId: replyId,
+                replyalias: alias,
+                liked: liked
+            },
+            dataType: 'json',
+            success: function (response) {
+                console.log("좋아요 응답:", response);
+                console.log("이미지번호", response.ReplylikedStatus)
+                console.log("총좋아요", response.ReplylikeCount)
+                const LikeHtml = `
+                   <div class="reply-like-count">
+                       <strong>${response.ReplylikeCount}</strong>
+                   </div>
+               `;
+                // 해당 댓글의 대댓글 목록 영역에 추가
+                $(`.reply-like-count[data-reply-id="${replyId}"]`).html(LikeHtml);
+
+                // 예시: 좋아요 상태에 따라 이미지 변경
+                if (response.ReplylikedStatus === 1) {
+                    $(`.reply-like-img[data-reply-id="${replyId}"]`).attr('src', '/LikeImg/LikeTrue.jpg');
+                    liked = 0;
+                } else {
+                    $(`.reply-like-img[data-reply-id="${replyId}"]`).attr('src', '/LikeImg/LikeFalse.jpg');
+                    liked = 1;
+                }
+            },
+            error: function (error) {
+                console.log('좋아요 요청 실패:', error);
+            }
+        });
+    });
+
+    // -------------------------- 댓글 좋아요 -----------------------------------------------
+    // 댓글 좋아요 클릭시(클릭시 비동기 변환)
+    $(document).on('click', '.Comment-like-btn', function (e) {
+        e.preventDefault();
+        const commentId = $(this).data('commentlikeid');
+        const CommentUserAlias = document.getElementById("UserAlias").value;
+        let Commentliked = 1; // 댓글 좋아요 개별 동작을 위해 지역변수로 선언
+        $.ajax({
+            url: '/Commentlike',
+            type: 'POST',
+            data: {
+                type: "accidentComment",
+                commentId: commentId,
+                CommentUserAlias: CommentUserAlias,
+                Commentliked: Commentliked
+            },
+            dataType: 'json',
+            success: function (CommentLikeresponse) {
+                const LikeHtml = `
+                <div class="Commentlike-list" data-commentlikeid="${commentId}">
+                    <strong>${CommentLikeresponse.CommentlikeCount}</strong>
+                </div>
+            `;
+                // 좋아요 카운트 갱신
+                $(`.Commentlike-list[data-commentlikeid="${commentId}"]`).html(LikeHtml);
+
+                // 좋아요 이미지 변경 (댓글번호에 따라 작동)
+                if (CommentLikeresponse.CommentlikedStatus === 1) {
+                    $(`img.comment-like-img[data-commentlikeid="${commentId}"]`).attr('src', '/LikeImg/LikeTrue.jpg');
+                    Commentliked = 0;
+                } else {
+                    $(`img.comment-like-img[data-commentlikeid="${commentId}"]`).attr('src', '/LikeImg/LikeFalse.jpg');
+                    Commentliked = 1;
+                }
+            },
+            error: function (error) {
+                console.log('좋아요 요청 실패:', error);
+            }
+        });
+    });
+
+    // -------------------------- 게시글 좋아요 -----------------------------------------------
+
+    // 게시글 좋아요 클릭시
+    $(document).on('click', '.like-btn', function (e) {
+        e.preventDefault(); // 새로고침 막기
+        const table = document.getElementById('table');
+        const registration_entity_id = table.rows[1].cells[1].childNodes[0].textContent; // 게시글 번호
+        const alias = document.getElementById("UserAlias").value; // 세션로그인 별명
+        let liked = 1; // 게시글 좋아요 상태 게시글 별로 동작해야 하기에 지역변수 선언
+        $.ajax({
+            url: '/like',
+            type: 'POST',
+            data: {
+                type: "accident",
+                registration_entity_id: registration_entity_id,
+                alias: alias,
+                liked: liked
+            },
+            dataType: 'json',
+            success: function (response) {
+                console.log("좋아요 응답:", response);
+                console.log("이미지번호", response.liked)
+                const LikeHtml = `
+                   <div class="like-list">
+                       <strong>${response.likeCount}</strong>
+                   </div>
+               `;
+                // 해당 댓글의 대댓글 목록 영역에 추가
+                $(".like-list").html(LikeHtml);
+
+                // 예시: 좋아요 상태에 따라 이미지 변경
+                if (response.likedStatus === 1) {
+                    $('#like').attr('src', '/LikeImg/LikeTrue.jpg');
+                    liked = 0;
+                } else {
+                    $('#like').attr('src', '/LikeImg/LikeFalse.jpg');
+                    liked = 1;
+                }
+            },
+            error: function (error) {
+                console.log('좋아요 요청 실패:', error);
+            }
+        });
+    });
+
+    // --------------------------대댓글 비동기 + 좋아요(상태유지)------------------------
+
+    // 대댓글 입력창 토글 (클릭시 화면 가리기,보이기)
+    $(document).on('click', '.commentBtn', function () {
+        const commentId = $(this).data('comment-id'); // 게시글 번호 대입
+        const $commentReply = $('.commentReply[data-comment-id="' + commentId + '"]');  // 대댓글 입력창을 선택
+        const $replyListContainer = $('.reply-list[data-comment-id="' + commentId + '"]');  // 대댓글 목록을 보여줄 곳 찾기
+
+        // 대댓글 입력란을 보이게/숨기게
+        $commentReply.toggle(); // toggle을 이용해 보이거나 숨기기
+
+        // 대댓글 목록이 비어 있으면 서버에서 대댓글 목록을 가져옵니다.
+        if ($replyListContainer.is(':empty')) {
+            $.ajax({
+                url: '/getReplies',
+                type: 'GET',
+                data: { commentId: commentId },
+                dataType: 'json',
+                success: function (response) {
+                    console.log('대댓글 정보 :', response); // 응답 데이터를 콘솔로 확인
+
+                    // 대댓글 목록을 출력할 HTML을 준비
+                    let repliesHtml = '';
+                    response.forEach(function (reply) {
+
+                        repliesHtml += `
+                           <div class="reply" data-reply-id="${reply.id}">
+                               <strong>${reply.alias}</strong> :
+                               <span>${reply.comment}</span>
+
+                               <!-- 대댓글 삭제 버튼 -->
+                               <button class="reply-delete-btn"
+                               data-reply-id="${reply.id}">삭제</button>
+
+                               <!-- 좋아요 버튼 -->
+                               <button class="reply-like-btn" data-reply-id="${reply.id}">
+                                   <img src="/LikeImg/LikeFalse.jpg" class="reply-like-img" data-reply-id="${reply.id}">
+                                   <div class="reply-like-count" data-reply-id="${reply.id}">0</div>
+                               </button>
+                           </div>
+                       `;
+
+                        // 대댓글 좋아요 상태 확인 및 반영 (대댓글 클릭시)
+                        fetch('/replylike/revert', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' }, // Content-Type: application/json ⇒ body는 JSON 문자열이라는 의미
+                            body: JSON.stringify({
+                                id: reply.id,
+                                alias: reply.alias
+                            })
+                        })
+                            .then(res => res.json()) // 이 부분은 서버 응답(response) 을 JSON으로 파싱합니다.
+                            .then(data => {
+                                if (data.ReplylikedStatus === 1) {
+                                    document.querySelector(`.reply-like-img[data-reply-id="${reply.id}"]`).src = '/LikeImg/LikeTrue.jpg';
+                                }
+                                document.querySelector(`.reply-like-count[data-reply-id="${reply.id}"]`).innerHTML = `<strong>${data.ReplylikeCount}</strong>`;
+                            })
+                            .catch(err => console.error('대댓글 좋아요 불러오기 실패:', err));
+                    });
+                    // 대댓글 목록을 DOM에 추가
+                    $replyListContainer.html(repliesHtml);
+                },
+                error: function () {
+                    alert('대댓글을 불러오는 데 실패했습니다.');
+                }
+            });
+        }
+    });
+
+    // -----------대댓글 비동기 전송--------------
+    $(document).on('submit', '.comment-reply-form', function (e) {
+        e.preventDefault();
+        // .comment-reply-form폼에 submit 발생하면 이벤트 발생
+        // preventDefault()=페이지 새로고침 실행을 멈춰줌
+        const form = $(this);
+        const data = form.serialize();
+        const commentId = form.data('comment-id');
+
+        $.ajax({
+            url: '/reply', // 실제 컨트롤러 주소
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function (response) {
+                console.log("Ajax 응답:", response);
+                console.log("넘어왔냐? :", response.id);
+                // alert('대댓글이 등록되었습니다!');
+                form[0].reset(); // 폼 초기화
+
+                // 대댓글 HTML 생성
+                const replyHtml = `
+                   <div class="reply" data-reply-id="${response.id}">
+                   <strong>${response.alias}</strong> :
+                   <span>${response.comment}</span>
+
+                   <!-- 대댓글 삭제 버튼 -->
+                   <button class="reply-delete-btn"
+                   data-reply-id="${response.id}" data-reply-alias="${response.alias}">삭제</button>
+
+                   <!-- 좋아요 버튼 -->
+                   <button class="reply-like-btn" data-reply-id="${response.id}">
+                       <img src="/LikeImg/LikeFalse.jpg" class="reply-like-img" data-reply-id="${response.id}">
+                       <div class="reply-like-count" data-reply-id="${response.id}"></div>
+                   </button>
+
+                   </div>
+                   `;
+
+                    // 해당 댓글의 대댓글 목록 영역에 추가
+                    $(`.reply-list[data-comment-id="${response.commentId}"]`).append(replyHtml);
+            },
+            error: function () {
+                alert('대댓글 등록에 실패했습니다.');
+            }
+        });
+    });
+
+    // ----------대댓글 삭제-------------
+    $(document).on('click', '.reply-delete-btn', function () {
+        const replyId = $(this).data('reply-id');
+        const replyAlias = $(this).data('reply-alias'); // 작성자 별명
+        const alias = document.getElementById("UserAlias").value; // 세션 별명
+        if (replyAlias != alias) { // 동일시에만 삭제가능
+            alert("본인이 작성한 대댓글만 삭제할 수 있습니다.");
+            return; // 조건이 맞지 않으면 ajax 요청 중단
+        }
+        console.log(alias);
+        console.log('삭제한다? :', replyId);
+        $.ajax({
+            url: '/replydelete',
+            type: 'POST',
+            data: {
+                replyId: replyId,
+                replyAlias: replyAlias
+            },
+            success: function () {
+                $(`.reply[data-reply-id="${replyId}"]`).remove();
+            },
+            error: function () {
+                alert('대댓글 삭제 실패');
+            }
+        });
+    });
+</script>

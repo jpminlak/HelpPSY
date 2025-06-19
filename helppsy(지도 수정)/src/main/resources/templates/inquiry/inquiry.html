@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문의하기</title>
+    <link rel="stylesheet" th:href="@{/main/head.css}">
+    <script th:src="@{/main/fragment.js}"></script>
+    <style>
+        main {
+            width: 700px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        }
+
+        form > div {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        input[type="file"] {
+            margin-top: 10px;
+        }
+
+        input[type="submit"] {
+            background-color: #0d6efd;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0b5ed7;
+        }
+    </style>
+</head>
+
+<body>
+<div class="wrapper">
+    <div class="header-container">
+        <div class="logo-nav-container">
+            <div class="logo-container">
+                <img id="like" th:src="@{/LikeImg/차량사고 커뮤니티 로고.png}" width="150" alt="로고">
+                <h2><b>Help PSY</b></h2>
+            </div>
+            <div class="nav-links">
+                <a href="/main">메인 화면</a>
+                <a href="/mainFreeBulletin">자유게시판</a>
+                <a href="/accidentmain">사고게시판</a>
+                <a href="/inquiry">문의하기</a>
+                <a href="/respondent">답변 (관리자)</a>
+                <a href="/map">지도</a>
+            </div>
+            <div class="login-section">
+                <div id="memberBox">
+                    <div th:if="${session.userAlias == null}">
+                        <a href="/signInMain"><input type="button" value="로그인"></a>
+                        <a href="/signUpMain"><input type="button" value="회원가입"></a>
+                    </div>
+                    <div th:if="${session.userAlias != null}">
+                        <label th:text="${session.userAlias} + '님 환영합니다.'"></label>
+                        <a th:href="@{'/profile?alias=' + ${session.userAlias}}"><input type="button" value="정보"></a>
+                        <input type="button" value="로그아웃" onclick="logout()">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <h1 style="text-align: center; margin-bottom: 30px;">문의하기</h1>
+        <form action="ddd" method="post" enctype="multipart/form-data">
+            <div>
+                <label for="writer">작성자</label>
+                <input type="text" id="writer" name="writer" th:value="${session.userAlias}" readonly>
+            </div>
+            <div>
+                <label for="subject">제목</label>
+                <input type="text" id="subject" name="subject">
+            </div>
+            <div>
+                <label for="content">내용</label>
+                <textarea id="content" name="content"></textarea>
+            </div>
+            <div>
+                <label for="file">첨부파일</label>
+                <input type="file" id="file" name="file" accept="image/*">
+            </div>
+            <div style="text-align: right;">
+                <input value="전송" type="submit">
+            </div>
+        </form>
+    </main>
+
+    <div id="footer">
+        <p>개발자 이메일 : human@gmail.com | 대표 이름 : human</p>
+    </div>
+</div>
+
+<script>
+    function logout() {
+        location.href = '/logout';
+    }
+
+    window.onload = () => {
+        document.getElementById('mainTitle').innerText = '문의하기';
+    }
+</script>
+</body>
+</html>
