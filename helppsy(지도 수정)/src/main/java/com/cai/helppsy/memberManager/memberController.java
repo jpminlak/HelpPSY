@@ -1,7 +1,7 @@
 package com.cai.helppsy.memberManager;
 
 import com.cai.helppsy.accidentBulleinBoard.entity.RegistrationEntity;
-import com.cai.helppsy.accidentBulleinBoard.repository.RegistrationRepository;
+import com.cai.helppsy.memberManager.SignupEntity;
 import com.cai.helppsy.accidentBulleinBoard.service.RegistrationService;
 import com.cai.helppsy.freeBulletinBoard.entity.FreeBulletin;
 import com.cai.helppsy.freeBulletinBoard.repository.FreeBulletinRepository;
@@ -10,9 +10,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Controller
@@ -57,8 +61,8 @@ public class memberController {
 
                 session.setAttribute("userId", user.getUserId()); // 세션에 id저장
                 session.setAttribute("userAlias", user.getAlias()); // 세션에 별명저장
-                session.setAttribute("division", user.getDivision());   // 세션에 설계사,일반인(구분) 저장
-                session.setAttribute("dNum", user.getDNum());   // 세션에 설계사 번호 저장
+//                session.setAttribute("division", user.getDivision());   // 세션에 설계사,일반인(구분) 저장
+//                session.setAttribute("dNum", user.getDNum());   // 세션에 설계사 번호 저장
                 session.setAttribute("userPass", user.getUserPass()); // 세션에 비밀번호 저장
                 session.setAttribute("Intro", user.getIntro());  //세션에 소개글 저장
 
@@ -84,7 +88,6 @@ public class memberController {
 //        System.out.println(session.getAttribute("userPass"));
         return "redirect:/main";
     }
-
 
 
     @GetMapping("/profile")
@@ -116,33 +119,62 @@ public class memberController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute SignupEntity updatedUser, HttpSession session) {
-        String userId = (String) session.getAttribute("userId");
-        if (userId == null)
-            return "redirect:/main";
+    public String update(@ModelAttribute SignupEntity updatedUser,
+                         @RequestParam(value = "Ffile", required = false) MultipartFile profileImage,
+                         HttpSession session)  {
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println(profileImage);
+        System.out.println(profileImage.getSize());
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) {
+            return "redirect:/main";
+        }
         SignupEntity user = signupservice.login(userId);
+
         if (user != null) {
+            // 일반 정보 업데이트
             user.setAlias(updatedUser.getAlias());
             user.setUserPass(updatedUser.getUserPass());
-            user.setDivision(updatedUser.getDivision());
             user.setIntro(updatedUser.getIntro());
-            user.setDNum(updatedUser.getDNum());
-            signupservice.signup(user);  // save()로 덮어쓰기
-            session.setAttribute("userAlias", user.getAlias());  // 세션도 업데이트
+
+
+            if (!profileImage.isEmpty()) {
+                UUID uuid = UUID.randomUUID();
+                String uploadDir = System.getProperty("user.dir")+"/files/profile" ;
+                //System.out.println("파일 저장 경로: " + uploadDir);
+
+                String filename = uuid + "_" + profileImage.getOriginalFilename();
+                File dir = new File(uploadDir, filename);
+
+                try {
+                    profileImage.transferTo(dir);
+                    System.out.println("----------------------------------------------------1212121");
+                    user.setProfileImage(filename); // DB에 저장
+                    System.out.println("----------------------------------------------------1212121");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    // 저장 실패 시 처리 로직 추가 가능
+                }
+            }
+
+            signupservice.signup(user); // 저장
+            session.setAttribute("userAlias", user.getAlias());
             session.setAttribute("Intro", user.getIntro());
-            System.out.println(user.getAlias());
         }
 
         String redirectUrl = UriComponentsBuilder
                 .fromPath("/profile")
                 .queryParam("alias", user.getAlias())
                 .build()
-                .encode()   //한국어 자동 인코딩 (Tomcat 예외 / 한글 깨짐)
+                .encode()
                 .toUriString();
 
-        return "redirect:" + redirectUrl;
+        return "redirect:" + redirectUrl ;
     }
+
+
 
     @GetMapping("/checkId")
     @ResponseBody
@@ -150,4 +182,6 @@ public class memberController {
         boolean exists = signupservice.existsById(userId); // 여기 사용 가능
         return exists ? "DUPLICATE" : "OK";
     }
+
+
 }

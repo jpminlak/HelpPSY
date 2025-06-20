@@ -38,7 +38,12 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	// 아래는 모델 매퍼를 사용하기 위해 등록하는 것이다.
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
+
+	compileOnly 'org.projectlombok:lombok:1.18.26'
+	annotationProcessor 'org.projectlombok:lombok:1.18.26'
 }
+
+
 
 tasks.named('test') {
 	useJUnitPlatform()

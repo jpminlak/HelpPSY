@@ -84,10 +84,15 @@
 <div class="profile-container">
     <h1>프로필 수정</h1>
 
-    <form action="/update" method="post">
+    <form action="/update" method="POST" enctype="multipart/form-data">
+        <label>
+            프로필 사진
+            <input id="minwoo" type="file" name="Ffile" accept="image/*">
+        </label>
         <label>
             아이디:
-            <input type="text" name="userId" th:value="${user.userId}" readonly>
+            <input type="text" name="userId" th:value="${user.userId}" disabled>
+            <input type="hidden" name="userId" th:value="${user.userId}">
         </label>
 
         <label>

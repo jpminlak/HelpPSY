@@ -1,5 +1,6 @@
 package com.cai.helppsy.config;
 
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -20,8 +21,14 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:" + fileUploadPath+"accidentBulletin/");
         registry.addResourceHandler("/files/inquiry/**")
                 .addResourceLocations("file:" + fileUploadPath+"inquiry/");
+
         // 좋아요 이미지 맵핑 (민우꺼)
         registry.addResourceHandler("/LikeImg/**")
                 .addResourceLocations("classpath:/static/LikeImg/");
+
+        //윤빈
+        registry.addResourceHandler("/files/profile/**")
+                .addResourceLocations("file:" + fileUploadPath + "profile/");
+
     }
 }

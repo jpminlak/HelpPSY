@@ -7,113 +7,113 @@
     <link rel="stylesheet" th:href="@{/main/head.css}">
     <script th:src="@{/main/fragment.js}"></script>
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #f7f7f7;
-        }
+<!--        body, html {-->
+<!--            margin: 0;-->
+<!--            padding: 0;-->
+<!--            font-family: 'Arial', sans-serif;-->
+<!--            background-color: #f7f7f7;-->
+<!--        }-->
 
-        .wrapper {
-            width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+<!--        .wrapper {-->
+<!--            width: 1400px;-->
+<!--            margin: 0 auto;-->
+<!--            padding: 20px;-->
+<!--        }-->
 
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 10px;
-            background-color: #f0f0f0;
-            border-bottom: 2px solid #ddd;
-        }
+<!--        .header-container {-->
+<!--            display: flex;-->
+<!--            justify-content: space-between;-->
+<!--            align-items: center;-->
+<!--            padding: 20px 10px;-->
+<!--            background-color: #f0f0f0;-->
+<!--            border-bottom: 2px solid #ddd;-->
+<!--        }-->
 
-        .logo-nav-container {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-        }
+<!--        .logo-nav-container {-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            gap: 30px;-->
+<!--        }-->
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+<!--        .logo-container {-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            gap: 10px;-->
+<!--        }-->
 
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
+<!--        .nav-links {-->
+<!--            display: flex;-->
+<!--            gap: 20px;-->
+<!--        }-->
 
-        .nav-links a {
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-        }
+<!--        .nav-links a {-->
+<!--            text-decoration: none;-->
+<!--            color: #333;-->
+<!--            font-weight: bold;-->
+<!--        }-->
 
-        .nav-links a:hover {
-            color: #007BFF;
-        }
+<!--        .nav-links a:hover {-->
+<!--            color: #007BFF;-->
+<!--        }-->
 
-        .login-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+<!--        .login-section {-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            gap: 15px;-->
+<!--        }-->
 
-        .login-section input[type="button"] {
-            padding: 6px 14px;
-            background-color: #444;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+<!--        .login-section input[type="button"] {-->
+<!--            padding: 6px 14px;-->
+<!--            background-color: #444;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            border-radius: 4px;-->
+<!--            cursor: pointer;-->
+<!--        }-->
 
-        .login-section input[type="button"]:hover {
-            background-color: #666;
-        }
+<!--        .login-section input[type="button"]:hover {-->
+<!--            background-color: #666;-->
+<!--        }-->
 
-        table {
-            width: 100%;
-            margin-top: 30px;
-            border-collapse: collapse;
-            background-color: white;
-        }
+<!--        table {-->
+<!--            width: 100%;-->
+<!--            margin-top: 30px;-->
+<!--            border-collapse: collapse;-->
+<!--            background-color: white;-->
+<!--        }-->
 
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: center;
-        }
+<!--        th, td {-->
+<!--            border: 1px solid #ccc;-->
+<!--            padding: 8px;-->
+<!--            text-align: center;-->
+<!--        }-->
 
-        th {
-            background-color: #f1f1f1;
-        }
+<!--        th {-->
+<!--            background-color: #f1f1f1;-->
+<!--        }-->
 
-        button {
-            margin-top: 20px;
-            padding: 8px 16px;
-            background-color: crimson;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+<!--        button {-->
+<!--            margin-top: 20px;-->
+<!--            padding: 8px 16px;-->
+<!--            background-color: crimson;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            border-radius: 4px;-->
+<!--            cursor: pointer;-->
+<!--        }-->
 
-        button:hover {
-            background-color: darkred;
-        }
+<!--        button:hover {-->
+<!--            background-color: darkred;-->
+<!--        }-->
 
-        #footer {
-            text-align: center;
-            margin-top: 50px;
-            background-color: #f0f0f0;
-            padding: 20px;
-            font-size: 14px;
-            color: #444;
-        }
+<!--        #footer {-->
+<!--            text-align: center;-->
+<!--            margin-top: 50px;-->
+<!--            background-color: #f0f0f0;-->
+<!--            padding: 20px;-->
+<!--            font-size: 14px;-->
+<!--            color: #444;-->
+<!--        }-->
     </style>
 </head>
 
@@ -130,20 +130,20 @@
                 <a href="/mainFreeBulletin">자유게시판</a>
                 <a href="/accidentmain">사고게시판</a>
                 <a href="/inquiry">문의하기</a>
-                <a href="/respondent">답변 (관리자)</a>
+                <a th:if="${session.userId == 'aa'}" href="/respondent">답변 (관리자)</a>
                 <a href="/map">지도</a>
             </div>
-        </div>
-        <div class="login-section">
-            <div id="memberBox">
-                <div th:if="${session.userAlias} == null">
-                    <a href="/signInMain"><input type="button" value="로그인"></a>
-                    <a href="/signUpMain"><input type="button" value="회원가입"></a>
-                </div>
-                <div th:if="${session.userAlias} != null">
-                    <label th:text="${session.userAlias} + '님 환영합니다.'"></label>
-                    <a th:href="@{'/profile?alias=' + ${session.userAlias}}"><input type="button" value="정보"></a>
-                    <input type="button" value="로그아웃" onclick="logout()">
+            <div class="login-section">
+                <div id="memberBox">
+                    <div th:if="${session.userAlias == null}">
+                        <a href="/signInMain"><input type="button" value="로그인"></a>
+                        <a href="/signUpMain"><input type="button" value="회원가입"></a>
+                    </div>
+                    <div th:if="${session.userAlias != null}">
+                        <label th:text="${session.userAlias} + '님 환영합니다.'"></label>
+                        <a th:href="@{'/profile?alias=' + ${session.userAlias}}"><input type="button" value="정보"></a>
+                        <input type="button" value="로그아웃" onclick="logout()">
+                    </div>
                 </div>
             </div>
         </div>
