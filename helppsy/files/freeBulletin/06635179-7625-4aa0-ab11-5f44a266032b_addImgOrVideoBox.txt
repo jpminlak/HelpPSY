@@ -1,0 +1,21 @@
+<div id="addImgOrVideoBox">
+	<input id="imgOrVideoFile" type="file" accept="image/*">
+	<div id="imgOrVideoSizeTxt">사이즈 : </div>
+	<select id="imgOrVideoSize">
+		<option value="50">50</option>
+		<option value="100">100</option>
+		<option value="150">150</option>
+		<option value="200">200</option>
+		<option value="250">250</option>
+		<option value="300">300</option>
+		<option value="350">350</option>
+		<option value="400">400</option>
+		<option value="450">450</option>
+		<option value="500">500</option>
+	</select>
+	<input id="insertImgOrVideo" type="button" value="추가하기">
+</div>
+
+// 아래의 문자열로 시작할 때만 파일 추가 가능하게 제한하기
+image/
+video/
