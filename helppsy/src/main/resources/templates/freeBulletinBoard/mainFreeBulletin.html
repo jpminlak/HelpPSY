@@ -162,6 +162,8 @@
 <!--    </div>-->
     <input id="searchListOrDefaultList" type="hidden" th:value="${searchListOrDefaultList}">
     <div id="wholeBulletin">
+        <input id="beforeSearchWord" type="hidden" th:value="${searchDTO.searchWord}">
+        <input id="beforeSortingType" type="hidden" th:value="${searchDTO.sortingType}">
         <input id="searchWord" type="text" placeholder="검색어를 입력하세요">
         <input id="searchBtn" type="button" value="검색" onclick="search()">
         <select id="sortingType">
@@ -199,14 +201,14 @@
                         <td><input type="button" value="<<" onclick="leftPageNumListNum()"></td>
                         <td><input type="button" value="<" onclick="leftPaging()"></td>
                         <td th:each="num : ${currentPageNums}">
-                            <div class="pageNums" th:text="${num}" th:onclick="'clickPageNum('+${num}+', '+${currentPageSetNum}+')'"></div>
+                            <div class="pageNums" th:text="${num}" th:onclick="'clickPageNum('+${num}+', '+${searchDTO.currentPageSetNum}+')'"></div>
                         </td>
                         <td><input type="button" value=">" onclick="rightPaging()"></td>
                         <td><input type="button" value=">>" onclick="RightPageNumListNum()"></td>
                     </tr>
                 </table>
-                <input id="currentPage" type="hidden" th:value="${currentPage}">
-                <input id="currentPageSetNum" type="hidden" th:value="${currentPageSetNum}">
+                <input id="currentPage" type="hidden" th:value="${searchDTO.currentPage}">
+                <input id="currentPageSetNum" type="hidden" th:value="${searchDTO.currentPageSetNum}">
                 <input id="pageNumSetCnt" type="hidden" th:value="${pageNumSetCnt}">
                 <input id="allPageNumCnt" type="hidden" th:value="${allPageNumCnt}">
                 <input id="perPageNumCnt" type="hidden" th:value="${perPageNumCnt}">
@@ -248,20 +250,20 @@
             if(firstPageIncurrentPageNums > currentPage){
                 currentPageSetNum--
                 if(searchListOrDefaultList == 'normal'){
-                    location.href = 'mainFreeBulletin?page='+currentPage+'&currentPageSetNum='+currentPageSetNum;
+                    location.href = 'mainFreeBulletin?currentPage='+currentPage+'&currentPageSetNum='+currentPageSetNum;
                 }else{
-                    const searchWord = document.getElementById('searchWord').value;
-                    const sortingType = document.getElementById('sortingType').value;
-                    location.href = 'searchFreeBulletin?page='+currentPage+'&currentPageSetNum='+currentPageSetNum
+                    const searchWord = document.getElementById('beforeSearchWord').value;
+                    const sortingType = document.getElementById('beforeSortingType').value;
+                    location.href = 'searchFreeBulletin?currentPage='+currentPage+'&currentPageSetNum='+currentPageSetNum
                         +'&searchWord='+searchWord+'&sortingType='+sortingType;
                 }
             }else {
                 if(searchListOrDefaultList == 'normal'){
-                    location.href = 'mainFreeBulletin?page='+currentPage+'&currentPageSetNum='+currentPageSetNum;
+                    location.href = 'mainFreeBulletin?currentPage='+currentPage+'&currentPageSetNum='+currentPageSetNum;
                 }else{
-                    const searchWord = document.getElementById('searchWord').value;
-                    const sortingType = document.getElementById('sortingType').value;
-                    location.href = 'searchFreeBulletin?page='+currentPage+'&currentPageSetNum='+currentPageSetNum
+                    const searchWord = document.getElementById('beforeSearchWord').value;
+                    const sortingType = document.getElementById('beforeSortingType').value;
+                    location.href = 'searchFreeBulletin?currentPage='+currentPage+'&currentPageSetNum='+currentPageSetNum
                         +'&searchWord='+searchWord+'&sortingType='+sortingType;
                 }
             }
@@ -280,20 +282,20 @@
             if(currentPage > LastPageIncurrentPageNum){
                 currentPageSetNum++
                 if(searchListOrDefaultList == 'normal'){
-                    location.href = 'mainFreeBulletin?page='+currentPage+'&currentPageSetNum='+currentPageSetNum;
+                    location.href = 'mainFreeBulletin?currentPage='+currentPage+'&currentPageSetNum='+currentPageSetNum;
                 }else{
-                    const searchWord = document.getElementById('searchWord').value;
-                    const sortingType = document.getElementById('sortingType').value;
-                    location.href = 'searchFreeBulletin?page='+currentPage+'&currentPageSetNum='+currentPageSetNum
+                    const searchWord = document.getElementById('beforeSearchWord').value;
+                    const sortingType = document.getElementById('beforeSortingType').value;
+                    location.href = 'searchFreeBulletin?currentPage='+currentPage+'&currentPageSetNum='+currentPageSetNum
                         +'&searchWord='+searchWord+'&sortingType='+sortingType;
                 }
             }else {
                 if(searchListOrDefaultList == 'normal'){
-                    location.href = 'mainFreeBulletin?page='+currentPage+'&currentPageSetNum='+currentPageSetNum;
+                    location.href = 'mainFreeBulletin?currentPage='+currentPage+'&currentPageSetNum='+currentPageSetNum;
                 }else{
-                    const searchWord = document.getElementById('searchWord').value;
-                const sortingType = document.getElementById('sortingType').value;
-                    location.href = 'searchFreeBulletin?page='+currentPage+'&currentPageSetNum='+currentPageSetNum
+                    const searchWord = document.getElementById('beforeSearchWord').value;
+                const sortingType = document.getElementById('beforeSortingType').value;
+                    location.href = 'searchFreeBulletin?currentPage='+currentPage+'&currentPageSetNum='+currentPageSetNum
                         +'&searchWord='+searchWord+'&sortingType='+sortingType;
                 }
             }
@@ -310,11 +312,11 @@
             currentPageSetNum--;
             let page = (currentPageSetNum-1) * cnt +1;
             if(searchListOrDefaultList == 'normal'){
-                location.href = 'mainFreeBulletin?page='+page+'&currentPageSetNum='+currentPageSetNum;
+                location.href = 'mainFreeBulletin?currentPage='+page+'&currentPageSetNum='+currentPageSetNum;
             }else{
-                const searchWord = document.getElementById('searchWord').value;
-                const sortingType = document.getElementById('sortingType').value;
-                location.href = 'searchFreeBulletin?page='+page+'&currentPageSetNum='+currentPageSetNum
+                const searchWord = document.getElementById('beforeSearchWord').value;
+                const sortingType = document.getElementById('beforeSortingType').value;
+                location.href = 'searchFreeBulletin?currentPage='+page+'&currentPageSetNum='+currentPageSetNum
                     +'&searchWord='+searchWord+'&sortingType='+sortingType;
             }
         }
@@ -330,12 +332,12 @@
             currentPageSetNum++;
             let page = (currentPageSetNum-1) * cnt + 1;
             if(searchListOrDefaultList == 'normal'){
-                location.href = 'mainFreeBulletin?page='+page+'&currentPageSetNum='+currentPageSetNum;
+                location.href = 'mainFreeBulletin?currentPage='+page+'&currentPageSetNum='+currentPageSetNum;
             }else{
-                const searchWord = document.getElementById('searchWord').value;
-                const sortingType = document.getElementById('sortingType').value;
-                location.href = 'searchFreeBulletin?page='+page+'&currentPageSetNum='+currentPageSetNum
-                    +'&searchWord='+searchWord+'&sortingType='+sortingType;
+                const searchWord = document.getElementById('beforeSearchWord').value;
+                const sortingType = document.getElementById('beforeSortingType').value;
+                location.href = 'searchFreeBulletin?currentPage='+page+'&currentPageSetNum='+currentPageSetNum
+                    +'&searchWord='+searchWord+'&sortingType='+sortingType+'&beforeSearchWord='+searchWord+'&beforeSortingType='+sortingType;
             }
         }
     }
@@ -349,12 +351,12 @@
         const searchListOrDefaultList = document.getElementById('searchListOrDefaultList').value;
 
         if(searchListOrDefaultList == 'normal'){
-            location.href = 'mainFreeBulletin?page='+pageNum+'&currentPageSetNum='+pageSetNum;
+            location.href = 'mainFreeBulletin?currentPage='+pageNum+'&currentPageSetNum='+pageSetNum;
         }else{
-            const searchWord = document.getElementById('searchWord').value;
-            const sortingType = document.getElementById('sortingType').value;
-            location.href = 'searchFreeBulletin?page='+pageNum+'&currentPageSetNum='+pageSetNum
-                +'&searchWord='+searchWord+'&sortingType='+sortingType;
+            const searchWord = document.getElementById('beforeSearchWord').value;
+            const sortingType = document.getElementById('beforeSortingType').value;
+            location.href = 'searchFreeBulletin?currentPage='+pageNum+'&currentPageSetNum='+pageSetNum
+                +'&searchWord='+searchWord+'&sortingType='+sortingType+'&beforeSearchWord='+searchWord+'&beforeSortingType='+sortingType;
         }
     }
 </script>

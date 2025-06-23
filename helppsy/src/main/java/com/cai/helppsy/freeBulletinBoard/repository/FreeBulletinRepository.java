@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface FreeBulletinRepository extends JpaRepository<FreeBulletin, Integer> {
     List<FreeBulletin> findByTitleContaining(String searchWord);
-    List<FreeBulletin> findByTitleContainingOrderByLikesDesc(String searchWord, Sort sort);
+    List<FreeBulletin> findByTitleContainingOrderByLikesAsc(String searchWord, Sort sort);
 }

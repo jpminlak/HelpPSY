@@ -247,7 +247,7 @@
                     <div id="thumbnailTxt">썸네일 등록(비율  2:1)</div>
                     <input id="inputThumbnail" type="file" accept="image/*" onchange="addThumbnail()">
                     <input id="thumbnailForSubmit" type="hidden" name="thumbnail">
-                    <img id="preViewThumbnail" src="" width="200" height="100">
+                    <img id="preViewThumbnail" th:src="${bulletinOneInfo.thumbnail}" width="200" height="100">
                 </div>
                 <div id="addImgOrVideoBox">
                     <input id="imgOrVideoFile" type="file">

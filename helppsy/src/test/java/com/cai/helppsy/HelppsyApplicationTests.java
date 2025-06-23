@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Random;
+
 @SpringBootTest
 class HelppsyApplicationTests {
 	@Autowired
@@ -20,9 +22,12 @@ class HelppsyApplicationTests {
 
 	@Test
 	void pagingTest(){
+		Random r = new Random();
 		for(int i = 0; i < 50; i++){
 			FreeBulletin fb = new FreeBulletin();
-			fb.setTitle("12345678");
+			fb.setTitle("aaa"+r.nextInt(1000));
+			fb.setViews(r.nextInt(1000));
+			fb.setLikes(r.nextInt(1000));
 			bulletinRepository.save(fb);
 		}
 	}

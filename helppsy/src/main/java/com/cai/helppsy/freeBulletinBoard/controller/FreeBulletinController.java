@@ -2,6 +2,7 @@ package com.cai.helppsy.freeBulletinBoard.controller;
 
 import com.cai.helppsy.freeBulletinBoard.dto.FreeBulletinDTO;
 import com.cai.helppsy.freeBulletinBoard.dto.FreeBulletinReplyDTO;
+import com.cai.helppsy.freeBulletinBoard.dto.SearchDTO;
 import com.cai.helppsy.freeBulletinBoard.entity.FreeBulletin;
 import com.cai.helppsy.freeBulletinBoard.entity.FreeBulletinComment;
 import com.cai.helppsy.freeBulletinBoard.entity.FreeBulletinReply;
@@ -31,21 +32,19 @@ public class FreeBulletinController {
     }
 
     @GetMapping("mainFreeBulletin")
-    public String mainFreeBulletin(Model model, @RequestParam(value = "page", defaultValue = "1") int page
-            , @RequestParam(value = "currentPageSetNum", defaultValue = "1") int currentPageSetNum) {
+    public String mainFreeBulletin(Model model, @ModelAttribute SearchDTO searchDTO) {
         List<FreeBulletin> bulletinList = freeBulletinService.bulletinList();
         Paging paging = new Paging();
-        paging.setPerPageList(10, page, currentPageSetNum, 5, bulletinList);
+        paging.setPerPageList(10, searchDTO.getCurrentPage(), searchDTO.getCurrentPageSetNum(), 5, bulletinList);
 
         model.addAttribute("perPageList", paging.getPerPageList());
         model.addAttribute("allPageNumCnt", paging.getAllPageNumCnt());
         model.addAttribute("currentPageNums", paging.getCurrentPageNums());
-        model.addAttribute("currentPage", page);
         model.addAttribute("perPageNumCnt", 5);
-        model.addAttribute("currentPageSetNum", currentPageSetNum);
         model.addAttribute("pageNumSetCnt", paging.getPageNumSetCnt());
         model.addAttribute("searchListOrDefaultList", "normal");
         model.addAttribute("requestName", "mainFreeBulletin");
+        model.addAttribute("searchDTO", searchDTO);
         return "freeBulletinBoard/mainFreeBulletin";
     }
 
@@ -184,9 +183,7 @@ public class FreeBulletinController {
 
     // 아래는 검색 기능
     @GetMapping("searchFreeBulletin")
-    public String searchBulletin(Model model, @RequestParam("searchWord") String searchWord
-            , @RequestParam("sortingType") String sortingType, @RequestParam(value = "page", defaultValue = "1") int page
-            , @RequestParam(value = "currentPageSetNum", defaultValue = "1") int currentPageSetNum){
+    public String searchBulletin(Model model, @ModelAttribute SearchDTO searchDTO){
 //        System.out.println("_________________________11__________________________");
 //        System.out.println("#"+searchWord+"#");
 //        System.out.println("#"+sortingType+"#");
@@ -194,20 +191,21 @@ public class FreeBulletinController {
 //        System.out.println(searchWord.equals(""));
 //        System.out.println(sortingType.equals(""));
 //        System.out.println("_________________________13__________________________");
-        List<FreeBulletinDTO> bulletinList = freeBulletinService.searchBulletin(searchWord, sortingType);
+        List<FreeBulletinDTO> bulletinList = freeBulletinService.searchBulletin(searchDTO.getSearchWord(), searchDTO.getSortingType());
         Paging paging = new Paging();
-        paging.setPerPageList(10, page, currentPageSetNum, 5, bulletinList);
+        paging.setPerPageList(10, searchDTO.getCurrentPage(), searchDTO.getCurrentPageSetNum(), 5, bulletinList);
 
+        System.out.println(searchDTO.getSearchWord());
+        System.out.println(searchDTO.getSortingType());
 
         model.addAttribute("perPageList", paging.getPerPageList());
         model.addAttribute("allPageNumCnt", paging.getAllPageNumCnt());
         model.addAttribute("currentPageNums", paging.getCurrentPageNums());
-        model.addAttribute("currentPage", page);
         model.addAttribute("perPageNumCnt", 5);
-        model.addAttribute("currentPageSetNum", currentPageSetNum);
         model.addAttribute("pageNumSetCnt", paging.getPageNumSetCnt());
         model.addAttribute("searchListOrDefaultList", "search");
         model.addAttribute("requestName", "searchFreeBulletin");
+        model.addAttribute("searchDTO", searchDTO);
         return "freeBulletinBoard/mainFreeBulletin";
     }
 }

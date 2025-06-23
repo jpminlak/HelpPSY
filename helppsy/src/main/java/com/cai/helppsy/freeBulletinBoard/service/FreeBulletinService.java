@@ -231,10 +231,10 @@ public class FreeBulletinService {
 
         if(!searchWord.equals("") && !sortingType.equals("")){
             if(sortingType.equals("likes")){
-                fbEntityList = freeBulletinRepository.findByTitleContainingOrderByLikesDesc
+                fbEntityList = freeBulletinRepository.findByTitleContainingOrderByLikesAsc
                     (searchWord, Sort.by(Sort.Order.desc("likes")));
             }else if(sortingType.equals("views")){
-                fbEntityList = freeBulletinRepository.findByTitleContainingOrderByLikesDesc
+                fbEntityList = freeBulletinRepository.findByTitleContainingOrderByLikesAsc
                     (searchWord, Sort.by(Sort.Order.desc("views")));
             }
             System.out.println("1-1");
@@ -243,9 +243,9 @@ public class FreeBulletinService {
             System.out.println("2-2");
         }else if(searchWord.equals("")){
             if(sortingType.equals("likes")){
-                fbEntityList = freeBulletinRepository.findAll(Sort.by(Sort.Order.desc("likes")));
+                fbEntityList = freeBulletinRepository.findAll(Sort.by(Sort.Order.asc("likes")));
             }else if(sortingType.equals("views")){
-                fbEntityList = freeBulletinRepository.findAll(Sort.by(Sort.Order.desc("views")));
+                fbEntityList = freeBulletinRepository.findAll(Sort.by(Sort.Order.asc("views")));
             }
             System.out.println("3-3");
         }else if(sortingType.equals("")){
