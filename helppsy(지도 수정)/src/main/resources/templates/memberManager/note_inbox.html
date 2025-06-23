@@ -5,43 +5,29 @@
     <link rel="stylesheet" th:href="@{/main/head.css}">
     <script th:src="@{/main/fragment.js}"></script>
     <style>
-        body {
-<!--            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;-->
-            background-color: #f4f7f9;
-            margin: 0;
-            padding: 0;
-        }
-
-        .wrapper {
-            padding: 20px;
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-top: 30px;
-        }
-
-        form {
-            max-width: 600px;
-            margin: 30px auto;
-            padding: 30px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        input[type="text"], textarea {
+        .note {
             width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1em;
+            border-collapse: collapse;
+            background-color: white;
         }
 
-        textarea {
-            resize: vertical;
+        .note th, .note td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: center;
+        }
+
+        .note th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        .note tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .note tr:hover {
+            background-color: #e6f7ff;
         }
 
         button {
@@ -55,28 +41,14 @@
             margin-top: 15px;
         }
 
-        button:hover {
-            background-color: #0056b3;
+        .scroll-box {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+            border-radius: 5px;
         }
 
-        .home-button {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .home-button button {
-            background-color: #6c757d;
-        }
-
-        #footer {
-            text-align: center;
-            padding: 20px 0;
-            background-color: #eee;
-            margin-top: 40px;
-            font-size: 0.9em;
-            color: #666;
-        }
     </style>
 </head>
 <body>
@@ -113,27 +85,29 @@
     </div>
 
     <h1>받은 쪽지 목록</h1>
-    <table>
-        <thead>
-        <tr>
-            <th>발신자</th>
-            <th>제목</th>
-            <th>발신일</th>
-            <th>내용</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="note : ${notes}">
-            <td th:text="${note.senderId}"></td>
-            <td th:text="${note.title}"></td>
-            <td th:text="${#temporals.format(note.sentAt, 'yyyy-MM-dd HH:mm')}"></td>
-            <td th:text="${note.content}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="scroll-box">
+        <table class="note" id="scroll-box">
+            <thead>
+            <tr>
+                <th>발신자</th>
+                <th>발신일</th>
+                <th>제목</th>
+                <th>내용</th>
+            </tr>
+            </thead>
+            <tbody th:colspan="2">
+            <tr th:each="note : ${notes}">
+                <td th:text="${note.senderId}" style="text-align:center;"></td>
+                <td th:text="${#temporals.format(note.sentAt, 'yyyy-MM-dd HH:mm')}" style="text-align:center;"></td>
+                <td th:text="${note.title}"></td>
+                <td th:text="${note.content}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
     <a href="/main">
-        <button>홈으로</button>
+        <button id="home">홈으로</button>
     </a>
 </div>
 

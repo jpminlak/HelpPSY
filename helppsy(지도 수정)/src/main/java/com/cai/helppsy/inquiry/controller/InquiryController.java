@@ -9,6 +9,7 @@ import com.cai.helppsy.note.Note;
 import com.cai.helppsy.note.NoteRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -70,9 +71,13 @@ public class InquiryController {
 
 
     @GetMapping("respondent")   // 문의 답변전체 페이지
-    public String listUsers(Model model) {
-        List<Question> users = q1.findAll();  // DB에서 모든 사용자 조회
+    public String listUsers(@RequestParam(value = "sort",defaultValue = "desc") String sort, Model model) {
+        Sort.Direction direction = sort.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        List<Question> users = q1.findAll(Sort.by(direction, "createDate"));
+
+//        List<Question> users = q1.findAll();  // DB에서 모든 사용자 조회
         model.addAttribute("users", users); // 모델에 담기
+        model.addAttribute("sort", sort);
         return "inquiry/respondent"; // 템플릿 파일명 (userList.html)
     }
 
