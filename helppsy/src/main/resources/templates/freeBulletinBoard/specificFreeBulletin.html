@@ -112,20 +112,48 @@
 
     /* commentArea */
     #commentArea {
-        width: 800px;s
+        width: 800px;
         margin: auto;
     }
 
     #deleteBulletin {
         position: absolute;
-        margin-left: 610px;
+        margin-left: 640px;
         margin-top: -50px;
+    }
+
+    #deleteBulletin input {
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        width: 50px;
+        border-radius: 5px;
+        font-weight: 500;
+    }
+
+    #deleteBulletin input:hover {
+        background-color: #ff3737;
+        color: white;
     }
 
     #updateBulletin {
         position: absolute;
         margin-left: 700px;
         margin-top: -50px;
+    }
+
+    #updateBulletin input {
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        font-weight: 500;
+        width: 50px;
+        border-radius: 5px;
+    }
+
+    #updateBulletin input:hover {
+        background-color: #448bde;
+        color: white;
     }
 
     /* in commentArea */
@@ -188,26 +216,62 @@
         position: absolute;
         margin-left: 400px;
         margin-top: ;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        font-weight: 500;
+    }
+
+    .deleteForComment:hover {
+        background-color: #ff3737;
+        color: white;
     }
 
     .editUiForComment {
         position: absolute;
-        margin-left: 500px;
+        margin-left: 470px;
         margin-top: ;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        font-weight: 500;
+    }
+
+    .editUiForComment:hover {
+        background-color: #448bde;
+        color: white;
     }
 
     .cancelEditUiForComment {
         position: absolute;
-        margin-left: 500px;
+        margin-left: 470px;
         margin-top: ;
         display: none;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        font-weight: 500;
+    }
+
+    .cancelEditUiForComment:hover {
+        background-color: #44a844;
+        color: white;
     }
 
     .updateBtnForComment {
         position: absolute;
         display: none;
-        margin-left: 640px;
+        margin-left: 570px;
         margin-top: 0px;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        font-weight: 500;
+    }
+
+    .updateBtnForComment:hover {
+        background-color: #448bde;
+        color: white;
     }
 
     #commentContent {
@@ -301,26 +365,62 @@
         position: absolute;
         margin-left: 400px;
         margin-top: ;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        font-weight: 500;
+    }
+
+    .deleteBtnForReply:hover {
+        background-color: #ff3737;
+        color: white;
     }
 
     .editUiForReply {
         position: absolute;
-        margin-left: 500px;
+        margin-left: 480px;
         margin-top: ;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        font-weight: 500;
+    }
+
+    .editUiForReply:hover {
+        background-color: #448bde;
+        color: white;
     }
 
     .cancelEditUiForReply {
         position: absolute;
-        margin-left: 500px;
+        margin-left: 480px;
         margin-top: ;
         display: none;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        font-weight: 500;
+    }
+
+    .cancelEditUiForReply:hover {
+        background-color: #44a844;
+        color: white;
     }
 
     .updateBtnForReply {
         position: absolute;
         display: none;
-        margin-left: 640px;
+        margin-left: 590px;
         margin-top: 0px;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        font-weight: 500;
+    }
+
+    .updateBtnForReply:hover {
+        background-color: #448bde;
+        color: white;
     }
 
     .replyContent {
@@ -388,11 +488,11 @@
         <h2 id="mainTitle" th:text="'제목 : '+${bulletinOne.title}"></h2>
         <a id="deleteBulletin" th:if="${session.userAlias == bulletinOne.writer}"
                 th:href="'deleteFreeBulletin?no='+${bulletinOne.no}">
-            <input type="button" value="게시글 삭제">
+            <input type="button" value="삭제">
         </a>
         <a id="updateBulletin" th:if="${session.userAlias == bulletinOne.writer}"
                 th:href="'editFreeBullein?no='+${bulletinOne.no}+'&userName='+${session.userAlias}">
-            <input type="button" value="게시글 수정">
+            <input type="button" value="수정">
         </a>
         <div id="bulletinInfo">
             <img id="profileImg"
