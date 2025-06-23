@@ -402,68 +402,69 @@
         </form>
 
         <h3 style="margin-top: 20px;">댓글 목록</h3>
-        <div th:each="commentlist : ${commenet}" class="comment" id="commentlistId">
+        <div th:each="dto : ${commentDTOList}" class="comment" id="commentlistId">
             <div class="comment-buttons"> <!-- 좋아요,삭제,수정 한곳에 뭉치기 div -->
 
                 <!-- 프로필 이미지 가져오기 -->
-                <img class="ContentprofileUserImg" th:if="${signupEntity.profileImage != null}"
-                     th:src="@{'/files/profile/' + ${signupEntity.profileImage}}">
+                <img class="ContentprofileUserImg" th:if="${dto.profileImage != null}"
+                     th:src="@{'/files/profile/' + ${dto.profileImage}}">
 
-                <img class="ContentprofileUserImg" th:if="${signupEntity.profileImage == null}"
+                <img class="ContentprofileUserImg" th:if="${dto.profileImage == null}"
                      src="https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png?type=c77_77">
 
                 <!-- 작성자,댓글내용 -->
-                <a th:href="@{'/profile?alias=' + ${commentlist.alias}}">
-                 <strong id="commentAlias"  th:text="${commentlist.alias}" style="display: block;"></strong>
+                <a th:href="@{'/profile?alias=' + ${dto.comment.alias}}">
+                 <strong id="commentAlias"  th:text="${dto.comment.alias}" style="display: block;"></strong>
                 </a>
-                <span id="comment" th:text="${commentlist.comment}" style="display: block;"></span>
+                <span id="comment" th:text="${dto.comment.comment}" style="display: block;"></span>
 
                 <!-- 댓글 수정 input (초기에는 숨김) 수정 클릭시 나오게 -->
                 <form class="commentEdit-form" action="/commentEdit" method="post" style="display: none;">
                     <input type="text" id="commentEdit" name="commentEdit"/>
-                    <input type="hidden" id="commentEditId" name="commentEditId" th:value="${commentlist.id}" />
-                    <input type="hidden" id="commentEditAlias" name="commentEditAlias" th:value="${commentlist.alias}" />
+                    <input type="hidden" id="commentEditId" name="commentEditId" th:value="${dto.comment.id}" />
+                    <input type="hidden" id="commentEditAlias" name="commentEditAlias" th:value="${dto.comment.alias}" />
                     <input type="hidden" name="registrationId" th:value="${view.id}"/>
                     <input type="submit" value="등록"
                            style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">
                 </form>
 
                 <!-- 댓글 좋아요 -->
-                <button class="Comment-like-btn" th:attr="data-commentlikeid=${commentlist.id}" >
-                    <img class="comment-like-img" th:attr="data-commentlikeid=${commentlist.id}"
+                <button class="Comment-like-btn" th:attr="data-commentlikeid=${dto.comment.id}" >
+                    <img class="comment-like-img" th:attr="data-commentlikeid=${dto.comment.id}"
                          src="/LikeImg/unFilledHeart.png" alt="좋아요">
                     <input type="hidden" class="CommentUserAlias" th:value="${session.userAlias}">
-                    <input type="hidden" id="commentId" name="commentId" th:value="${commentlist.id}" />
+                    <input type="hidden" id="commentId" name="commentId" th:value="${dto.comment.id}" />
                     <!-- 총개수 영역-->
-                    <div class="Commentlike-list" th:attr="data-commentlikeid=${commentlist.id}"></div>
+                    <div class="Commentlike-list" th:attr="data-commentlikeid=${dto.comment.id}"></div>
                 </button>
 
                 <!--댓글 삭제하기-->
-                <form action="/commentdelete" method="post" th:if="${session.userAlias}==${commentlist.alias}">
-                    <input type="hidden" name="commentId" th:value="${commentlist.id}" />
-                    <input type="hidden" name="userAlias" th:value="${commentlist.alias}" />
+                <form action="/commentdelete" method="post" th:if="${session.userAlias}==${dto.comment.alias}">
+                    <input type="hidden" name="commentId" th:value="${dto.comment.id}" />
+                    <input type="hidden" name="userAlias" th:value="${dto.comment.alias}" />
                     <input type="hidden" name="registrationId" th:value="${view.id}" />
                     <input type="submit" value="삭제"
                            style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">
                 </form>
                 <!-- 댓글 수정 버튼 -->
-                <button class="commentUpdateBtn" th:if="${session.userAlias}==${commentlist.alias}"
+                <button class="commentUpdateBtn" th:if="${session.userAlias}==${dto.comment.alias}"
                         style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">수정</button>
             </div>
-            <button class="commentBtn" type="button" th:attr="data-comment-id=${commentlist.id}"
+            <!-- 대댓글 토글버튼 -->
+            <button class="commentBtn" type="button" th:attr="data-comment-id=${dto.comment.id}"
                     style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">대댓글</button>
 
                 <!-- 대댓글 입력하기 -->
-                <div class="commentReply" style="display: none;" th:attr="data-comment-id=${commentlist.id}">
-                    <form class="comment-reply-form" data-comment-id="[[${commentlist.id}]]">
+                <div class="commentReply" style="display: none;" th:attr="data-comment-id=${dto.comment.id}">
+                    <form class="comment-reply-form" data-comment-id="[[${dto.comment.id}]]">
                         <input type="text" name="comment" id="commentReply"  placeholder="대댓글을 입력하세요">
                         <input type="hidden" name="alias" th:value="${session.userAlias}" />
-                        <input type="hidden" name="commentId" th:value="${commentlist.id}" />
+                        <input type="hidden" name="commentId" th:value="${dto.comment.id}" />
                         <input type="submit" value="대댓글등록" style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">
 
                         <!-- 대댓글 목록을 보여줄 영역 -->
                     </form>
-                    <div class="reply-list" th:attr="data-comment-id=${commentlist.id}"></div>
+                    <div class="reply-list" th:attr="data-comment-id=${dto.comment.id}"></div>
                 </div>
         </div>
     </div>
@@ -686,7 +687,7 @@
        e.preventDefault(); // 새로고침 막기
        console.log('대댓글 좋아요들어왔냐')
 
-       const replyId = $(this).data('reply-id'); // 대댓글 번호
+       const replyId = $(this).attr('data-reply-id'); // 대댓글 번호
        const alias = document.getElementById("UserAlias").value; // 세션 별명
        let liked = 1; // 게시글 좋아요 상태 게시글 별로 동작해야 하기에 지역변수 선언
 
@@ -731,7 +732,7 @@
    // 댓글 좋아요 클릭시(클릭시 비동기 변환)
    $(document).on('click', '.Comment-like-btn', function (e) {
        e.preventDefault();
-       const commentId = $(this).data('commentlikeid');
+       const commentId = $(this).attr('data-commentlikeid');
        const CommentUserAlias = document.getElementById("UserAlias").value;
        let Commentliked = 1; // 댓글 좋아요 개별 동작을 위해 지역변수로 선언
        $.ajax({
@@ -817,7 +818,7 @@
 
    // 대댓글 입력창 토글 (클릭시 화면 가리기,보이기)
    $(document).on('click', '.commentBtn', function () {
-       const commentId = $(this).data('comment-id'); // 게시글 번호 대입
+       const commentId = $(this).attr('data-comment-id');
        const $commentReply = $('.commentReply[data-comment-id="' + commentId + '"]');  // 대댓글 입력창을 선택
        const $replyListContainer = $('.reply-list[data-comment-id="' + commentId + '"]');  // 대댓글 목록을 보여줄 곳 찾기
 
@@ -841,10 +842,20 @@
 
                    response.forEach(function (reply) {
 
+                    //프로필 이미지 변수 할당
+                    let profileImageUrl = reply.profileImage
+                        ? `/files/profile/${reply.profileImage}`
+                        : "https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png?type=c77_77";
+
                      let replyBlock =`
                       <div class="reply" data-reply-id="${reply.id}">
                           <div class="reply-btn-group">
-                              <strong class="reply-alias">${reply.alias}</strong>
+                              <img class="ContentprofileUserImg" src="${profileImageUrl}"
+                              alt="프로필 이미지" style="width:30px; height:30px; border-radius:50%; margin-right:8px;">
+
+                              <a href="/profile?alias=${encodeURIComponent(reply.alias)}">
+                                <strong class="reply-alias">${reply.alias}</strong>
+                              </a>
                               <span class="reply-comment">${reply.comment}</span>
 
                           <!-- 수정 폼 -->
@@ -921,7 +932,7 @@
        // preventDefault()=페이지 새로고침 실행을 멈춰줌
        const form = $(this);
        const data = form.serialize();
-       const commentId = form.data('comment-id');
+       const commentId = form.attr('data-comment-id');
 
        const userAlias = document.getElementById("UserAlias").value;         // 세션 로그인
        const commentReply = document.getElementById("commentReply");      // 대댓글 입력창
@@ -944,12 +955,22 @@
                // alert('대댓글이 등록되었습니다!');
                form[0].reset(); // 폼 초기화
 
+                // 회원 프로필 이미지 받아오기
+                let profileImageUrl = response.profileImage
+                    ? `/files/profile/${response.profileImage}`
+                    : "https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png?type=c77_77";
+
                // 대댓글 HTML 생성
                let replyHtml = `
                   <!-- 기존 reply 내용은 별도 div로 유지 -->
                   <div class="reply" data-reply-id="${response.id}">
                         <div class="reply-btn-group">
-                              <strong class="reply-alias">${response.alias}</strong>
+                              <img class="ContentprofileUserImg" src="${profileImageUrl}"
+                                alt="프로필 이미지" style="width:30px; height:30px; border-radius:50%; margin-right:8px;">
+
+                              <a href="/profile?alias=${encodeURIComponent(response.alias)}">
+                                <strong class="reply-alias">${response.alias}</strong>
+                              </a>
                               <span class="reply-comment">${response.comment}</span>
 
                            <!-- 대댓글 수정 폼 -->
@@ -1061,8 +1082,8 @@
 
    // ----------대댓글 삭제-------------
    $(document).on('click', '.reply-delete-btn', function () {
-       const replyId = $(this).data('reply-id');
-       const replyAlias = $(this).data('reply-alias'); // 작성자 별명
+       const replyId = $(this).attr('data-reply-id');
+       const replyAlias = $(this).attr('data-reply-alias'); // 작성자 별명
        const alias = document.getElementById("UserAlias").value; // 세션 별명
        if (replyAlias != alias) { // 동일시에만 삭제가능
            alert("본인이 작성한 대댓글만 삭제할 수 있습니다.");

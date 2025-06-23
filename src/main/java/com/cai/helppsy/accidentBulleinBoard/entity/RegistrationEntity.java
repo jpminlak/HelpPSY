@@ -63,9 +63,6 @@ public class RegistrationEntity {
     @UpdateTimestamp
     private LocalDateTime modifiedDate; // 글 수정 시간
 
-    @Column(columnDefinition = "MEDIUMTEXT")
-    private String profileImage; // 회원 프로필 이미지
-
     // 1:N 관계에서 사용
     // 파일 리스트
     @OneToMany(mappedBy = "registrationEntity",cascade = CascadeType.REMOVE, orphanRemoval = true)

@@ -8,18 +8,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 @Controller
 @RequiredArgsConstructor
-public class CommentContorller {
+public class CommentController {
     private final CommentService commentservice;
 
     // 댓글 저장 (로그인 public String login에서 세션유지하는 값을 클라이언트에서 별칭 뽑아옴)
     @PostMapping("/comment")
     // commententity에는 댓글내용/작성자 별칭(세션값뽑아옴)/글작성번호(글테이블id) 넘겨받음
-    public String comment(@ModelAttribute CommentEntity commententity
-            , @RequestParam("registrationId") Integer registrationId){
+    public String comment(@ModelAttribute CommentEntity commententity,
+                          @RequestParam("registrationId") Integer registrationId){
+
         commentservice.SaveComment(commententity,registrationId); //댓글테이블에 저장
-        // 순서1) 외래키 id로 테이블조회후
+
+        // 순서1) 외래키 id로 테이블조회후 댓글의 프로필 이미지를 넣기위해 댓글 작성한 작성자의 별칭도 함께 넘겨줌
         return "redirect:/accidentview/"+ registrationId;
     }
 
