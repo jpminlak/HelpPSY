@@ -1,7 +1,10 @@
 package com.cai.helppsy.memberManager;
 
+import com.cai.helppsy.accidentBulleinBoard.entity.RegistrationEntity;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 
 

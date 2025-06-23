@@ -6,6 +6,7 @@ import com.cai.helppsy.accidentBulleinBoard.service.RegistrationService;
 import com.cai.helppsy.freeBulletinBoard.entity.FreeBulletin;
 import com.cai.helppsy.freeBulletinBoard.repository.FreeBulletinRepository;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

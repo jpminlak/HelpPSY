@@ -5,6 +5,9 @@ import com.cai.helppsy.inquiry.entity.Answer;
 import com.cai.helppsy.inquiry.entity.Question;
 import com.cai.helppsy.inquiry.repository.AnswerRepository;
 import com.cai.helppsy.inquiry.repository.QuestionRepository;
+import com.cai.helppsy.note.Note;
+import com.cai.helppsy.note.NoteRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +25,8 @@ import java.util.UUID;
 public class InquiryController {
     private final AnswerRepository a1;
     private final QuestionRepository q1;
+    private final NoteRepository noteRepository;
+
 
     @GetMapping("inquiry")
     public String inquiry() {
@@ -72,27 +77,48 @@ public class InquiryController {
     }
 
     @PostMapping("kkk")
-    public String kkk(@RequestParam(value = "action") String action,    //@Requestparam으로 action을 넘겨줌
-                      @RequestParam(value = "ids", required = false) List<Integer> ids, //기본값: true를 false로 바꿈
+    public String kkk(@RequestParam(value = "action") String action,
+                      @RequestParam(value = "ids", required = false) List<Integer> ids,
                       @ModelAttribute Answer A,
-                      @RequestParam(value = "question.id", required = false) Integer qid) { //question.id를 넘겨줌 변수명 : qid
+                      @RequestParam(value = "question.id", required = false) Integer qid,
+                      HttpSession session) {
 
-        if ("delete".equals(action)) {      //action이 delete면
-            if (ids != null && !ids.isEmpty()) {    //ids가 빈값이 아니면 존재여부 확인
-                q1.deleteAllById(ids);  //해당 id(번호) 행 삭제
+        if ("delete".equals(action)) {
+            if (ids != null && !ids.isEmpty()) {
+                q1.deleteAllById(ids);
             }
-        } else if ("answer".equals(action)) {   //action이 answer이면
+        } else if ("answer".equals(action)) {
             A.setCreateDate(LocalDateTime.now());
 
-            // 질문 ID가 전달되었으면 연결해주기
-            if (qid != null) {  //qid가 존재하면
+            if (qid != null) {
                 Question question = q1.findById(qid).orElse(null);
                 A.setQuestion(question);
+
+                // 답변 저장
+                a1.save(A);
+
+                // ===== 쪽지 전송 로직 시작 =====
+                if (question != null) {
+                    String writerId = question.getWriter(); // 문의 작성자
+                    String adminId = (String) session.getAttribute("userId"); // 답변자 (관리자) 아이디
+
+                    // Note 객체 생성
+                    Note note = new Note();
+                    note.setReceiverId(writerId);
+                    note.setSenderId(adminId);
+                    note.setSentAt(LocalDateTime.now());
+                    note.setTitle("[문의 답변] " + question.getSubject());
+                    note.setContent("문의하신 내용: " + question.getContent() + "\n\n답변 내용: " + A.getContent2());
+
+                    noteRepository.save(note); // 쪽지 저장
+                }
+                // ===== 쪽지 전송 로직 끝 =====
             }
-            a1.save(A);
         }
+
         return "redirect:/respondent";
     }
+
 
     @PostMapping("delete")
     public String delete(@RequestParam(value = "ids", required = false) List<Integer> ids) {

@@ -83,8 +83,16 @@ public class NoteController {
     public String sendReply(@RequestParam String receiverId,
                             @RequestParam String title,
                             @RequestParam String content,
-                            HttpSession session) {
+                            HttpSession session,
+                            Model model) {
+
         String senderId = (String) session.getAttribute("userId");
+        if (senderId == null || senderId.isEmpty()) {
+            return "redirect:/login";  // 세션 만료 또는 미로그인 시
+        }
+        model.addAttribute("senderId", senderId);
+        model.addAttribute("senderAlias", session.getAttribute("userAlias")); // 로그인할 때 세션에 저장했던 별명
+
         noteService.sendNote(senderId, receiverId, title, content);
         return "redirect:/note/inbox";
     }

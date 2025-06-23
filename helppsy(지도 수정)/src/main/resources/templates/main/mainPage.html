@@ -8,10 +8,14 @@
     <script th:src="@{/main/fragment.js}"></script>
 </head>
 
+<style>
+
+</style>
+
 <body>
 <div class="wrapper">
     <div class="header-container">
-        <div class="logo-nav-container">
+        <div class="logo-nav-container" th:fragment="header">
             <div class="logo-container">
                 <img id="like" th:src="@{/LikeImg/차량사고 커뮤니티 로고.png}" width="150" alt="로고">
                 <h2><b>Help PSY</b></h2>

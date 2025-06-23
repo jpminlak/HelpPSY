@@ -16,4 +16,5 @@ public class signupService {
     public boolean existsById(String userId) {
         return signupRepository.existsByUserId(userId); // 직접 선언한 메서드 호출
     }
+
 }

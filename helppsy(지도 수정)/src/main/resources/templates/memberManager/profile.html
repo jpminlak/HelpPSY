@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="https://www.thymeleaf.org" >
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -8,6 +8,14 @@
         * {
             user-select: none;
             box-sizing: border-box;
+        }
+
+        .scroll-box {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+            border-radius: 5px;
         }
 
         body {
@@ -143,8 +151,8 @@
         <div class="profile-info">
             <h1><label th:text="${member.userId}"></label></h1>
             <p>별명 : <label th:text="${member.alias}"></label></p>
-<!--            <p>구분 : <label th:text="${member.division}"></label></p>-->
-<!--            <p>고유번호 : <label th:text="${member.dNum}"></label></p>-->
+            <!--            <p>구분 : <label th:text="${member.division}"></label></p>-->
+            <!--            <p>고유번호 : <label th:text="${member.dNum}"></label></p>-->
             <div th:if="${session.userId} == ${member.userId}">
                 <a href="profile_Update"><input id="profile_Update" type="button" value="프로필 편집" onclick=""></a>
                 <a href="note_inbox"><input id="note_inbox" type="button" value="쪽지함"></a>
@@ -170,7 +178,7 @@
         <div th:if="${#lists.isEmpty(accidentPosts)}">
             <p>작성한 글이 없습니다.</p>
         </div>
-        <div th:unless="${#lists.isEmpty(accidentPosts)}">
+        <div th:unless="${#lists.isEmpty(accidentPosts)}" class="scroll-box">
             <table style="text-align: center;">
                 <thead>
                 <tr>
@@ -181,7 +189,13 @@
                 </thead>
                 <tbody>
                 <tr th:each="post : ${accidentPosts}">
-                    <td th:text="${post.title}"></td>
+                    <td>
+                        <!-- 사고게시판 제목 클릭 시 사고 상세페이지로 이동 -->
+                        <a th:href="@{'/accidentview/' + ${post.id}}"
+                           th:text="${post.title}"
+                           style="text-decoration: none;">
+                        </a>
+                    </td>
                     <td th:text="${post.postViews}"></td>
                     <td th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd')}"></td>
                 </tr>
@@ -194,26 +208,32 @@
         <div th:if="${#lists.isEmpty(freePosts)}">
             <p>작성한 자유게시판 글이 없습니다.</p>
         </div>
-        <table th:if="${!#lists.isEmpty(freePosts)}">
-            <thead>
-            <tr>
-                <th >제목</th>
-                <th >조회수</th>
-                <th >작성일</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="post : ${freePosts}">
-                <td th:text="${post.title}" ></td>
-                <td th:text="${post.views}" ></td>
-                <td th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd')}" ></td>
-            </tr>
-            </tbody>
-        </table>
+        <div th:unless="${#lists.isEmpty(freePosts)}" class="scroll-box">
+            <table>
+                <thead>
+                <tr>
+                    <th>제목</th>
+                    <th>조회수</th>
+                    <th>작성일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="post : ${freePosts}">
+                    <td>
+                        <!-- 자유게시판 제목 클릭 시 자유 상세페이지로 이동 -->
+                        <a th:href="@{'/specificBulletin?no=' + ${post.no} + '&userName=' + ${post.writer}}"
+                           th:text="${post.title}"
+                           style="text-decoration: none;">
+                        </a>
+                    </td>
+                    <td th:text="${post.views}"></td>
+                    <td th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     <a href="main"><input id="main" type="button" value="홈" onclick=""></a>
-
-
 </div>
 </body>
 
