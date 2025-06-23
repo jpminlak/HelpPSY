@@ -7,6 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface FreeBulletinRepository extends JpaRepository<FreeBulletin, Integer> {
-    List<FreeBulletin> findByTitleContaining(String searchWord);
+    List<FreeBulletin> findByTitleContainingOrderByLikesDesc(String searchWord, Sort sort);
     List<FreeBulletin> findByTitleContainingOrderByLikesAsc(String searchWord, Sort sort);
+    List<FreeBulletin> findByTitleContainingOrderByViewsDesc(String searchWord, Sort sort);
+    List<FreeBulletin> findByTitleContainingOrderByViewsAsc(String searchWord, Sort sort);
+    List<FreeBulletin> findByTitleContainingOrderByNoDesc(String searchWord, Sort sort);
+    List<FreeBulletin> findByTitleContainingOrderByNoAsc(String searchWord, Sort sort);
 }

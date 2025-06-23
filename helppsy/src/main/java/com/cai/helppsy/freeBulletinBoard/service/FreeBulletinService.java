@@ -2,6 +2,7 @@ package com.cai.helppsy.freeBulletinBoard.service;
 
 import com.cai.helppsy.freeBulletinBoard.dto.FreeBulletinCommentDTO;
 import com.cai.helppsy.freeBulletinBoard.dto.FreeBulletinDTO;
+import com.cai.helppsy.freeBulletinBoard.dto.SearchDTO;
 import com.cai.helppsy.freeBulletinBoard.entity.FreeBulletin;
 import com.cai.helppsy.freeBulletinBoard.entity.FreeBulletinAttach;
 import com.cai.helppsy.freeBulletinBoard.entity.FreeBulletinComment;
@@ -225,35 +226,56 @@ public class FreeBulletinService {
     }
 
     // 아래는 검색 기능
-    public List<FreeBulletinDTO> searchBulletin(String searchWord, String sortingType){
+    public List<FreeBulletinDTO> searchBulletin(SearchDTO searchDTO) {
         List<FreeBulletin> fbEntityList = null;
         List<FreeBulletinDTO> fbDTOList = new ArrayList<>();
 
-        if(!searchWord.equals("") && !sortingType.equals("")){
-            if(sortingType.equals("likes")){
+        if (!searchDTO.getSearchWord().equals("") && !searchDTO.getSortingType().equals("")) {
+            if (searchDTO.getSortingType().equals("likes") && searchDTO.getDescOrAsc().equals("desc")) {
                 fbEntityList = freeBulletinRepository.findByTitleContainingOrderByLikesAsc
-                    (searchWord, Sort.by(Sort.Order.desc("likes")));
-            }else if(sortingType.equals("views")){
-                fbEntityList = freeBulletinRepository.findByTitleContainingOrderByLikesAsc
-                    (searchWord, Sort.by(Sort.Order.desc("views")));
+                        (searchDTO.getSearchWord(), Sort.by(Sort.Order.asc("likes")));
+            } else if (searchDTO.getSortingType().equals("likes")) {
+                fbEntityList = freeBulletinRepository.findByTitleContainingOrderByLikesDesc
+                        (searchDTO.getSearchWord(), Sort.by(Sort.Order.desc("likes")));
+            } else if (searchDTO.getSortingType().equals("views") && searchDTO.getDescOrAsc().equals("desc")) {
+                fbEntityList = freeBulletinRepository.findByTitleContainingOrderByViewsAsc
+                        (searchDTO.getSearchWord(), Sort.by(Sort.Order.asc("views")));
+            } else if (searchDTO.getSortingType().equals("views")) {
+                fbEntityList = freeBulletinRepository.findByTitleContainingOrderByViewsDesc
+                        (searchDTO.getSearchWord(), Sort.by(Sort.Order.desc("views")));
             }
             System.out.println("1-1");
-        }else if(searchWord.equals("") && sortingType.equals("")){
-            fbEntityList = freeBulletinRepository.findAll();
+        } else if (searchDTO.getSearchWord().equals("") && searchDTO.getSortingType().equals("")) {
+            if (searchDTO.getDescOrAsc().equals("desc")) {
+                fbEntityList = freeBulletinRepository.findAll(Sort.by(Sort.Order.asc("no")));
+
+            } else {
+                fbEntityList = freeBulletinRepository.findAll(Sort.by(Sort.Order.desc("no")));
+            }
             System.out.println("2-2");
-        }else if(searchWord.equals("")){
-            if(sortingType.equals("likes")){
+        } else if (searchDTO.getSearchWord().equals("")) {
+            if (searchDTO.getSortingType().equals("likes") && searchDTO.getDescOrAsc().equals("desc")) {
                 fbEntityList = freeBulletinRepository.findAll(Sort.by(Sort.Order.asc("likes")));
-            }else if(sortingType.equals("views")){
+            } else if (searchDTO.getSortingType().equals("likes")) {
+                fbEntityList = freeBulletinRepository.findAll(Sort.by(Sort.Order.desc("likes")));
+            } else if (searchDTO.getSortingType().equals("views") && searchDTO.getDescOrAsc().equals("desc")) {
                 fbEntityList = freeBulletinRepository.findAll(Sort.by(Sort.Order.asc("views")));
+            } else if (searchDTO.getSortingType().equals("views")) {
+                fbEntityList = freeBulletinRepository.findAll(Sort.by(Sort.Order.desc("views")));
             }
             System.out.println("3-3");
-        }else if(sortingType.equals("")){
-            fbEntityList = freeBulletinRepository.findByTitleContaining(searchWord);
+        } else if (searchDTO.getSortingType().equals("")) {
+            if (searchDTO.getDescOrAsc().equals("desc")) {
+                fbEntityList = freeBulletinRepository.findByTitleContainingOrderByNoAsc(searchDTO.getSearchWord()
+                        , Sort.by(Sort.Order.asc("no")));
+            } else {
+                fbEntityList = freeBulletinRepository.findByTitleContainingOrderByNoDesc(searchDTO.getSearchWord()
+                        , Sort.by(Sort.Order.desc("no")));
+            }
             System.out.println("4-4");
         }
 
-        if(fbEntityList != null) {
+        if (fbEntityList != null) {
             for (FreeBulletin fbe : fbEntityList) {
                 FreeBulletinDTO fbDTO = new FreeBulletinDTO();
                 fbDTO.setNo(fbe.getNo());
@@ -266,7 +288,7 @@ public class FreeBulletinService {
                 fbDTO.setWriter(fbe.getWriter());
                 fbDTOList.add(fbDTO);
             }
-        }else{
+        } else {
             System.out.println("freeBulletinEntityList null 발생");
         }
 

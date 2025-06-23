@@ -25,14 +25,6 @@ public class Paging {
         int initialValue = list.size() - 1 -(pageNum-1)*perPageListCnt;
         int condition = initialValue-perPageListCnt;
 
-        System.out.println("__________33________");
-        System.out.println(list.size());
-        System.out.println(pageNum);
-        System.out.println(perPageListCnt);
-        System.out.println(initialValue);
-        System.out.println(condition);
-        System.out.println("__________33________");
-
         for(int i = initialValue ; i > condition && i >= 0; i--){
             perPageList.add(list.get(i));
         }

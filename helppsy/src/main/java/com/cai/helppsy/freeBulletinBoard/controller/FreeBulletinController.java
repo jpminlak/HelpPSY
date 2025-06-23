@@ -35,7 +35,7 @@ public class FreeBulletinController {
     public String mainFreeBulletin(Model model, @ModelAttribute SearchDTO searchDTO) {
         List<FreeBulletin> bulletinList = freeBulletinService.bulletinList();
         Paging paging = new Paging();
-        paging.setPerPageList(10, searchDTO.getCurrentPage(), searchDTO.getCurrentPageSetNum(), 5, bulletinList);
+        paging.setPerPageList(15, searchDTO.getCurrentPage(), searchDTO.getCurrentPageSetNum(), 5, bulletinList);
 
         model.addAttribute("perPageList", paging.getPerPageList());
         model.addAttribute("allPageNumCnt", paging.getAllPageNumCnt());
@@ -184,19 +184,16 @@ public class FreeBulletinController {
     // 아래는 검색 기능
     @GetMapping("searchFreeBulletin")
     public String searchBulletin(Model model, @ModelAttribute SearchDTO searchDTO){
-//        System.out.println("_________________________11__________________________");
-//        System.out.println("#"+searchWord+"#");
-//        System.out.println("#"+sortingType+"#");
-//        System.out.println("_________________________12__________________________");
-//        System.out.println(searchWord.equals(""));
-//        System.out.println(sortingType.equals(""));
-//        System.out.println("_________________________13__________________________");
-        List<FreeBulletinDTO> bulletinList = freeBulletinService.searchBulletin(searchDTO.getSearchWord(), searchDTO.getSortingType());
-        Paging paging = new Paging();
-        paging.setPerPageList(10, searchDTO.getCurrentPage(), searchDTO.getCurrentPageSetNum(), 5, bulletinList);
 
-        System.out.println(searchDTO.getSearchWord());
-        System.out.println(searchDTO.getSortingType());
+//        System.out.println("______________________99______________________");
+//        System.out.println(searchDTO.getSearchWord());
+//        System.out.println(searchDTO.getSortingType());
+//        System.out.println("______________________99______________________");
+
+        List<FreeBulletinDTO> bulletinList = freeBulletinService.searchBulletin(searchDTO);
+        Paging paging = new Paging();
+        paging.setPerPageList(15, searchDTO.getCurrentPage(), searchDTO.getCurrentPageSetNum(), 5, bulletinList);
+
 
         model.addAttribute("perPageList", paging.getPerPageList());
         model.addAttribute("allPageNumCnt", paging.getAllPageNumCnt());
