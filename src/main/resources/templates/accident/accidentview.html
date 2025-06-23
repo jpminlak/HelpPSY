@@ -7,20 +7,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--    <link rel="stylesheet" th:href="@{/style.css}">-->
     <style>
-        body {
+        .minwooBody {
             font-family: 'Noto Sans KR', sans-serif;
             background-color: #f8f9fa;
             margin: 20px;
+        }
 
+        .info-table {
+            width: 100%;
+            margin-bottom: 30px;
+            table-layout: fixed; /* 줄어들어도 균형 유지 */
+        }
+        .td1{
+             padding: 10px;
+             text-align: left;
+        }
+        .td2{
+            padding: 10px;
+            border: 1px solid #ddd;
         }
 
         .container {
+            width: 100%;
             max-width: 800px;
             margin: auto;
-            background: white;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            background: white; /* 배경을 흰색으로 */
+            padding: 20px; /* 내부 여백 */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 입체감(그림자) */
+            border-radius: 8px; /* 모서리 둥글게 */
         }
 
         .post-header h2 {
@@ -28,17 +42,27 @@
             color: #333;
         }
 
-        .info-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
+        /* 지도 소개글 지도 중앙위치에 넣기위해 감싼 div */
+        .MapDivCenter {
+          width: 500px;
+          margin: 0;
+          margin-left: -130px;
         }
 
-        .info-table th,
-        .info-table td {
-            padding: 10px;
-            border: 1px solid #ccc;
-            text-align: left;
+        .map-title {
+          color: rgb(50, 89, 139);
+          font-size: 18px;
+          text-align: center; /* 글씨 중앙 정렬 */
+          margin-bottom: 8px; /* 글씨와 지도 간 간격 */
+        }
+
+        #map {
+          width: 500px;                         /* 지도의 가로 길이를 500px로 고정 */
+          min-height: 300px;                    /* 최소 세로 높이를 300px로 설정 → 내용이 적어도 최소 높이는 유지 */
+          height: auto;                         /* 내용에 따라 높이는 자동으로 조정되도록 설정 */
+          border: 2px solid rgb(50, 89, 139);   /* 지도 테두리에 진한 파란빛 테두리 적용 */
+          border-radius: 6px;                   /* 지도 테두리 모서리를 부드럽게 6px 둥글게 처리 */
+          position: relative;                   /* 자식 요소의 절대 위치 지정이 가능하도록 설정 (예: 마커, 버튼 등 위치 지정 시 활용) */
         }
 
         .images {
@@ -77,11 +101,16 @@
             color: #007bff;
         }
 
-        a {
+        .GoBack {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+        .GoBackText {
             text-decoration: none;
             color: #007bff;
             display: inline-block;
-            margin-top: 20px;
+            font-size: 18px;
+
         }
 
         .post-header {
@@ -121,65 +150,154 @@
         font-size: 14px;
     }
 
-
-    .bulletinInfo {
-    width: 350px;
-    /*         border: 1px solid; */
-    height: 60px;
-    margin-left: 25px;
+    /* 프로필 범위 */
+    .profileDiv {
+        position: relative; /* 자식 요소 위치 조절가능 */
+        width: 350px;
+        height: 60px;
+        margin-left: 3px;
+        padding-top: -20px;  /* 닉네임 높이 조절 */
     }
-
-    /* in bulletinInfo */
-    .profileImg {
+    /* 게시글 프로필 이미지*/
+    .profileUserImg {
         position: absolute;
         width: 50px;
         height: 50px;
+        border-radius: 50%;     /* 동그랗게 */
+        object-fit: cover;      /* 이미지 비율 유지 */
     }
 
-    .memberGrade {
+    /* 댓글 프로필 및 버튼들 1열 맞추기----*/
+        .ContentprofileUserImg {
+          position: static;       /* 절대 위치 해제 - 흐름에 따라 배치 */
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;     /* 동그랗게 */
+          object-fit: cover;      /* 이미지 비율 유지 */
+        }
+        #commentAlias, #comment {
+          display: inline-block;  /* 블록이 아니라 인라인블록으로 */
+          margin: 0;              /* 불필요한 마진 제거 */
+        }
+
+        #commentAlias {
+          font-weight: bold;
+          font-size: 17px;
+        }
+
+        #comment {
+          font-size: 15px;
+          color: #555;
+        }
+    /* 댓글 프로필 및 버튼들 1열 맞추기----*/
+
+
+    /* 프로필 이름 */
+    .profileUserName {
         position: absolute;
-        font-size: 12px;
+        font-size: 17px;
         margin-left: 70px;
+        top : 0px;
     }
 
-    .writer {
+    .profileTime {
         position: absolute;
-        font-size: 12px;
-        margin-left: 200px;
-    }
-
-    .writingDate {
-        position: absolute;
-        font-size: 12px;
+        font-size: 14px;
         margin-left: 70px;
         margin-top: 30px;
         color: gray;
     }
 
-    .viewCnt {
+    .profileViewCntSet {
         position: absolute;
-        font-size: 12px;
+        font-size: 14px;
         margin-left: 240px;
         margin-top: 30px;
         color: gray;
     }
 
     .comment-buttons {
-        display: flex;
-        gap: 10px; /* 버튼 간격 */
-        margin-top: 10px;
+      display: flex;          /* 가로 정렬 */
+      align-items: center;    /* 세로 중앙 정렬 */
+      gap: 10px;              /* 이미지와 텍스트 사이 간격 */
     }
+
+    /* 작성내용 보여지는곳 */
+    #content {
+        border: none;
+        height : 1px
+        background-color: #ddd;
+        margin: 30px 0;
+        text-align: center;
+    }
+
+    /* 카테고리,제보위치 등 label 글씨체 */
+    .viewTextStyle{
+        color: rgb(50, 89, 139);
+        font-size: 18px;"
+    }
+
+    /* 비동기 버튼들 그룹묶기 (대댓글과 1열로 배치) */
+            .reply-btn-group {
+                display: flex;            /* 내부 요소들을 가로로 나열 (수평 정렬) */
+                align-items: center;      /* 요소들을 수직 가운데 정렬 */
+                gap: 10px;                /* 요소들 사이의 간격 */
+                flex-wrap: wrap;          /* 줄바꿈 허용 (너무 좁은 화면 대응) */
+                margin-top: 8px;          /* 그룹 위쪽에 약간의 여백 추가 */
+            }
+
+            .reply-like-btn {
+                display: flex;              /* 버튼 내부 요소들 (이미지, 숫자)를 가로로 정렬 */
+                align-items: center;        /* 버튼 내부 콘텐츠를 수직 가운데 정렬 */
+                gap: 4px;                   /* 하트 이미지와 숫자 사이의 간격 */
+                background: none;           /* 버튼 배경 제거 → 배경색 없음 */
+                border: none;               /* 테두리 제거 */
+                padding: 0;                 /* 기본 여백 제거 */
+                cursor: pointer;            /* 마우스 올렸을 때 손 모양 포인터로 표시 */
+            }
+
+            .reply-edit-form {
+                margin: 0;                  /* 기본 마진 제거 */
+                display: flex;              /* 입력창과 버튼을 가로 정렬 */
+                align-items: center;        /* 입력창과 버튼을 수직 가운데 정렬 */
+                gap: 5px;                   /* 입력창과 버튼 사이의 간격 */
+            }
+            .reply {
+                margin-left: 20px;           /* 댓글보다 오른쪽으로 들여쓰기 */
+            }
+            .reply.reply-child {
+                margin-left: 20px;          /* (중복될 수 있지만) 대댓글 클래스일 경우도 동일하게 들여쓰기 */
+            }
+
+    /* 미리보기글 3줄요약 */
+    .Preview {
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+            /*  줄바꿈 허용 */
+            white-space: normal;                 /*  줄바꿈 허용 */
+                                        /* 너무 길면 아래로 흐르되 일정 높이까지만 보여주기 */
+            display: -webkit-box;               /* 줄 수 제한을 위한 flex 컨테이너 역할 */
+            -webkit-line-clamp: 3;              /* 최대 줄 수: n줄 */
+            -webkit-box-orient: vertical;       /* 세로 방향 박스 */
+            overflow: hidden;                   /* 넘치는 텍스트 감춤 */
+            text-overflow: ellipsis;            /* 말줄임표 (...) 처리 */
+            max-width: 520px;                   /* 최대 너비 제한 (원하는 값으로 조절 가능) */
+            line-height: 1.4;                   /* 줄 간격 조정 */
+            max-height: calc(1.4em * 3);        /* 최대 n줄 높이까지만 보이도록 제한 (줄 수에 맞춰 계산됨) */
+        }
     </style>
 </head>
 <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=0b286c3340a1de99c4f466bb9bd54867&libraries=services,clusterer,drawing"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<body>
-<a th:href="@{/accidentmain}"> 사고게시판 메인 화면으로 돌아가기</a>
+<body class="minwooBody">
 <div class="container">
+    <div class="GoBack"><a class="GoBackText" th:href="@{/accidentmain}"> 제보게시판</a></div>
     <div class="post-header">
 
         <h2 th:text="${view.title}"></h2>
+
         <!--게시글 좋아요버튼-->
         <button class="like-btn" >
             <img id="like" src="/LikeImg/unFilledHeart.jpg" alt="좋아요">
@@ -189,7 +307,7 @@
 
         <!--게시글 수정폼 -->
         <form action="/UpdateAccidentPage" method="post" th:if="${session.userAlias}==${view.alias}">
-            <input type="submit" value="게시글수정"
+            <input type="submit" value="수정"
                    style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">
             <input type="hidden" name="id" th:value="${view.id}" />
             <input type="hidden" name="alias" th:value="${view.alias}" />
@@ -198,56 +316,81 @@
 
         <!--게시글 삭제-->
         <form action="/deleteAccident" method="post" th:if="${session.userAlias}==${view.alias}">
-            <input type="submit" value="게시글삭제"
+            <input type="submit" value="삭제"
                    style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">
             <input type="hidden" name="id" th:value="${view.id}" />
             <input type="hidden" name="alias" th:value="${view.alias}" />
         </form>
     </div>
+    <br>
 
     <!-- 프로필 자리 생성 -->
-    <div class="bulletinInfo">
-        <img class="profileImg"
+    <div class="profileDiv">
+        <img class="profileUserImg" th:if="${signupEntity.profileImage != null}"
+             th:src="@{'/files/profile/' + ${signupEntity.profileImage}}">
+
+        <img class="profileUserImg" th:if="${signupEntity.profileImage == null}"
              src="https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png?type=c77_77">
-        <p class="memberGrade">회원등급 : 일반</p>
-        <p class="writer" th:text="'작성자 : '+${view.alias}"></p>
-        <p class="writingDate"
+
+        <a class="profileUserName"  th:href="@{'/profile?alias=' + ${view.alias}}" th:text="${view.alias}"></a>
+        <p class="profileTime"
            th:text="'등록일 : '+${#temporals.format(view.createDate, 'yyyy-MM-dd HH:mm')}"></p>
-        <p class="viewCnt" th:text="'조회수 : '+${postviewsnum}"></p>
+        <p class="profileViewCntSet" th:text="'조회수 : '+${postviewsnum}"></p>
     </div>
+
+    <!-- 글간 경계선 -->
+    <div style="height: 1px; background-color: #ccc; margin: 20px 0;"></div>
+
+    <!-- 미리보기 글 -->
+    <p class="Preview"  th:text="${view.Preview}"> </p>
+
+    <!-- 글간 경계선 -->
+    <div style="height: 1px; background-color: #ccc; margin: 20px 0;"></div>
 
     <table class="info-table" id="table">
         <tr>
-            <td>
+            <td id="td1">
+                <!-- 게시글 좋아요 비동기통신 사용용도 (글작성번호) -->
+                <input type="hidden" id="viewId" th:value="${view.id}" />
 
-                <label>글번호</label><br>
-                <span th:text="${view.id}" id="viewId"></span>
-                <br>
-                <br>
-                <label>사고 분류</label><br>
+                <label class="viewTextStyle">제보 카테고리</label><br>
                 <span th:text="${view.accident}"></span>
                 <br>
                 <br>
-                <label>사고 지역</label><br>
+                <br>
+                <label class="viewTextStyle">제보 분류</label><br>
+                <span th:text="${view.distinction}"></span>
+                <br>
+                <br>
+                <br>
+                <label class="viewTextStyle">제보 위치</label><br>
                 <span th:text="${view.region}"></span>
                 <br>
                 <br>
-                <label>차량 등급</label><br>
-                <span th:text="${view.rating}"></span>
                 <br>
-                <br>
-                <label>차량 종류</label><br>
+                <label class="viewTextStyle">제보 상세 위치</label><br>
                 <span th:text="${view.type}"></span>
 
-            <td>
-                <div id="map" style="width: 400px; height: 300px;"></div> <!-- 카카오지도 -->
+                <!-- 지도 생성 위치 -->
+            <td id="td2">
+                <div class="MapDivCenter">
+                    <div style=" color: rgb(50, 89, 139); font-size: 18px; text-align: center;">[제보 위치 지도]</div>
+                    <div id="map" ></div> <!-- 카카오지도 -->
+                </div>
             </td>
         </tr>
 
     </table>
+
+    <div style="height: 1px; background-color: #ccc; margin: 20px 0;"></div> <!-- 글간 경계선 -->
+
     <!-- 작성글 내용 -->
-    <!-- utext는 HTML 문자열을 렌더링 떄문에 클라이언트에선 HTML로 보내주고 서버,클라이언트 인코딩 작업이 없어도 됨 -->
-    <div th:utext="${view.content}"></div>
+    <div id="content" th:utext="${view.content}"></div>
+
+
+    <div style="height: 1px; background-color: #ccc; margin: 20px 0;"></div> <!-- 글간 경계선 -->
+
+
 
     <div class="comment-section">
         <h3>댓글 작성</h3>
@@ -262,9 +405,18 @@
         <div th:each="commentlist : ${commenet}" class="comment" id="commentlistId">
             <div class="comment-buttons"> <!-- 좋아요,삭제,수정 한곳에 뭉치기 div -->
 
+                <!-- 프로필 이미지 가져오기 -->
+                <img class="ContentprofileUserImg" th:if="${signupEntity.profileImage != null}"
+                     th:src="@{'/files/profile/' + ${signupEntity.profileImage}}">
+
+                <img class="ContentprofileUserImg" th:if="${signupEntity.profileImage == null}"
+                     src="https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png?type=c77_77">
+
                 <!-- 작성자,댓글내용 -->
-                    <strong id="commentAlias" th:text="${commentlist.alias}" style="display: block;"></strong>
-                    <span id="comment" th:text="${commentlist.comment}" style="display: block;"></span>
+                <a th:href="@{'/profile?alias=' + ${commentlist.alias}}">
+                 <strong id="commentAlias"  th:text="${commentlist.alias}" style="display: block;"></strong>
+                </a>
+                <span id="comment" th:text="${commentlist.comment}" style="display: block;"></span>
 
                 <!-- 댓글 수정 input (초기에는 숨김) 수정 클릭시 나오게 -->
                 <form class="commentEdit-form" action="/commentEdit" method="post" style="display: none;">
@@ -301,44 +453,43 @@
             <button class="commentBtn" type="button" th:attr="data-comment-id=${commentlist.id}"
                     style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">대댓글</button>
 
-            <!-- 대댓글 입력하기 -->
-            <div class="commentReply" style="display: none;" th:attr="data-comment-id=${commentlist.id}">
-                <form class="comment-reply-form" data-comment-id="[[${commentlist.id}]]">
-                    <input type="text" name="comment" placeholder="대댓글을 입력하세요">
-                    <input type="hidden" name="alias" th:value="${session.userAlias}" />
-                    <input type="hidden" name="commentId" th:value="${commentlist.id}" />
-                    <input type="submit" value="대댓글등록" style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">
+                <!-- 대댓글 입력하기 -->
+                <div class="commentReply" style="display: none;" th:attr="data-comment-id=${commentlist.id}">
+                    <form class="comment-reply-form" data-comment-id="[[${commentlist.id}]]">
+                        <input type="text" name="comment" id="commentReply"  placeholder="대댓글을 입력하세요">
+                        <input type="hidden" name="alias" th:value="${session.userAlias}" />
+                        <input type="hidden" name="commentId" th:value="${commentlist.id}" />
+                        <input type="submit" value="대댓글등록" style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">
 
-                    <!-- 대댓글 목록을 보여줄 영역 -->
-                </form>
-                <div class="reply-list" th:attr="data-comment-id=${commentlist.id}"></div>
-            </div>
+                        <!-- 대댓글 목록을 보여줄 영역 -->
+                    </form>
+                    <div class="reply-list" th:attr="data-comment-id=${commentlist.id}"></div>
+                </div>
         </div>
     </div>
-
+    <div class="GoBack"><a class="GoBackText" th:href="@{/accidentmain}">제보게시판</a></div>
 </div>
-
-<a th:href="@{/accidentmain}"> 사고게시판 메인 화면으로 돌아가기</a>
-
 </body>
-
 </html>
 <script>
     // ======================================= 일반 스크립트 코드 =======================================
+
+        // 대댓글 비로그인 작성 제한
         // 비로그인 댓글 등록 클릭시 차단 + 댓글 미작성 등록 작성시 차단
-            document.getElementById("submit").addEventListener("click", function(e) { // 가짜 파일을 누르면
-                const userAlias = document.getElementById("UserAlias").value; // 세션 로그인
-                const commentText = document.getElementById("commentText").value; // 댓글 미작성
+            document.getElementById("submit").addEventListener("click", function(e) {
+                const userAlias = document.getElementById("UserAlias").value;         // 세션 로그인
+                const commentText = document.getElementById("commentText");     // 댓글 미작성
                 if(!userAlias) { // null, undefined, "", 0 등을 모두 false로 판단
                     e.preventDefault(); // 폼 제출 방지
+                    commentText.value = '';
                     alert("로그인 후 댓글을 등록해주세요.");
                     return;
                 }
-                if(!commentText){
+                if(!commentText.value){
                      e.preventDefault(); // 폼 제출 방지
                     alert("댓글을 입력해 주세요.");
                     return;
-                 }
+                }
             });
 
          // ======댓글 수정 버튼 클릭시 수정문구 적는 칸란과 등록버튼 화면보이기 =========
@@ -472,7 +623,7 @@
                    console.log('댓글 좋아요 새로고침 성공 ');
                    // 좋아요 이미지 설정
                    if (res.CommentlikedStatus === 1) {
-                       $(`img.comment-like-img[data-commentlikeid="${commentId}"]`).attr('src', '/filledHeart.png');
+                       $(`img.comment-like-img[data-commentlikeid="${commentId}"]`).attr('src', '/LikeImg/filledHeart.png');
                    } else {
                        $(`img.comment-like-img[data-commentlikeid="${commentId}"]`).attr('src', '/LikeImg/unFilledHeart.png');
                    }
@@ -494,7 +645,7 @@
 
        // ---------------------------(게시글 좋아요 상태유지)-----------------------------------
        const table = document.getElementById('table');
-       const registration_entity_id = document.getElementById('viewId').innerText;
+       const registration_entity_id = document.getElementById('viewId').value;
        const alias = document.getElementById("UserAlias").value;
        $.ajax({
            url: '/like/revert',
@@ -563,10 +714,10 @@
 
                // 예시: 좋아요 상태에 따라 이미지 변경
                if (response.ReplylikedStatus === 1) {
-                   $(`.reply-like-img[data-reply-id="${replyId}"]`).attr('src', '/LikeImg/LikeTrue.jpg');
+                   $(`.reply-like-img[data-reply-id="${replyId}"]`).attr('src', '/LikeImg/filledHeart.png');
                    liked = 0;
                } else {
-                   $(`.reply-like-img[data-reply-id="${replyId}"]`).attr('src', '/LikeImg/LikeFalse.jpg');
+                   $(`.reply-like-img[data-reply-id="${replyId}"]`).attr('src', '/LikeImg/unFilledHeart.png');
                    liked = 1;
                }
            },
@@ -623,7 +774,7 @@
    $(document).on('click', '.like-btn', function (e) {
        e.preventDefault(); // 새로고침 막기
        const table = document.getElementById('table');
-       const registration_entity_id = document.getElementById('viewId').innerText; // 게시글 번호
+       const registration_entity_id = document.getElementById('viewId').value; // 게시글 번호
        const alias = document.getElementById("UserAlias").value; // 세션로그인 별명
        let liked = 1; // 게시글 좋아요 상태 게시글 별로 동작해야 하기에 지역변수 선언
        $.ajax({
@@ -673,6 +824,7 @@
        // 대댓글 입력란을 보이게/숨기게
        $commentReply.toggle(); // toggle을 이용해 보이거나 숨기기
 
+
        // 대댓글 목록이 비어 있으면 서버에서 대댓글 목록을 가져옵니다.
        if ($replyListContainer.is(':empty')) {
            $.ajax({
@@ -690,24 +842,24 @@
                    response.forEach(function (reply) {
 
                      let replyBlock =`
-
-                          <div class="reply" data-reply-id="${reply.id}">
+                      <div class="reply" data-reply-id="${reply.id}">
+                          <div class="reply-btn-group">
                               <strong class="reply-alias">${reply.alias}</strong>
                               <span class="reply-comment">${reply.comment}</span>
 
-                              <!-- 수정 폼 -->
-                              <form class="reply-edit-form" style="display:none;">
-                                  <input type="text" id="commentReply" name="commentReply"/> <!-- 수정글 적는 텍스트 칸 -->
-                                  <input type="hidden" id="commentReplyId" name="commentReplyId" value="${reply.id}" />  <!-- 대댓글 번호 -->
-                                  <input type="hidden" id="commentReplyAlias" name="commentReplyAlias" value="${reply.alias}" />  <!--대댓글 작성자 -->
-                                  <button type="submit">등록</button>
-                              </form>
+                          <!-- 수정 폼 -->
+                          <form class="reply-edit-form" style="display:none;">
+                              <input type="text" id="commentReply" name="commentReply"/> <!-- 수정글 적는 텍스트 칸 -->
+                              <input type="hidden" id="commentReplyId" name="commentReplyId" value="${reply.id}" />  <!-- 대댓글 번호 -->
+                              <input type="hidden" id="commentReplyAlias" name="commentReplyAlias" value="${reply.alias}" />  <!--대댓글 작성자 -->
+                              <button type="submit">등록</button>
+                          </form>
 
-                              <!-- 좋아요 버튼 -->
-                              <button class="reply-like-btn" data-reply-id="${reply.id}">
-                                  <img src="/LikeImg/LikeFalse.jpg" class="reply-like-img" data-reply-id="${reply.id}">
-                                  <div class="reply-like-count" data-reply-id="${reply.id}">0</div>
-                              </button>
+                          <!-- 좋아요 버튼 -->
+                          <button class="reply-like-btn" data-reply-id="${reply.id}">
+                              <img src="/LikeImg/unFilledHeart.png" class="reply-like-img" data-reply-id="${reply.id}">
+                              <div class="reply-like-count" data-reply-id="${reply.id}">0</div>
+                          </button>
                        `;
                        // 기존 작성된 replyHtml 뒤에 삭제,수정 버튼 HTML을 추가
                        if (reply.alias === userAlias) {
@@ -726,7 +878,9 @@
                            `;
                        }
 
-                        replyBlock += `</div>`; // reply div 닫기
+                        replyBlock += `
+                        </div>
+                        </div>`;
                         repliesHtml += replyBlock;   // 준비된 repliesHtml에 작성된 replyBlock 추가하기
 
 
@@ -742,7 +896,9 @@
                            .then(res => res.json()) // 이 부분은 서버 응답(response) 을 JSON으로 파싱합니다.
                            .then(data => {
                                if (data.ReplylikedStatus === 1) {
-                                   document.querySelector(`.reply-like-img[data-reply-id="${reply.id}"]`).src = '/LikeImg/LikeTrue.jpg';
+                                   document.querySelector(`.reply-like-img[data-reply-id="${reply.id}"]`).src = '/LikeImg/filledHeart.png';
+                               } else {
+                                   document.querySelector(`.reply-like-img[data-reply-id="${reply.id}"]`).src = '/LikeImg/unFilledHeart.png';
                                }
                                document.querySelector(`.reply-like-count[data-reply-id="${reply.id}"]`).innerHTML = `<strong>${data.ReplylikeCount}</strong>`;
                            })
@@ -767,6 +923,16 @@
        const data = form.serialize();
        const commentId = form.data('comment-id');
 
+       const userAlias = document.getElementById("UserAlias").value;         // 세션 로그인
+       const commentReply = document.getElementById("commentReply");      // 대댓글 입력창
+            if(!userAlias) {   // null, undefined, "", 0 등을 모두 false로 판단
+                e.preventDefault(); // 폼 제출 방지
+                alert("로그인 후 대댓글을 등록해주세요.");
+                commentReply.value = '';
+                return;
+            }
+
+
        $.ajax({
            url: '/reply', // 실제 컨트롤러 주소
            type: 'POST',
@@ -780,22 +946,19 @@
 
                // 대댓글 HTML 생성
                let replyHtml = `
-
-                <!-- 대댓글 전체를 감싸는 flex 컨테이너 추가 -->
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-
                   <!-- 기존 reply 내용은 별도 div로 유지 -->
                   <div class="reply" data-reply-id="${response.id}">
-                      <strong class="reply-alias">${response.alias}</strong>
-                      <span class="reply-comment">${response.comment}</span>
+                        <div class="reply-btn-group">
+                              <strong class="reply-alias">${response.alias}</strong>
+                              <span class="reply-comment">${response.comment}</span>
 
-                   <!-- 대댓글 수정 폼 -->
-                    <form class="reply-edit-form" style="display:none;">
-                        <input type="text" id="commentReply" name="commentReply"/>  <!-- 수정글 적는 텍스트 칸 -->
-                        <input type="hidden" id="commentReplyId" name="commentReplyId" value="${response.id}" />  <!-- 대댓글 번호 -->
-                        <input type="hidden" id="commentReplyAlias" name="commentReplyAlias" value="${response.alias}" />  <!--대댓글 작성자 -->
-                        <button type="submit">등록</button>
-                    </form>
+                           <!-- 대댓글 수정 폼 -->
+                            <form class="reply-edit-form" style="display:none;">
+                                <input type="text" id="commentReply" name="commentReply"/>  <!-- 수정글 적는 텍스트 칸 -->
+                                <input type="hidden" id="commentReplyId" name="commentReplyId" value="${response.id}" />  <!-- 대댓글 번호 -->
+                                <input type="hidden" id="commentReplyAlias" name="commentReplyAlias" value="${response.alias}" />  <!--대댓글 작성자 -->
+                                <button type="submit">등록</button>
+                            </form>
 
                   <!-- 좋아요 버튼 -->
                   <button class="reply-like-btn" data-reply-id="${response.id}">
@@ -823,8 +986,8 @@
                     }
 
                     replyHtml += `
-                            </div> <!--  버튼 영역 종료 -->
-                        </div> <!--  전체 flex 컨테이너 종료 -->
+                            </div>
+                        </div>
                     `;
                    // 해당 댓글의 대댓글 목록 영역에 추가
                    $(`.reply-list[data-comment-id="${response.commentId}"]`).append(replyHtml);

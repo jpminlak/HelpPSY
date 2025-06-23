@@ -118,18 +118,22 @@ public class RegistrationService{
         RegistrationEntity entity = registrationrepository.findById(Data.getId())
                 .orElseThrow(()->new RuntimeException("게시글을 찾을 수 없습니다"));
                 // .orElseThrow() = 값이 존재하면 그 값을 꺼내고,없으면 바로 예외를 던짐, !null 체크가 불필요하고, 코드도 더 안정적
-
         // JAP가 변경을 감지
         entity.setTitle(Data.getTitle()); // 제목
-        entity.setAccident(Data.getAccident()); // 사고분류
-        entity.setRegion(Data.getRegion()); // 사고지역
-        entity.setType(Data.getType()); // 차 종류
+        entity.setPreview(Data.getPreview()); // 미리보기 글
+        entity.setMainImg(Data.getMainImg()); // 썸네일 이미지
+        entity.setAccident(Data.getAccident()); // 제보 카테고리
+        entity.setDistinction(Data.getDistinction()); // 제보 분류
+        entity.setRegion(Data.getRegion()); // 제보지역
+        entity.setType(Data.getType()); // 제보상세위치
         entity.setContent(Data.getContent()); // 내용
         entity.setLatitude(Data.getLatitude()); // 위도
         entity.setLongitude(Data.getLongitude()); // 경도
-
         return registrationrepository.save(entity);
     }
 
+    public List<RegistrationEntity> getPostsByAlias(String alias) {
+        return registrationrepository.findByAlias(alias);
+    }
 
 }

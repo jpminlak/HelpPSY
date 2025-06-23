@@ -5,40 +5,34 @@
     <meta charset="UTF-8">
     <title>사고 등록 폼</title>
     <style>
-        /* 폼 전체 영역 가운데 정렬 및 넓이 지정 */
-        body {
+
+        .minwooBody {
             font-family: 'Malgun Gothic', Arial, sans-serif;
             padding: 30px;
             display: flex;
+            background-color: #f8f9fa;
             justify-content: center;
-            background-image: url("https://images.unsplash.com/photo-1554034483-04fda0d3507b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDEyfHx3YWxscGFwZXJ8ZW58MHx8fHwxNjg2MDM2Mzc2fDA&ixlib=rb-4.0.3&q=80&w=2000");
-
         }
 
         table {
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            width: 720px; /* 기존 480px → 720px */
-            border-radius: 8px;
-            overflow: hidden;
+            border-collapse: collapse;              /* 테이블 셀 경계를 하나로 합쳐서 깔끔하게 만듦 */
+            background-color: #fff;                 /* 테이블 배경을 흰색으로 설정 → 배경색과 구분되도록 */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);  /* 테이블에 은은한 그림자 효과를 주어 입체감 부여 */
+            width: 720px;                           /* 테이블의 전체 너비 설정 → 적당한 고정폭으로 정렬된 느낌 제공 */
+            border-radius: 8px;                     /* 테이블 모서리를 부드럽게 둥글게 처리 */
+            overflow: hidden;                       /* 테두리 둥글기에 맞춰 내용이 삐져나오지 않도록 처리 */
         }
 
         /* 테이블 각 셀 */
         td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #ddd;
-            vertical-align: middle;
-        }
-
-        /* 첫 번째 칸 제목 스타일 */
-        td:first-child {
-            background-color: #f2f2f2;
-            font-weight: bold;
-            width: 180px; /* 넓어진 테이블에 맞춰 약간 확장 */
-            text-align: left;
+            padding: 12px 15px;                /* 셀의 상하 여백 12px, 좌우 여백 15px 설정 → 전체적인 공간 확보 */
+            border-bottom: 1px solid #ddd;     /* 셀 하단에 연한 회색 경계선 추가 → 행 간 구분을 위해 */
+            vertical-align: middle;            /* 셀 안의 텍스트나 요소를 세로 방향으로 가운데 정렬 */
+            font-weight: bold;                 /* 셀 안의 텍스트를 굵게 표시 */
+            width: 180px;                      /* 각 셀의 너비를 180px로 고정 → 열 너비 균일화 */
+            text-align: left;                  /* 텍스트를 셀 안에서 왼쪽 정렬 */
             padding-left: 10px;
-            font-size: 14px;
+            font-size: 14px;                   /* 셀 안 텍스트의 글자 크기를 14px로 설정 */
         }
 
         /* input, select, textarea 스타일 */
@@ -99,21 +93,76 @@
             box-sizing: border-box; /* 크기 계산을 border 포함하여 정렬 */
             display: block; /* inline-block이 되지 않게 */
         }
+
+        // 스크립트 이미지 제한걸어둔걸 수정간 문서 로딩시에 제한을 걸고 시작
+        // 썸네일
+        #MainImg img {
+        width: 100px !important;   /* !important = JavaScript로 설정되기 전에도 강제 제한 (페이지 첫로딩시에) */
+        height: auto;
+        display: block;
+        }
+
+        // 스크립트 이미지 제한걸어둔걸 수정간 문서 로딩시에 제한을 걸고 시작
+        // 썸네일
+        #content img {
+        width: 400px !important;
+        height: auto;
+        display: block;
+        }
     </style>
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=0b286c3340a1de99c4f466bb9bd54867&libraries=services,clusterer,drawing"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-<body>
+<body class="minwooBody">
 <form id="postForm" action="/registration" method="post" enctype="multipart/form-data">
     <table>
-
-        <!-- 글 제목 -->
         <tr>
-            <td colspan="2"><input type="text" name="title" id="title" placeholder="글 제목을 입력하세요"></td>
+            <td colspan="2">
+                <!-- 글 제목 -->
+                <input type="text" name="title" id="title" placeholder="글 제목을 입력하세요" style="width:90%">
+                <!-- 취소 버튼 -->
+                <a href="accidentmain">
+                    <input type="button" value="작성취소"
+                           style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">
+                </a>
+            </td>
         </tr>
 
+        <!-- 메인사진 등록부 -->
         <tr>
-            <!-- 오른쪽 칸 : 사고 분류 + 사고 지역 (이전 아랫줄에서 이동) -->
+            <td>
+                <label>썸네일 이미지</label>
+                <p style="font-size: 13px; color: #888; margin-top: 3px; margin-bottom: 8px;">
+                    이미지는 1장만 등록 가능합니다
+                </p>
+                <br>
+                <!-- 진짜 파일첨부 버튼 -->
+                <input id="MainaddImgFile" type="file" name="uploadFile" style="display:none;">
+                <!-- 가짜 파일첨부 버튼   (스크립트에서) 가짜버튼 클릭시 진짜버튼 클릭이벤트 발생시킴-->
+                <input id="MainFileBtn" value="추가" type="button" style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">
+                <input id="MainDeleteFileBtn" value="삭제" type="button" style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">
+            </td>
+            <td>
+                <!-- 메인썸네일 사진 보여주는 칸 -->
+                <div id="MainImg" contenteditable="false"
+                     style="min-height: 100px;  width: 100px; border: 1px solid #ccc; padding: 10px; background-color: #fff;"></div>
+                <textarea name="MainImg" id="MainImgHidden" style="display: none;" placeholder="썸네일은 1장만 등록가능 합니다&#10;파일첨부 이후 첨부 버튼을 눌러야 사진이 올라옵니다" ></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: left;">
+                <!-- 미리보기 글 -->
+                <label>미리보기 글</label><br>
+                <p style="font-size: 13px; color: #888; margin-top: 3px; margin-bottom: 8px; ">
+                    제보 게시판 내 미리보기글을 제공합니다
+                </p>
+                <textarea id="Preview" name="Preview" placeholder="미리보기 글은 제보 게시판 미리보기글 3줄 까지만 제공됩니다."
+                     style="min-height: 100px; width: 100%; border: 1px solid #ccc; padding: 10px;
+                            background-color: #fff; resize: vertical; font-size: 14px;"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <!-- 왼쪽 칸 : 사고 분류 + 사고 지역 (이전 아랫줄에서 이동) -->
             <td>
                 <label>작성자</label><br>
                 <span th:text="${session.userAlias}"></span>
@@ -122,18 +171,34 @@
                 <br>
                 <br>
 
-                <label for="accident">사고 분류</label><br>
+
+                <!-- 제보 카테고리 -->
+                <label for="accident">제보 카테고리</label><br>
                 <select name="accident" id="accident" style="width: 100%; margin-bottom: 15px;">
-                    <option value="차량 간 충돌사고">차량 간 충돌사고</option>
-                    <option value="차량 간 사람사고">차량 간 사람사고</option>
-                    <option value="차량 단독 사고">차량 단독 사고</option>
+                    <option>카테고리를 선택하세요</option>
+                    <option value="교통·도로 관련">교통·도로 관련</option>
+                    <option value="생활 안전/환경">생활 안전/환경</option>
+                    <option value="치안·범죄 예방">치안·범죄 예방</option>
+                    <option value="긴급·재난 상황">긴급·재난 상황</option>
+                    <option value="사회적 약자 보호">사회적 약자 보호</option>
+                    <option value="불법·비상식 행위 제보">불법·비상식 행위 제보</option>
                 </select>
                 <br>
                 <br>
                 <br>
 
+                <!-- 분류 -->
+                <label>제보 분류</label>
+                <p style="font-size: 13px; color: #888; margin-top: 3px; margin-bottom: 8px;">
+                    카테고리 선택시 분류 선택가능
+                </p>
+                <select name="distinction" id="distinction" style="display:none;"></select>
+                <br>
+                <br>
+                <br>
+
                 <!-- 사고 지역 추가 -->
-                <label>사고 지역</label><br>
+                <label>제보 위치</label><br>
                 <span id="address" style="display: inline-block; width: 87%; padding: 7px 10px; border: 1px solid #ccc;
                 border-radius: 4px; background-color: white;" ></span>
                 <input type="hidden" name="region" id="region"> <!-- 사고주소 -->
@@ -143,26 +208,12 @@
                 <br>
                 <br>
 
-                <!-- 차량등급 -->
-                <label>차량 등급(크기)</label>
-                <select name="rating">
-                    <option value="경차">경차</option>
-                    <option value="소형차">소형차</option>
-                    <option value="준중형차">준중형차</option>
-                    <option value="중형차">중형차</option>
-                    <option value="준대형차">준대형차</option>
-                    <option value="대형차">대형차</option>
-                </select>
-                <br>
-                <br>
-                <br>
-
-                <!-- 차량종류 -->
-                <label>차량종류</label>
+                <!-- 제보 상세 위치 -->
+                <label>제보 상세 위치</label>
                 <input type="text" name="type">
             </td>
 
-            <!-- 왼쪽 칸 : 지도 -->
+            <!-- 오른쪽 칸 : 지도 -->
             <td>
                 <input type="text" id="keyword" placeholder="검색어 입력" style="width: 90%; margin-bottom: 10px;">
                 <input type="button" onclick="searchPlaces()" value="검색" style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">
@@ -172,33 +223,23 @@
         </tr>
         <tr>
             <td colspan="2">
+                <!-- 글 작성내용 -->
+                <div id="content" contenteditable="true" placeholder="내용을 입력해 주세요"></div>
+                <textarea name="content" id="contentHidden" style="display: none;" placeholder="입력된 내용이 없습니다"></textarea>
                 <!-- 진짜 파일첨부 버튼 -->
                 <input id="addImgFile" type="file" name="uploadFile" style="display:none;">
                 <!-- 가짜 파일첨부 버튼   (스크립트에서) 가짜버튼 클릭시 진짜버튼 클릭이벤트 발생시킴-->
-                <input id="FileBtn" value="파일첨부" type="button" style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">
-                <input id="addImg" value="이미지 추가하기" type="button" style="margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">
-
-                <div id="content" contenteditable="true"></div>
-                <textarea name="content" id="contentHidden" style="display: none;" placeholder="내용을 입력해 주세요"></textarea>
+                <input id="FileBtn" value="이미지,동영상 첨부" type="button" style="width: 100%; margin-bottom: 10px; padding : 6px; background-color: white; border-color: white;">
                 <input type="submit" value="등록">
             </td>
         </tr>
-
-
     </table>
 </form>
-
-
 </body>
 </html>
 
 <script>
     // ======================================= 일반 스크립트 코드 =======================================
-        // 파일첨부 클릭상자 이미지 변경
-        document.getElementById("FileBtn").addEventListener("click", function() { // 가짜 파일을 누르면
-        document.getElementById("addImgFile").click(); // 진짜 파일도 눌림
-        });
-
         // 사고지역 텍스트값 보내기
         document.querySelector("#postForm").addEventListener("submit", function () {
             // 지도에서 따온 텍스트를  .trim() = 앞뒤 공백 제거 해서
@@ -207,12 +248,22 @@
             document.getElementById('region').value = region;
         });
 
-        // 제목을 적지않을시 submit 자체를 취소시킴
+        // 미기재 내용이 있을시 submit 자체를 취소시킴
        document.querySelector("#postForm").addEventListener("submit", function(e) {
-            let title = document.getElementById('title').value;
-            let alias = document.querySelector("input[name='alias']").value;
-            let address = document.getElementById('address').innerHTML;
+            let title = document.getElementById('title').value;                 // 제목
+            let alias = document.querySelector("input[name='alias']").value;    // 작성자
+            let address = document.getElementById('address').innerHTML;         // 제보 위치
+            let ReportCategory = document.getElementById('accident').value;     // 제보 카테고리
+            let distinction = document.getElementById('distinction').value;  // 제보 분류
 
+            if (distinction.trim() === "분류를 선택하세요") {
+                alert('제보 분류 입력은 필수 입력사항 입니다.');
+                e.preventDefault();
+            }
+            if (ReportCategory.trim() === "카테고리를 선택하세요") {
+                alert('제보 카테고리 입력은 필수 입력사항 입니다.');
+                e.preventDefault();
+            }
             if (title.trim() === "") {
                 alert('제목을 입력하세요');
                 e.preventDefault();
@@ -227,6 +278,80 @@
                 e.preventDefault();
                 return;
             }
+        });
+
+        // 사고 카테고리 별 사고 분류 설정
+        $('#accident').on('change', function() {
+            let ReportCategory = document.getElementById('accident').value; //제보 카테고리
+            let distinction = $('#distinction'); // 제보 분류
+
+            // 분류 옵션 초기화
+            distinction.empty();
+
+            if (ReportCategory === '교통·도로 관련') {
+                distinction.append(new Option('분류를 선택하세요'));
+                distinction.append(new Option('사고 목격', '사고 목격'));
+                distinction.append(new Option('위험 도로/시설', '위험 도로/시설'));
+                distinction.append(new Option('신호등 고장', '신호등 고장'));
+                distinction.append(new Option('불법 주정차', '불법 주정차'));
+
+                distinction.show();
+            }else if(ReportCategory === '생활 안전/환경'){
+                distinction.append(new Option('분류를 선택하세요'));
+                distinction.append(new Option('위험 건축물', '위험 건축물'));
+                distinction.append(new Option('생활 불편 제보', '생활 불편 제보'));
+                distinction.append(new Option('반려동물 방치/위험 행동', '반려동물 방치/위험 행동'));
+                distinction.append(new Option('소음 민원', '소음 민원'));
+                distinction.show();
+            }else if(ReportCategory === '치안·범죄 예방'){
+                distinction.append(new Option('분류를 선택하세요'));
+                distinction.append(new Option('의심스러운 인물/상황 제보', '의심스러운 인물/상황 제보'));
+                distinction.append(new Option('불법 촬영 / 몰카 의심', '불법 촬영 / 몰카 의심'));
+                distinction.append(new Option('무단 침입 / 상가 훼손', '무단 침입 / 상가 훼손'));
+                distinction.show();
+            }else if(ReportCategory === '긴급·재난 상황'){
+                distinction.append(new Option('분류를 선택하세요'));
+                distinction.append(new Option('화재 / 연기 발생 제보', '화재 / 연기 발생 제보'));
+                distinction.append(new Option('침수 지역 / 하수 역류', '침수 지역 / 하수 역류'));
+                distinction.append(new Option('자연재해로 인한 위험 (폭우, 강풍, 낙석 등)', '자연재해로 인한 위험 (폭우, 강풍, 낙석 등)'));
+                distinction.show();
+            }else if(ReportCategory === '사회적 약자 보호'){
+                distinction.append(new Option('분류를 선택하세요'));
+                distinction.append(new Option('노인·장애인 위험 상황 제보', '노인·장애인 위험 상황 제보'));
+                distinction.append(new Option('유아 방치·학대 의심 제보', '유아 방치·학대 의심 제보'));
+                distinction.append(new Option('거리 노숙인·취약계층 위험 제보', '거리 노숙인·취약계층 위험 제보'));
+                distinction.show();
+            }else if(ReportCategory === '불법·비상식 행위 제보'){
+                distinction.append(new Option('분류를 선택하세요'));
+                distinction.append(new Option('공공장소 흡연', '공공장소 흡연'));
+                distinction.append(new Option('가격표 미부착 / 바가지 요금', '가격표 미부착 / 바가지 요금'));
+                distinction.append(new Option('불법 임대, 부당 청구', '불법 임대, 부당 청구'));
+                distinction.append(new Option('공공기관 민원 태도 제보', '공공기관 민원 태도 제보'));
+                distinction.show();
+            }else{
+                distinction.hide();
+            }
+        });
+
+        // 썸네일 이미지 1장으로 제한하기
+        document.getElementById("MainFileBtn").addEventListener("click", function() {
+            let MainImg = document.getElementById('MainImg').innerHTML;
+            if (MainImg === ""){
+                document.getElementById("MainaddImgFile").click(); // 진짜 파일도 눌림
+            }else{
+                alert('썸네일 이미지는 1장만 등록 가능합니다.\n등록된 사진을 삭제후 다시 등록해주세요')
+            }
+        });
+
+        // 썸네일 삭제하기
+        document.getElementById("MainDeleteFileBtn").addEventListener("click", function() {
+            let MainImg = document.getElementById('MainImg');
+            MainImg.innerHTML = "";
+        });
+
+        // 파일첨부 클릭상자 이미지 변경
+        document.getElementById("FileBtn").addEventListener("click", function() { // 가짜 파일을 누르면
+            document.getElementById("addImgFile").click(); // 진짜 파일도 눌림
         });
 
     // ======================================= 카카오 API관련 ===========================================
@@ -324,61 +449,97 @@
                      }
                 });
             });
-        // ======================================= 파일첨부 관련 =======================================
-        $(document).on('click', '#addImg', function() {
-        const addImgFileTag = $('#addImgFile')[0]; // file input DOM 요소
+
+
+    // ====================== 썸네일 사진첨부 관련 =======================
+    document.getElementById("MainaddImgFile").addEventListener("change", function () {
+        const addImgFileTag = $('#MainaddImgFile')[0]; // file input DOM 요소
         const fileReader = new FileReader(); // FileReader 객체 생성
 
         if (addImgFileTag.files.length > 0) { // 파일이 선택되었는지 확인
+            const file = addImgFileTag.files[0];
+            fileReader.readAsDataURL(file); // 파일을 base64 형태로 변환 (인코딩작업)
 
-        const file = addImgFileTag.files[0];
-        fileReader.readAsDataURL(file); // 파일을 base64 형태로 변환 (인코딩작업)
+                fileReader.onload = function(e) {
+                const dataUrl = e.target.result; // 이미지 데이터 URL
+                const fileType = file.type; // 파일 타입변수 선언
 
-        fileReader.onload = function(e) {
-        const dataUrl = e.target.result; // 이미지 데이터 URL
-        const fileType = file.type; // 파일 타입변수 선언
+                    if (fileType.startsWith('image/')) {
+                    insertIntoMainImg('img', dataUrl);
+                    }else {
+                    alert('이미지만 첨부 가능합니다');
+                    return;  // 예외시 여기서 중단
+                    }
 
-        if (fileType.startsWith('image/')) {
-        insertIntoContent('img', dataUrl);
-        } else if (fileType.startsWith('video/')) {
-        insertIntoContent('video', dataUrl);
-        } else {
-        alert('이미지 또는 동영상 파일만 첨부할 수 있습니다.');
-        return;  // 예외시 여기서 중단
+                    addImgFileTag.value = "";
+                };
         }
-        addImgFileTag.value = ''; // 파일 input 초기화 (같은 파일 다시 선택 가능하도록)
-        };
-        }
-        });
-        // 아래 함수는 변환된 data url로 img 태그를 만들어서 blockquote 태그에 넣는 기능을 담당한다.
-        function insertIntoContent(tagType,dataUrl) {
+    });
+        function insertIntoMainImg(tagType,dataUrl) {
+            const Maincontent = document.getElementById('MainImg'); // 썸네일 보여줄 div 태그
 
-        const content = document.getElementById('content');
-        const wrapper = document.createElement('div');  // 감싸기용 div 생성
-        const Tag = document.createElement(tagType); // 태그 생성
-        const imgWidth = 400;
-        Tag.setAttribute('src', dataUrl);
-        Tag.setAttribute('width', imgWidth);
+            const Tag = document.createElement(tagType); // 태그 생성
+            const imgWidth = 100; // 사진 이미지 크기
+            Tag.setAttribute('src', dataUrl);
+            Tag.setAttribute('width', imgWidth);
 
-        if (tagType === 'video') {
-        Tag.setAttribute('type', 'video/mp4'); // 또는 파일에 맞는 타입
-        Tag.setAttribute('controls', true); // 동영상 컨트롤 바 표시
-        // Tag.setAttribute('autoplay', true); // 비디오가 로드되자마자 자동으로 재생
-        // Tag.setAttribute('muted', true); // 재생시 소리 음소거 autoplay사용 하려면 muted꼭 기능추가해야함
-        Tag.setAttribute('loop', true); // 비디오가 끝나면 반복재생
-        }
-
-        wrapper.appendChild(Tag);
-        wrapper.appendChild(document.createElement('br')); // 항상 줄바꿈 추가
-        content.appendChild(wrapper);
+            Maincontent.appendChild(Tag);
         }
 
         // submit 전에 contenteditable HTML을 인코딩해서 hidden input에 넣기
         // document.querySelector는 JavaScript에서 DOM(Document Object Model) 요소를 선택하는 메서드
-
         document.querySelector("#postForm").addEventListener("submit", function (e) {
-        const contentHtml = document.querySelector("#content").innerHTML;
-        document.querySelector("#contentHidden").value = contentHtml;
+            const contentHtml = document.querySelector("#MainImg").innerHTML;
+            document.querySelector("#MainImgHidden").value = contentHtml;
+        });
+
+        // ======================================= 파일첨부 관련 =======================================
+        document.getElementById("addImgFile").addEventListener("change", function () {
+            const addImgFileTag = $('#addImgFile')[0]; // file input DOM 요소
+            const fileReader = new FileReader(); // FileReader 객체 생성
+            if (addImgFileTag.files.length > 0) { // 파일이 선택되었는지 확인
+                const file = addImgFileTag.files[0];
+                fileReader.readAsDataURL(file); // 파일을 base64 형태로 변환 (인코딩작업)
+                    fileReader.onload = function(e) {
+                        const dataUrl = e.target.result; // 이미지 데이터 URL
+                        const fileType = file.type; // 파일 타입변수 선언
+
+                        if (fileType.startsWith('image/')) {
+                            insertIntoContent('img', dataUrl);
+                        } else if (fileType.startsWith('video/')) {
+                             insertIntoContent('video', dataUrl);
+                        } else {
+                            alert('이미지 또는 동영상 파일만 첨부할 수 있습니다.');
+                            return;  // 예외시 여기서 중단
+                        }
+                            addImgFileTag.value = ''; // 파일 input 초기화 (같은 파일 다시 선택 가능하도록)
+                    };
+            }
+        });
+        // 아래 함수는 변환된 data url로 img 태그를 만들어서 blockquote 태그에 넣는 기능을 담당한다.
+        function insertIntoContent(tagType,dataUrl) {
+            const content = document.getElementById('content');
+            const wrapper = document.createElement('div');  // 감싸기용 div 생성
+            const Tag = document.createElement(tagType); // 태그 생성
+            const imgWidth = 400; // 이미지 크기
+            Tag.setAttribute('src', dataUrl);
+            Tag.setAttribute('width', imgWidth);
+            if (tagType === 'video') {
+                Tag.setAttribute('type', 'video/mp4'); // 또는 파일에 맞는 타입
+                Tag.setAttribute('controls', true); // 동영상 컨트롤 바 표시
+            // Tag.setAttribute('autoplay', true); // 비디오가 로드되자마자 자동으로 재생
+            // Tag.setAttribute('muted', true); // 재생시 소리 음소거 autoplay사용 하려면 muted꼭 기능추가해야함
+                Tag.setAttribute('loop', true); // 비디오가 끝나면 반복재생
+            }
+            wrapper.appendChild(Tag);
+            wrapper.appendChild(document.createElement('br')); // 항상 줄바꿈 추가
+            content.appendChild(wrapper);
+        }
+        // submit 전에 contenteditable HTML을 인코딩해서 hidden input에 넣기
+        // document.querySelector는 JavaScript에서 DOM(Document Object Model) 요소를 선택하는 메서드
+            document.querySelector("#postForm").addEventListener("submit", function (e) {
+            const contentHtml = document.querySelector("#content").innerHTML;
+            document.querySelector("#contentHidden").value = contentHtml;
         });
 
 </script>
