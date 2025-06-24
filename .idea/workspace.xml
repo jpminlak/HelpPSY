@@ -1,34 +1,292 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="e7299bb8-de58-4d95-a8cf-8dfe6ec96008" name="변경" comment="" />
+    <list default="true" id="ada88862-5a06-4292-b027-b8dc91d90b5d" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/../.idea/helppsy.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/material_theme_project_new.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/files/freeBulletin/1144fda5-7adf-4249-a701-eff4e4d9e70b_specificFreeBulletin.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/files/freeBulletin/87a6a5ba-f69b-4824-b289-9070e36bffe0_12321312321.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/files/freeBulletin/ff351dc8-eedf-416d-85b2-affbec858fbd_0617.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/HelppsyApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/DTO/CommentLikeDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/DTO/RegistrationLikeDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/DTO/ReplyDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/DTO/ReplyLikeDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/controller/CommentContorller.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/controller/CommentLikeController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/controller/CommentReplyController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/controller/CommentReplyLikeController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/controller/RegistrationController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/controller/RegistrationLikeController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/entity/CommentEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/entity/CommentLikeEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/entity/CommentReplyEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/entity/CommentReplyLikeEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/entity/RegistrationEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/entity/RegistrationFileEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/entity/RegistrationLikeEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/repository/CommentLikeRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/repository/CommentReplyLikeRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/repository/CommentReplyRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/repository/CommentRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/repository/RegistrationFileRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/repository/RegistrationLikeRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/repository/RegistrationRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/service/CommentLikeService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/service/CommentReplyLikeService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/service/CommentReplyService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/service/CommentService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/service/RegistrationLikeService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/accidentBulleinBoard/service/RegistrationService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/config/SecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/config/WebConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/freeBulletinBoard/controller/FileDownloadController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/freeBulletinBoard/controller/FreeBulletinController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/freeBulletinBoard/dto/FreeBulletinCommentDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/freeBulletinBoard/dto/FreeBulletinDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/freeBulletinBoard/dto/FreeBulletinReplyDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/freeBulletinBoard/dto/SearchDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/freeBulletinBoard/entity/FreeBulletin.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/freeBulletinBoard/entity/FreeBulletinAttach.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/freeBulletinBoard/entity/FreeBulletinComment.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/freeBulletinBoard/entity/FreeBulletinReply.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/freeBulletinBoard/repository/FreeBulletinAttachRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/freeBulletinBoard/repository/FreeBulletinCommentRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/freeBulletinBoard/repository/FreeBulletinReplyRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/freeBulletinBoard/repository/FreeBulletinRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/freeBulletinBoard/service/FreeBulletinService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/function/DataNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/inquiry/controller/InquiryController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/inquiry/entity/Answer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/inquiry/entity/Question.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/inquiry/repository/AnswerRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/inquiry/repository/QuestionRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/likes/controller/FreeBulletinLikesController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/likes/dto/FreeBulletinCommentLikeDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/likes/dto/FreeBulletinLikeDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/likes/dto/FreeBulletinReplyLikeDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/likes/entity/FreeBulletinCommentLike.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/likes/entity/FreeBulletinLike.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/likes/entity/FreeBulletinReplyLike.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/likes/repository/FreeBulletinCommentLikeRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/likes/repository/FreeBulletinLikeRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/likes/repository/FreeBulletinReplyLikeRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/likes/service/FreeBulletinLikesService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/main/MainController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/map/MapController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/map/Mapmarker.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/map/MarkerRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/map/MarkerService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/memberManager/SignupEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/memberManager/memberController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/memberManager/signupRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/memberManager/signupService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/note/Note.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/note/NoteController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/note/NoteRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/note/NoteService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/tools/Paging.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cai/helppsy/tools/Paging_BM.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/LikeImg/LikeFalse.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/LikeImg/LikeTrue.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/LikeImg/filledHeart.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/LikeImg/unFilledHeart.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/main/fragment.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/main/fragmentStyle.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/main/jquery.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/main/main.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/accident/accidentmain.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/accident/accidentview.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/accident/accidentwriting.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/freeBulletinBoard/mainFreeBulletin.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/freeBulletinBoard/newFreeBulletin.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/freeBulletinBoard/specificFreeBulletin.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/freeBulletinBoard/updateFreeBulletin.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/inquiry/inquiry.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/inquiry/question_detail.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/inquiry/respondent.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/main/mainPage.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/map/exp.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/map/map.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/memberManager/note_form.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/memberManager/note_inbox.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/memberManager/note_reply_form.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/memberManager/note_view.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/memberManager/profile.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/memberManager/profile_Update.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/memberManager/signIn.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/memberManager/signUp.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/cai/helppsy/HelppsyApplicationTests.java" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
-  <component name="ProjectId" id="2yLBUHQw21u8bkpNyFKyqYEllsp" />
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="MAKE_PROJECT_ON_SAVE" value="true" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;BLANKRIVER7&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/jpminlak/HelpPSY.git&quot;,
+    &quot;accountId&quot;: &quot;aa698285-c14a-4e9b-ad92-2f565f5d0744&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2ysmFF7N0ZQOVLyG6qXWcALI2Rf" />
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/human040110/Desktop/helppsy"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.HelppsyApplicationTests.pagingTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.helppsy [:com.cai.helppsy.HelppsyApplication.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.helppsy 빌드.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.HelppsyApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;hoojin&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;프로젝트&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propCompiler&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
+    &quot;애플리케이션.HelppsyApplication.executor&quot;: &quot;Run&quot;
   }
-}]]></component>
+}</component>
+  <component name="RunManager" selected="Spring Boot.HelppsyApplication">
+    <configuration name="HelppsyApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.cai.helppsy.HelppsyApplication" />
+      <module name="helppsy.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.cai.helppsy.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="HelppsyApplicationTests.pagingTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.cai.helppsy.HelppsyApplicationTests.pagingTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="HelppsyApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="helppsy.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.cai.helppsy.HelppsyApplication" />
+      <option name="UPDATE_ACTION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Gradle.HelppsyApplicationTests.pagingTest" />
+      <item itemvalue="Spring Boot.HelppsyApplication" />
+      <item itemvalue="애플리케이션.HelppsyApplication" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="애플리케이션.HelppsyApplication" />
+        <item itemvalue="Gradle.HelppsyApplicationTests.pagingTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.26094.121" />
+        <option value="bundled-js-predefined-d6986cc7102b-b26f3e71634d-JavaScript-IU-251.26094.121" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="디폴트 작업">
-      <changelist id="e7299bb8-de58-4d95-a8cf-8dfe6ec96008" name="변경" comment="" />
-      <created>1749603988043</created>
+      <changelist id="ada88862-5a06-4292-b027-b8dc91d90b5d" name="변경" comment="" />
+      <created>1750631550509</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1749603988043</updated>
+      <updated>1750631550509</updated>
+      <workItem from="1750649461187" duration="16546000" />
+      <workItem from="1750720399676" duration="2887000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
