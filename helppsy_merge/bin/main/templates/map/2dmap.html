@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<!--브이월드 지도와 오픈레이어스 비교
+	참고: 오픈레이어스 충돌로 오픈레이어스 지도는 줌 설정이 안됨 !!
+ -->
+<html lang="kor" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>2D 지도생성 2.0</title>
+    <script type="text/javascript"
+            src="https://map.vworld.kr/js/vworldMapInit.js.do?version=2.0&apiKey=CEB52025-E065-364C-9DBA-44880E3B02B8&domain=">
+    </script>
+</head>
+
+<body>
+<div th:insert="~{/start :: menu}"></div>
+<div th:fragment="2dm">
+    <div style="display: flex;">
+        <!--    <div style="float: left; width: 50%;">-->
+        <div style="float: left; width: 100%;">
+            <div id="vmap" style="width: 100%; height: 100%;"></div>
+        </div>
+        <!--    <div style="float: left; width: 50%;">-->
+        <!--        <div id="map" style="width: 100%; height: 700px;"></div>-->
+        <!--    </div>-->
+    </div>
+
+    <!-- 지도가 그려지는 영역 조정 -->
+    <div>
+        <!-- 검색 API의 파라미터를 설정하는 form 영역 -->
+        <form id="searchForm" action="#" class="form_data" onsubmit="return false;search();">
+            <input type="hidden" name="page" value="1"/>
+            <input type="hidden" name="type" value="PLACE"/>
+            <input type="hidden" name="request" value="search"/>
+            <input type="hidden" name="apiKey" value="CEB52025-E065-364C-9DBA-44880E3B02B8">
+            <input type="hidden" name="domain" value="http://localhost:8080">
+            <input type="hidden" name="crs" value="EPSG:3857"/>
+            <div>
+                <label for="searchValue"></label>
+                <input type="text" id="searchValue" name="query" placeholder="검색할 장소를 입력해주세요"
+                                                        style="width: 180px;" />
+                <a href="javascript:search();">검색</a>
+                <input type="button" value="검색어만 밑에 출력" onclick="sb()" />
+            </div>
+            <div><a href="/">메인화면</a></div>
+        </form>
+    </div>
+    <div id="outputSearch"></div>
+<script>
+    function sb(){
+        let searchValue = document.getElementById("searchValue").value;
+        let outputSearch = document.getElementById("outputSearch");
+        outputSearch.innerHTML = searchValue;
+    }
+</script>
+<script type="text/javascript">
+    vw.ol3.MapOptions = {
+        basemapType: vw.ol3.BasemapType.GRAPHIC
+      , controlDensity: vw.ol3.DensityType.FULL
+      , interactionDensity: vw.ol3.DensityType.BASIC
+      , controlsAutoArrange: true
+      , homePosition: vw.ol3.CameraPosition
+      , initPosition: vw.ol3.CameraPosition
+    };
+    let vmap = new vw.ol3.Map("vmap",  vw.ol3.MapOptions);
+    // 브이월드 지도 설정 종료
+
+    // 이동함수 구현
+    let move = function(x,y,z){
+        vmap.getView().setCenter([ x*1, y*1 ]); // 지도 이동 값에 문자열로 숫자가 들어 갈 경우 이동이 안되는 증상이 있음
+        vmap.getView().setZoom(z); // 줌레벨 설정
+    }
+
+    // 오픈레이어스 구현
+    let Base = new ol.layer.Tile({
+        name : "Base",
+        source: new ol.source.XYZ({
+            url: 'https://api.vworld.kr/req/wmts/1.0.0/CEB52025-E065-364C-9DBA-44880E3B02B8/Base/{z}/{y}/{x}.png'  // WMTS API 사용
+        })
+    });
+
+    let olView = new ol.View({
+        center: ol.proj.transform([127.100616,37.402142], 'EPSG:4326', 'EPSG:3857'),//좌표계 변환
+        zoom: 7
+    })// 뷰 설정
+    let map = new ol.Map({
+        layers: [Base] ,
+        target: 'map',
+        view: olView
+    });//
+
+    vmap.on("moveend", function() {
+        let center = vmap.getView().getCenter();
+        let zoom = vmap.getView().getZoom();
+
+        map.getView().setCenter(center)
+        map.getView().setZoom(zoom)
+    })
+
+    //
+    var features = new Array();
+    let search = function(){
+
+        var markerLayer; // 마커를 담을 레이어 선언
+        if(markerLayer==null){
+            markerLayer = new vw.ol3.layer.Marker(vmap);
+        }
+        markerLayer.set("name","마커레이어"); //마커레이어에 이름을 적용하여 검색 결과 초기화
+
+        // jquery ajax 비동기 통신
+        $.ajax({
+            type: "get",
+            url: "http://api.vworld.kr/req/search",
+            data : $('#searchForm').serialize(),
+            dataType: 'jsonp', //cors 우회를 위해 jsonp 이용
+            async: false,
+            success: function(data) {
+                if(data.response.status =="NOT_FOUND"){
+                    alert("검색결과가 없습니다.");
+                }else{
+                    for(let o in data.response.result.items){
+                        if(o==0){
+                            //첫번째인자로 이동
+                            move(data.response.result.items[o].point.x,data.response.result.items[o].point.y,15);
+                        }
+                        vw.ol3.markerOption = {
+                            x : data.response.result.items[o].point.x,
+                            y : data.response.result.items[o].point.y,
+                            epsg : "EPSG:3857",
+                            title : data.response.result.items[o].title,
+                            contents : data.response.result.items[o].address.parcel,
+                            iconUrl : 'http://map.vworld.kr/images/ol3/marker_blue.png'
+                        }; //마커 옵션 설정
+                        markerLayer.addMarker(vw.ol3.markerOption);// 마커를 레이어에 등록
+
+                        features[o] = new ol.Feature({
+                            geometry: new ol.geom.Point([data.response.result.items[o].point.x*1,data.response.result.items[o].point.y*1]),
+                            title: data.response.result.items[o].title,
+                            parcel: data.response.result.items[o].address.parcel,
+                            road: data.response.result.items[o].address.road,
+                            category: data.response.result.items[o].category,
+                            point: data.response.result.items[o].point
+                        });
+                        features[o].set("id",data.response.result.items[o].id);
+
+                        var iconStyle = new ol.style.Style({
+                            image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+                                anchor: [0.5, 46],
+                                anchorXUnits: 'fraction',
+                                anchorYUnits: 'pixels',
+                                src: 'http://map.vworld.kr/images/ol3/marker_blue.png'
+                            }))
+                        });
+                        features[o].setStyle(iconStyle);
+                    }
+                }//else 종료
+            },
+            complete:function(){
+                vmap.removeLayer(vmap.getLayerByName("마커레이어")) //vmap.getLayerByName(레이어명)
+                vmap.addLayer(markerLayer) //마커를 vmap에 등록
+
+                var vectorSource = new ol.source.Vector({
+                          features: features
+                    });
+
+                    // 기존검색결과를 제거하기 위해 키 값 생성
+                    var vectorLayer = new ol.layer.Vector({
+                        source: vectorSource
+                    });
+
+                    // 기존검색결과를 제거하기 위해 키 값 생성
+                    vectorLayer.set("vectorLayer","search_vector")
+
+                    map.getLayers().forEach(function(layer){
+                        if(layer.get("vectorLayer")=="search_vector"){
+                            map.removeLayer(layer);
+                        }
+                    });
+                    map.addLayer(vectorLayer);
+            },
+            error: function(xhr, stat, err) {}
+        });
+    }
+
+     /* 클릭 이벤트 제어 */
+     map.on("click", function(evt) {
+            var coordinate = evt.coordinate //좌표정보
+            var pixel = evt.pixel
+            var cluster_features = [];
+            var features = [];
+
+            //선택한 픽셀정보로  feature 체크
+            map.forEachFeatureAtPixel(pixel, function(feature, layer) {
+                var title = feature.get("title");
+                var parcel = feature.get("parcel");
+
+                if(title.length>0){
+
+                    var overlayElement= document.createElement("div"); // 오버레이 팝업설정
+
+                    overlayElement.setAttribute("class", "overlayElement");
+                    overlayElement.setAttribute("style", "background-color: #3399CC; border: 2px solid white; color:white; font-size:1.5em");
+                    overlayElement.setAttribute("onclick", "deleteOverlay('"+feature.get("id")+"')");
+                    overlayElement.innerHTML="<span>"+title+"</span> <br />"+"<span>"+parcel+"</span>";
+
+                    var overlayInfo = new ol.Overlay({
+                        id:feature.get("id"),
+                        element:overlayElement,
+                        offset: [-10, -70],
+                        position: [feature.get("point").x*1, feature.get("point").y*1]
+                    });
+
+                    if(feature.get("id") != null){
+                        map.removeOverlay(map.getOverlayById(feature.get("id")));
+                    }
+
+                    map.addOverlay(overlayInfo);
+                }
+            });
+        });
+
+        // 오버레이 삭제
+        var deleteOverlay = function(id){
+            map.removeOverlay(map.getOverlayById(id));
+        }
+</script>
+</div>
+</body>
+</html>

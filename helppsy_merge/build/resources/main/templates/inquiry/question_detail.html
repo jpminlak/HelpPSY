@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>질문 상세 보기</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            width:1400px;
+            margin : auto;
+            color: #333;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #2c3e50;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 30px;
+            background-color: #fff;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f3f5;
+            color: #495057;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .file-preview {
+            padding: 10px 0;
+        }
+
+        .file-preview img {
+            max-width: 300px;
+            height: auto;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.05);
+            max-width: 600px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .no-answer {
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<h1>질문 상세 보기</h1>
+
+<!-- 질문 정보 출력 -->
+<table>
+    <tr>
+        <th>번호</th>
+        <td th:text="${question.id}"></td>
+    </tr>
+    <tr>
+        <th>작성자</th>
+        <td th:text="${question.writer}"></td>
+    </tr>
+    <tr>
+        <th>제목</th>
+        <td th:text="${question.subject}"></td>
+    </tr>
+    <tr>
+        <th>내용</th>
+        <td th:text="${question.content}"></td>
+    </tr>
+    <tr>
+        <th>작성일</th>
+        <td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+    </tr>
+    <tr th:if="${question.file != null}">
+        <th>첨부파일</th>
+        <td class="file-preview">
+            <!-- 이미지 미리보기 -->
+            <div th:if="${#strings.endsWith(question.file.toLowerCase(), '.jpg')
+                      or #strings.endsWith(question.file.toLowerCase(), '.jpeg')
+                      or #strings.endsWith(question.file.toLowerCase(), '.png')
+                      or #strings.endsWith(question.file.toLowerCase(), '.gif')}">
+                <img id="aaa" th:src="@{/files/inquiry/{file}(file=${question.file})}" alt="첨부 이미지">
+            </div>
+
+            <!-- 그 외 파일 다운로드 -->
+            <div th:unless="${#strings.endsWith(question.file.toLowerCase(), '.jpg')
+                         or #strings.endsWith(question.file.toLowerCase(), '.jpeg')
+                         or #strings.endsWith(question.file.toLowerCase(), '.png')
+                         or #strings.endsWith(question.file.toLowerCase(), '.gif')}">
+                <a th:href="@{'/' + ${question.file}}" th:text="${question.file}" download></a>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<h2>답변 목록</h2>
+<div th:if="${#lists.isEmpty(answers)}">
+    <p class="no-answer">등록된 답변이 없습니다.</p>
+</div>
+<div th:if="${!#lists.isEmpty(answers)}">
+    <table>
+        <thead>
+        <tr>
+            <th>번호</th>
+            <th>답변자</th>
+            <th>제목</th>
+            <th>내용</th>
+            <th>작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="answer : ${answers}">
+            <td th:text="${answer.id}"></td>
+            <td th:text="${answer.respondent}"></td>
+            <td th:text="${answer.title}"></td>
+            <td th:text="${answer.content2}"></td>
+            <td th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<h2>답변 작성</h2>
+<form action="/kkk" method="post">
+    <input type="hidden" name="question.id" th:value="${question.id}">
+
+    <label>
+        답변자:
+        <input type="text" name="respondent" placeholder="관리자 이름">
+    </label>
+
+    <label>
+        제목:
+        <input type="text" name="title" placeholder="답변 제목">
+    </label>
+
+    <label>
+        내용:
+        <textarea name="content2" placeholder="답변 내용 입력" cols="50" rows="10"></textarea>
+    </label>
+
+    <button type="submit" name="action" value="answer">전송</button>
+</form>
+
+<br>
+<a href="/respondent">전체 목록</a>
+
+</body>
+</html>
