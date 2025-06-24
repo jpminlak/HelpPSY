@@ -219,6 +219,7 @@
         background-color: #d5d4d4;
         color: black;
         border-color: white;
+        border-radius: 5px;
         font-weight: 500;
     }
 
@@ -234,6 +235,7 @@
         background-color: #d5d4d4;
         color: black;
         border-color: white;
+        border-radius: 5px;
         font-weight: 500;
     }
 
@@ -250,6 +252,7 @@
         background-color: #d5d4d4;
         color: black;
         border-color: white;
+        border-radius: 5px;
         font-weight: 500;
     }
 
@@ -266,6 +269,7 @@
         background-color: #d5d4d4;
         color: black;
         border-color: white;
+        border-radius: 5px;
         font-weight: 500;
     }
 
@@ -368,6 +372,7 @@
         background-color: #d5d4d4;
         color: black;
         border-color: white;
+        border-radius: 5px;
         font-weight: 500;
     }
 
@@ -383,6 +388,7 @@
         background-color: #d5d4d4;
         color: black;
         border-color: white;
+        border-radius: 5px;
         font-weight: 500;
     }
 
@@ -399,6 +405,7 @@
         background-color: #d5d4d4;
         color: black;
         border-color: white;
+        border-radius: 5px;
         font-weight: 500;
     }
 
@@ -415,6 +422,7 @@
         background-color: #d5d4d4;
         color: black;
         border-color: white;
+        border-radius: 5px;
         font-weight: 500;
     }
 
@@ -534,7 +542,9 @@
                 <input id="commentType" type="hidden" value="free" name="type">
             </div>
         </form>
+
         <div th:id="'comment'+${commentOne.no}" class="comments" th:each="commentOne : ${commentList}">
+            <hr>
             <img class="profileImgOfComment" width="50"
                  src="https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png?type=c77_77">
             <input class="deleteForComment" th:if="${commentOne.writer == session.userAlias}" th:id="'deleteForComment('+${commentOne.no}+')'" type="button" value="댓글 삭제"
