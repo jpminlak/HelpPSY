@@ -1,6 +1,7 @@
 package com.cai.helppsy.accidentBulleinBoard.entity;
 
 
+import com.cai.helppsy.memberManager.SignupEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -28,4 +29,9 @@ public class CommentReplyEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_entity_id", nullable = false)
     private CommentEntity commentEntity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "signup_entity_id")
+    // Join되는거 service쪽 fileEntity.setRegistrationEntity(registrationEntity);에서 연결
+    private SignupEntity signupEntity;
 }

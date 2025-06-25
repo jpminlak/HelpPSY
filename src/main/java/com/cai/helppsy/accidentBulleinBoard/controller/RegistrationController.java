@@ -90,8 +90,8 @@ public class RegistrationController {
     // @RequestParam(value = "alias", required = false) String alias
     // = 댓글 작성 commentController부터 인코딩되어 댓글작성자 별칭 넘겨받음
     @GetMapping("/accidentview/{id}")
-    public String accidentview(Model model, @PathVariable("id") Integer id,
-                               @RequestParam(value = "alias", required = false) String alias) {
+    public String accidentview(Model model, @PathVariable("id") Integer id) {
+
 
         Optional<RegistrationEntity> viewOptional = registrationService.getaccidentview(id);
         // RegistrationEntity의 id값을 Optional로 받아옴
@@ -100,8 +100,8 @@ public class RegistrationController {
         // 받아온 viewOptional에서 id를 가져와 RegistrationEntity타입으로 view에 저장
         model.addAttribute("view", view);
         // @ 파일이름 가져오기
-        List<RegistrationFileEntity> filename = registrationService.getfilename(id);
-        model.addAttribute("filename", filename);
+//        List<RegistrationFileEntity> filename = registrationService.getfilename(id);
+//        model.addAttribute("filename", filename);
 
         // 댓글보기
         // 순서1) 외래키 id로 테이블조회후
@@ -110,13 +110,11 @@ public class RegistrationController {
         List<CommentDTO> commentDTOList = new ArrayList<>();
         for (CommentEntity comment : commentList) {
             SignupEntity signup = signupRepository.findByAlias(comment.getAlias());
+                                    // null이 아닐경우 signup.getProfileImage()대입 , null일경우 null
             String profileImage = (signup != null) ? signup.getProfileImage() : null;
             commentDTOList.add(new CommentDTO(comment, profileImage));
         }
         model.addAttribute("commentDTOList", commentDTOList);
-
-//        // 순서2) CommentEntity타입으로 가져온 목록을 commentlist에 대입
-//        model.addAttribute("commenet",commentList);
 
         // 게시글 조회수 (비동기 처리 로직에서 가져오기)
         int postviewsnum = registrationService.getPostView(id); // 게시글 번호를 파라미터로 전달
@@ -125,6 +123,8 @@ public class RegistrationController {
         // 회원 프로필 사진 가져오기 (게시글 작성자용)
         SignupEntity signupEntity = signupRepository.findByAlias(view.getAlias());
         model.addAttribute("signupEntity",signupEntity);
+
+
 
 
         return "accident/accidentview";

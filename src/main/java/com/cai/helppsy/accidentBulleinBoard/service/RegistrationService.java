@@ -5,6 +5,8 @@ import com.cai.helppsy.accidentBulleinBoard.entity.RegistrationEntity;
 import com.cai.helppsy.accidentBulleinBoard.entity.RegistrationFileEntity;
 import com.cai.helppsy.accidentBulleinBoard.repository.RegistrationFileRepository;
 import com.cai.helppsy.accidentBulleinBoard.repository.RegistrationRepository;
+import com.cai.helppsy.memberManager.SignupEntity;
+import com.cai.helppsy.memberManager.signupRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ public class RegistrationService{
 
     private final RegistrationRepository registrationrepository; //일반 작성글
     private final RegistrationFileRepository filerepository; //파일
+    private final com.cai.helppsy.memberManager.signupRepository signupRepository; // 회원관리
 
     // 작성글 db 보내기
     public RegistrationEntity write(RegistrationEntity registrationEntity) {
@@ -136,4 +139,38 @@ public class RegistrationService{
         return registrationrepository.findByAlias(alias);
     }
 
+    // 프로필 별명 변경 테이블에 반영해주기
+    public void setSignupAlias(String alias, Integer id){
+        List<RegistrationEntity> registrations = registrationrepository.findBySignupEntity_Id(id);
+        for (RegistrationEntity registration : registrations) {
+            registration.setAlias(alias);
+            registrationrepository.save(registration);
+        }
+    }
+
+//    // 프로필 별명 변경 테이블에 반영해주기
+//    public void setSignupAlias(String alias, Integer id){
+//
+//        List<RegistrationEntity> a = registrationrepository.findBySignupEntity_Id(id);
+//        if(a.isPresent()){
+//        RegistrationEntity entity = registrationrepository.findBySignupEntity_Id(id)
+//                .orElseThrow(()->new RuntimeException("게시글을 찾을 수 없습니다"));
+//        entity.setAlias(alias);
+//        registrationrepository.save(entity);
+//        }else {
+//            System.out.println("게시물이 존재하지않습니다");
+//        }
+//    }
+
+//    // 회원프로필 수정시 제보게시판 프로필 최신화
+//    // 프로필 최신화 정보 업데이트 내용 제보게시글 db저장 로직
+//    public RegistrationEntity getUpdateSignup(Integer id){
+//        // 기존 등록글 불러오기
+//        RegistrationEntity registration = registrationrepository.findById(id)
+//                .orElseThrow(()-> new RuntimeException("객체 비어있음"));
+//
+//
+//        registration.setAlias(signupAlias.getAlias());
+//        return registrationrepository.save(registration);
+//    }
 }

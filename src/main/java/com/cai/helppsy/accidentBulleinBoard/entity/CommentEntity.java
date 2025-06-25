@@ -1,5 +1,6 @@
 package com.cai.helppsy.accidentBulleinBoard.entity;
 
+import com.cai.helppsy.memberManager.SignupEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -31,4 +32,9 @@ public class CommentEntity {
     // 대댓글에 1:N 관계 성립 (기본키)
     @OneToMany(mappedBy = "commentEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CommentReplyEntity> reply;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "signup_entity_id")
+    // Join되는거 service쪽 fileEntity.setRegistrationEntity(registrationEntity);에서 연결
+    private SignupEntity signupEntity;
 }

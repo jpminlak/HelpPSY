@@ -16,6 +16,9 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Integer>
     // 수정할 댓글 찾기
     CommentEntity findByIdAndAlias(Integer commentEditId,String commentEditAlias);
 
+    // 회원프로필 별명 최신화 시키기
+    List<CommentEntity> findBySignupEntity_Id(Integer id); // 회원 프로필 별명 최신화
+
     // 댓글 삭제하기
 //    void deleteByIdAndAliasAndRegistrationEntity_Id(Integer id, String alias);
 //    void deleteByIdAndAliasAndRegistrationEntity_Id(Integer id, String alias, Integer registration_entity_id);

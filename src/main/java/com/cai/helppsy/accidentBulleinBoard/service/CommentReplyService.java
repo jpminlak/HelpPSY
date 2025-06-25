@@ -3,11 +3,13 @@ package com.cai.helppsy.accidentBulleinBoard.service;
 
 import com.cai.helppsy.accidentBulleinBoard.entity.CommentEntity;
 import com.cai.helppsy.accidentBulleinBoard.entity.CommentReplyEntity;
+import com.cai.helppsy.accidentBulleinBoard.entity.RegistrationEntity;
 import com.cai.helppsy.accidentBulleinBoard.repository.CommentReplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.SortedMap;
 
 @Service
@@ -46,4 +48,28 @@ public class CommentReplyService {
         System.out.println("------------대댓글 수정 ");
         return commentReplyRepository.save(entity);
     }
+
+    // 프로필 별명 변경 테이블에 반영해주기
+    public void setReplyAlias(String alias, Integer id){
+        List<CommentReplyEntity> commentReplys = commentReplyRepository.findBySignupEntity_Id(id);
+        for(CommentReplyEntity commentReply : commentReplys){
+            commentReply.setAlias(alias);
+            commentReplyRepository.save(commentReply);
+        }
+    }
+
+
+//    // 프로필 별명 변경 테이블에 반영해주기
+//    public void setReplyAlias(String alias, Integer id){
+//
+//        Optional<CommentReplyEntity> a = commentReplyRepository.findBySignupEntity_Id(id);
+//        if(a.isPresent()){
+//            CommentReplyEntity entity = commentReplyRepository.findBySignupEntity_Id(id)
+//                    .orElseThrow(()->new RuntimeException("게시글을 찾을 수 없습니다"));
+//            entity.setAlias(alias);
+//            commentReplyRepository.save(entity);
+//        }else {
+//            System.out.println("게시물이 존재하지않습니다");
+//        }
+//    }
 }

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -50,4 +51,27 @@ public class CommentService {
         entity.setComment(commentEdit);
         return commentrepository.save(entity);
     }
+
+    // 프로필 별명 변경 테이블에 반영해주기
+    public void setCommentSignupAlias(String alias, Integer id){
+        List<CommentEntity> comments = commentrepository.findBySignupEntity_Id(id);
+        for(CommentEntity comment : comments){
+            comment.setAlias(alias);
+            commentrepository.save(comment);
+        }
+    }
+
+//     // 프로필 별명 변경 테이블에 반영해주기
+//    public void setCommentSignupAlias(String alias, Integer id){
+//
+//        Optional<CommentEntity> a = commentrepository.findBySignupEntity_Id(id);
+//        if(a.isPresent()){
+//            CommentEntity entity = commentrepository.findBySignupEntity_Id(id)
+//                    .orElseThrow(()->new RuntimeException("게시글을 찾을 수 없습니다"));
+//            entity.setAlias(alias);
+//            commentrepository.save(entity);
+//        }else {
+//            System.out.println("게시물이 존재하지않습니다");
+//        }
+//    }
 }
