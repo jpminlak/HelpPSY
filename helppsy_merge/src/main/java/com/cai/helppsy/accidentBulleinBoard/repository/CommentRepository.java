@@ -19,4 +19,6 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Integer>
     // 댓글 삭제하기
 //    void deleteByIdAndAliasAndRegistrationEntity_Id(Integer id, String alias);
 //    void deleteByIdAndAliasAndRegistrationEntity_Id(Integer id, String alias, Integer registration_entity_id);
+
+    List<CommentEntity> findBySignupEntity_Id(Integer id); // 회원 프로필 별명 최신화
 }

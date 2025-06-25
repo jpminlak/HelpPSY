@@ -114,6 +114,7 @@ public class InquiryController {
                     note.setSentAt(LocalDateTime.now());
                     note.setTitle("[문의 답변] " + question.getSubject());
                     note.setContent("문의하신 내용: " + question.getContent() + "\n\n답변 내용: " + A.getContent2());
+                    note.setRelatedQuestionId(question.getId());
 
                     noteRepository.save(note); // 쪽지 저장
                 }
@@ -121,7 +122,7 @@ public class InquiryController {
             }
         }
 
-        return "redirect:/respondent";
+        return "redirect:/question/" + qid;
     }
 
 

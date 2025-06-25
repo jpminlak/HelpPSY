@@ -135,5 +135,12 @@ public class RegistrationService{
     public List<RegistrationEntity> getPostsByAlias(String alias) {
         return registrationrepository.findByAlias(alias);
     }
-
+    // 프로필 별명 변경 테이블에 반영해주기
+    public void setSignupAlias(String alias, Integer id){
+        List<RegistrationEntity> registrations = registrationrepository.findBySignupEntity_Id(id);
+        for (RegistrationEntity registration : registrations) {
+            registration.setAlias(alias);
+            registrationrepository.save(registration);
+        }
+    }
 }

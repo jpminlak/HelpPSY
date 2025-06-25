@@ -46,4 +46,13 @@ public class CommentReplyService {
         System.out.println("------------대댓글 수정 ");
         return commentReplyRepository.save(entity);
     }
+
+    // 프로필 별명 변경 테이블에 반영해주기
+    public void setReplyAlias(String alias, Integer id){
+        List<CommentReplyEntity> commentReplys = commentReplyRepository.findBySignupEntity_Id(id);
+        for(CommentReplyEntity commentReply : commentReplys){
+            commentReply.setAlias(alias);
+            commentReplyRepository.save(commentReply);
+        }
+    }
 }

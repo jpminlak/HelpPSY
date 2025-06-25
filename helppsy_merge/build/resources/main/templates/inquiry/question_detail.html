@@ -31,6 +31,7 @@
             border: 1px solid #dee2e6;
             padding: 12px;
             text-align: left;
+            vertical-align: top; /* textarea와 같은 블록 요소가 잘 정렬되도록 */
         }
 
         th {
@@ -55,18 +56,24 @@
             border-radius: 4px;
         }
 
+        /* 답변 폼 및 입력 필드 스타일 */
         form {
             background-color: #ffffff;
             padding: 20px;
             border-radius: 6px;
             box-shadow: 0 0 8px rgba(0,0,0,0.05);
             max-width: 600px;
+            margin-top: 20px; /* 폼 상단 여백 추가 */
         }
 
-        label {
+        form label { /* 폼 안의 label에만 적용되도록 수정 */
             display: block;
-            margin-bottom: 15px;
+            margin-bottom: 5px; /* 레이블과 입력 필드 사이 간격 줄임 */
             color: #333;
+        }
+
+        form div { /* 폼 내부 각 섹션의 간격 */
+            margin-bottom: 15px;
         }
 
         input[type="text"],
@@ -77,9 +84,15 @@
             border-radius: 4px;
             font-size: 14px;
             box-sizing: border-box;
+            margin-bottom: 10px; /* 입력 필드 아래 여백 추가 */
         }
 
-        button {
+        textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        button[type="submit"] {
             background-color: #007bff;
             color: white;
             padding: 10px 16px;
@@ -87,9 +100,11 @@
             border-radius: 4px;
             font-size: 14px;
             cursor: pointer;
+            width: auto; /* 버튼 너비 자동 조절 */
+            margin-top: 10px; /* 버튼 상단 여백 추가 */
         }
 
-        button:hover {
+        button[type="submit"]:hover {
             background-color: #0056b3;
         }
 
@@ -106,13 +121,44 @@
             color: #999;
             font-style: italic;
         }
+
+        /* 문의 내용 textarea 스타일 */
+        .question-content-box {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .question-content-box h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        .question-content-box textarea {
+            background-color: #e9ecef; /* 읽기 전용임을 나타내는 배경색 */
+            cursor: default; /* 마우스 커서 변경 안 함 */
+        }
+
+        /* ⭐ 새로 추가/수정된 스타일: 답변 목록 textarea */
+        .answer-content-textarea {
+            width: 100%;
+            min-height: 100px; /* 답변 내용 최소 높이 */
+            background-color: #f8f9fa; /* 테이블 배경과 유사하게 */
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 8px;
+            font-size: 13px;
+            resize: vertical;
+            box-sizing: border-box;
+            overflow-y: auto; /* 내용이 넘칠 경우 스크롤바 */
+            cursor: default;
+        }
     </style>
 </head>
 <body>
 
 <h1>질문 상세 보기</h1>
 
-<!-- 질문 정보 출력 -->
 <table>
     <tr>
         <th>번호</th>
@@ -127,17 +173,12 @@
         <td th:text="${question.subject}"></td>
     </tr>
     <tr>
-        <th>내용</th>
-        <td th:text="${question.content}"></td>
-    </tr>
-    <tr>
         <th>작성일</th>
         <td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
     </tr>
     <tr th:if="${question.file != null}">
         <th>첨부파일</th>
         <td class="file-preview">
-            <!-- 이미지 미리보기 -->
             <div th:if="${#strings.endsWith(question.file.toLowerCase(), '.jpg')
                       or #strings.endsWith(question.file.toLowerCase(), '.jpeg')
                       or #strings.endsWith(question.file.toLowerCase(), '.png')
@@ -145,7 +186,6 @@
                 <img id="aaa" th:src="@{/files/inquiry/{file}(file=${question.file})}" alt="첨부 이미지">
             </div>
 
-            <!-- 그 외 파일 다운로드 -->
             <div th:unless="${#strings.endsWith(question.file.toLowerCase(), '.jpg')
                          or #strings.endsWith(question.file.toLowerCase(), '.jpeg')
                          or #strings.endsWith(question.file.toLowerCase(), '.png')
@@ -155,6 +195,13 @@
         </td>
     </tr>
 </table>
+
+<div class="question-content-box">
+    <h2>문의 내용</h2>
+    <textarea th:text="${question.content}" readonly rows="10"></textarea>
+</div>
+
+---
 
 <h2>답변 목록</h2>
 <div th:if="${#lists.isEmpty(answers)}">
@@ -167,8 +214,7 @@
             <th>번호</th>
             <th>답변자</th>
             <th>제목</th>
-            <th>내용</th>
-            <th>작성일</th>
+            <th>내용</th> <th>작성일</th>
         </tr>
         </thead>
         <tbody>
@@ -176,31 +222,37 @@
             <td th:text="${answer.id}"></td>
             <td th:text="${answer.respondent}"></td>
             <td th:text="${answer.title}"></td>
-            <td th:text="${answer.content2}"></td>
+            <td>
+                <textarea class="answer-content-textarea"
+                          th:text="${answer.content2}"
+                          readonly
+                          rows="5"></textarea> </td>
             <td th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
         </tr>
         </tbody>
     </table>
 </div>
 
+---
+
 <h2>답변 작성</h2>
 <form action="/kkk" method="post">
     <input type="hidden" name="question.id" th:value="${question.id}">
 
-    <label>
-        답변자:
-        <input type="text" name="respondent" placeholder="관리자 이름">
-    </label>
+    <div>
+        <label for="respondent">답변자:</label>
+        <input type="text" id="respondent" name="respondent" th:value="${session.userAlias}" readonly>
+    </div>
 
-    <label>
-        제목:
-        <input type="text" name="title" placeholder="답변 제목">
-    </label>
+    <div>
+        <label for="title">제목:</label>
+        <input type="text" id="title" name="title" placeholder="답변 제목">
+    </div>
 
-    <label>
-        내용:
-        <textarea name="content2" placeholder="답변 내용 입력" cols="50" rows="10"></textarea>
-    </label>
+    <div>
+        <label for="content2">내용:</label>
+        <textarea id="content2" name="content2" placeholder="답변 내용 입력" cols="50" rows="10"></textarea>
+    </div>
 
     <button type="submit" name="action" value="answer">전송</button>
 </form>

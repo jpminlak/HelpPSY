@@ -16,6 +16,7 @@ import java.util.List;
 public class NoteController {
 
     private final NoteService noteService;
+    
 
     /*쪽지 작성 폼 이동 */
     @GetMapping("/note/{receiverId}")

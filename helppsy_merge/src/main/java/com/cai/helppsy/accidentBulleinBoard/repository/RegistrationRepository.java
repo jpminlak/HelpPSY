@@ -19,6 +19,8 @@ public interface RegistrationRepository extends JpaRepository<RegistrationEntity
 
     List<RegistrationEntity> findByAlias(String alias); // 추천
 
+    List<RegistrationEntity> findBySignupEntity_Id(Integer id); // 회원 프로필 별명 최신화
+
     // 회원 ID 게시글테이블에 컬럼추가 하기위해
     Optional<RegistrationEntity> findTop1ByAliasOrderByCreateDateDesc(String alias);
 

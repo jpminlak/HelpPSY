@@ -19,4 +19,7 @@ public class Note {
     private String title;   //제목
     private String content; //내용
     private LocalDateTime sentAt;
+
+    @Column(nullable = true) // null 값 허용
+    private Integer relatedQuestionId;  //어떤 쪽지에 대한 답변인지
 }

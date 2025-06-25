@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -49,11 +50,20 @@
             border-radius: 5px;
         }
 
+        /* 추가: 링크 스타일 (선택 사항) */
+        .note td a {
+            color: #007bff; /* 링크 색상 */
+            text-decoration: none; /* 밑줄 제거 */
+        }
+        .note td a:hover {
+            text-decoration: underline; /* 호버 시 밑줄 */
+        }
+
     </style>
 </head>
 <body>
 
-<div class="wrapper">x`
+<div class="wrapper">
     <div class="header-container">
         <div class="logo-nav-container">
             <div class="logo-container">
@@ -97,9 +107,11 @@
             </thead>
             <tbody th:colspan="2">
             <tr th:each="note : ${notes}">
-                <td th:text="${note.senderId}" style="text-align:center;"></td>
+                <td style="text-align:center;">
+                    <a th:href="@{'/profile?alias=' + ${note.senderId}}" th:text="${note.senderId}"></a>
+                </td>
                 <td th:text="${#temporals.format(note.sentAt, 'yyyy-MM-dd HH:mm')}" style="text-align:center;"></td>
-                <td th:text="${note.title}"></td>
+                <td><a th:href="@{/respondent}" th:text="${note.title}"></a></td>
                 <td th:text="${note.content}"></td>
             </tr>
             </tbody>
@@ -111,7 +123,6 @@
     </a>
 </div>
 
-<!-- 푸터 -->
 <div id="footer">
     <p>개발자 이메일 : human@gmail.com | 대표 이름 : human</p>
 </div>

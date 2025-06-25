@@ -1,6 +1,8 @@
 package com.cai.helppsy.memberManager;
 
 import com.cai.helppsy.accidentBulleinBoard.entity.RegistrationEntity;
+import com.cai.helppsy.accidentBulleinBoard.service.CommentReplyService;
+import com.cai.helppsy.accidentBulleinBoard.service.CommentService;
 import com.cai.helppsy.accidentBulleinBoard.service.RegistrationService;
 import com.cai.helppsy.freeBulletinBoard.entity.FreeBulletin;
 import com.cai.helppsy.freeBulletinBoard.repository.FreeBulletinRepository;
@@ -21,7 +23,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Controller
 public class memberController {
-    private final RegistrationService registrationService;
+    private final RegistrationService registrationService; // 제보게시판
+    private final CommentService commentService; // 제보게시판
+    private final CommentReplyService commentReplyService; // 제보게시판
     private final signupRepository signupRepository;
     private final signupService signupservice;
     private final FreeBulletinRepository freeBulletinRepository;
@@ -123,6 +127,10 @@ public class memberController {
     public String update(@ModelAttribute SignupEntity updatedUser,
                          @RequestParam(value = "Ffile", required = false) MultipartFile profileImage,
                          HttpSession session)  {
+
+        registrationService.setSignupAlias(updatedUser.getAlias(),updatedUser.getId()); // 민우로직추가
+        commentService.setCommentSignupAlias(updatedUser.getAlias(),updatedUser.getId()); // 민우로직추가
+        commentReplyService.setReplyAlias(updatedUser.getAlias(),updatedUser.getId()); // 민우로직추가
         System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         System.out.println(profileImage);
         System.out.println(profileImage.getSize());

@@ -82,4 +82,5 @@ public class RegistrationEntity {
     @JoinColumn(name = "signup_entity_id")
     // Join되는거 service쪽 fileEntity.setRegistrationEntity(registrationEntity);에서 연결
     private SignupEntity signupEntity;
+
 }
