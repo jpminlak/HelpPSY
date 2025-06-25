@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="https://www.thymeleaf.org">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="main/fragmentStyle.css">
-        <script src="main/fragment.js"></script>
-        <title>자유 게시판</title>
-    </head>
-    <style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main/head.css">
+    <script src="main/fragment.js"></script>
+    <title>자유 게시판</title>
+</head>
+<style>
+    body {
+        background-color: #d1dee5;
+    }
+
     #main {
         border: 1px solid;
-        border-radius: 10px;
+        border-color: #c2c1c1;
+        border-radius: 5px;
+        background-color: #eff5f5;
         width: 600px;
         margin: auto;
     }
@@ -76,7 +82,8 @@
         overflow: auto;
     }
 
-    .fileOneNameDiv {}
+    .fileOneNameDiv {
+    }
 
     .deleteFileOne {
         display: inline;
@@ -99,7 +106,7 @@
 
     #addImgOrVideo {
         background-color: rgb(105, 206, 105);
-        margin-left: 50px;
+        margin-left: 180px;
         margin-bottom: 10px;
         margin-top: 10px;
         color: white;
@@ -108,16 +115,6 @@
 
     #addImgOrVideo:hover {
         background-color: rgb(63, 143, 83);
-    }
-
-    #fontSizeTxt {
-        display: inline;
-        font-size: 14px;
-    }
-
-    #fontSize {
-        display: inline;
-        font-size: 12px;
     }
 
     #content {
@@ -191,108 +188,91 @@
 
     /* thumbnail */
 
-    #thumbnailBox{
+    #thumbnailBox {
         border: 1px solid;
-	border-radius: 5px;
+        border-radius: 5px;
         width: 500px;
         margin: auto;
     }
 
-    #thumbnailTxt{
+    #thumbnailTxt {
         text-align: center;
     }
 
-    #inputThumbnail{
+    #inputThumbnail {
         position: absolute;
         width: 70px;
         margin-top: -20px;
         margin-left: 10px;
     }
 
-    #preViewThumbnail{
+    #preViewThumbnail {
         margin-top: 40px;
         margin-left: 100px;
     }
 </style>
 
-    <body>
-        <div th:replace="~{main/mainPage:: header}"></div>
-        <div th:replace="~{main/mainPage:: nav}"></div>
-        <div id="main">
-            <form id="bulletinForm" action="updateFreeBulletin" method="post"
-                onsubmit="return false"
-                enctype="multipart/form-data">
-                <h1>자유 게시판 게시글 수정</h1>
-                <input type="hidden" th:value="${bulletinOneInfo.no}" name="no">
-                <input type="hidden" th:value="${bulletinOneInfo.writer}" name="userName">
-                <input type="hidden" th:value="${userName}"
-                    name="currentUserName">
-                <div id="topArea">
-                    <h3 id="titleTxt">제목 : </h3>
-                    <input th:value="${bulletinOneInfo.title}" id="titleInput" type="text" name="title">
-                    <h4 id="attachFileTxt">첨부파일 : </h4>
-                    <div id="attachFileBox">
-                        <input id="fileInput" type="file"
-                            onchange="addAttachFile()">
-                        <div id="fileListArea">
+<body>
+<div th:replace="~{main/mainPage:: header}"></div>
+<div id="main">
+    <form id="bulletinForm" action="updateFreeBulletin" method="post"
+          onsubmit="return false"
+          enctype="multipart/form-data">
+        <h1>자유 게시판 게시글 수정</h1>
+        <input type="hidden" th:value="${bulletinOneInfo.no}" name="no">
+        <input type="hidden" th:value="${bulletinOneInfo.userId}" name="userId">
+        <div id="topArea">
+            <h3 id="titleTxt">제목 : </h3>
+            <input th:value="${bulletinOneInfo.title}" id="titleInput" type="text" name="title">
+            <h4 id="attachFileTxt">첨부파일 : </h4>
+            <div id="attachFileBox">
+                <input id="fileInput" type="file"
+                       onchange="addAttachFile()">
+                <div id="fileListArea">
 
-                        </div>
-                        <div class="hiddenFiles">
-                            <input class="hiddenFile" type="hidden" th:value="${fileName}"
-                                   th:each="fileName : ${fileNames}">
-                        </div>
-                    </div>
                 </div>
-                <div id="thumbnailBox">
-                    <div id="thumbnailTxt">썸네일 등록(비율  2:1)</div>
-                    <input id="inputThumbnail" type="file" accept="image/*" onchange="addThumbnail()">
-                    <input id="thumbnailForSubmit" type="hidden" name="thumbnail">
-                    <img id="preViewThumbnail" th:src="${bulletinOneInfo.thumbnail}" width="200" height="100">
+                <div class="hiddenFiles">
+                    <input class="hiddenFile" type="hidden" th:value="${fileName}"
+                           th:each="fileName : ${fileNames}">
                 </div>
-                <div id="addImgOrVideoBox">
-                    <input id="imgOrVideoFile" type="file">
-                    <div id="imgOrVideoSizeTxt">사이즈</div>
-                    <select id="imgOrVideoSize">
-                        <option value>선택</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="150">150</option>
-                        <option value="200">200</option>
-                        <option value="250">250</option>
-                        <option value="300">300</option>
-                        <option value="350">350</option>
-                        <option value="400">400</option>
-                        <option value="450">450</option>
-                        <option value="500">500</option>
-                    </select>
-                    <input id="insertImgOrVideo" type="button" value="추가하기"
-                        onclick="addImgOrVideoInContent()">
-                </div>
-                <div id="contentBox">
-                    <input id="addImgOrVideo" type="button" value="이미지 및 동영상 추가"
-                        onclick="showAddImgOrVideoBox()">
-                    <div id="fontSizeTxt">글자 크기</div>
-                    <select id="fontSize" onchange="setFontSize()">
-                        <option value>선택</option>
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="25">25</option>
-                        <option value="30">30</option>
-                        <option value="35">35</option>
-                        <option value="40">40</option>
-                        <option value="45">45</option>
-                    </select>
-
-                    <div id="content" contenteditable="true"></div>
-                    <input th:value="${bulletinOneInfo.content}" type="hidden" id='contentForSubmit' name="content">
-                </div>
-                <input id="bulletinUpload" type="button"
-                    onclick="submitToController()" value="올리기">
-            </form>
+            </div>
         </div>
-        <div th:replace="~{main/mainPage:: footer}"></div>
-    </body>
+        <div id="thumbnailBox">
+            <div id="thumbnailTxt">썸네일 등록(비율 14:13)</div>
+            <input id="inputThumbnail" type="file" accept="image/*" onchange="addThumbnail()">
+            <input id="thumbnailForSubmit" type="hidden" name="thumbnail" th:value="${bulletinOneInfo.thumbnail}">
+            <img id="preViewThumbnail" th:src="${bulletinOneInfo.thumbnail}" width="196" height="182">
+        </div>
+        <div id="addImgOrVideoBox">
+            <input id="imgOrVideoFile" type="file">
+            <div id="imgOrVideoSizeTxt">사이즈</div>
+            <select id="imgOrVideoSize">
+                <option value>선택</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="150">150</option>
+                <option value="200">200</option>
+                <option value="250">250</option>
+                <option value="300">300</option>
+                <option value="350">350</option>
+                <option value="400">400</option>
+                <option value="450">450</option>
+                <option value="500">500</option>
+            </select>
+            <input id="insertImgOrVideo" type="button" value="추가하기"
+                   onclick="addImgOrVideoInContent()">
+        </div>
+        <div id="contentBox">
+            <input id="addImgOrVideo" type="button" value="이미지 및 동영상 추가"
+                   onclick="showAddImgOrVideoBox()">
+            <div id="content" contenteditable="true"></div>
+            <input th:value="${bulletinOneInfo.content}" type="hidden" id='contentForSubmit' name="content">
+        </div>
+        <input id="bulletinUpload" type="button"
+               onclick="submitToController()" value="올리기">
+    </form>
+</div>
+</body>
 
 </html>
 <script>
@@ -303,13 +283,11 @@
     const existingFileNamesInServer = new Map();
 
     window.onload = () => {
-        if(document.getElementById('mainTitle') != null)
-            document.getElementById('mainTitle').innerHTML = '자유 게시판'
         initialFiles = document.getElementById('fileInput').files;
-        document.getElementById('content').focus( () => {
+        document.getElementById('content').focus(() => {
             const currentFocus = document.activeElement;
             const currentFocusDiv = currentFocus.parentElement.children[3];
-            if(currentFocus.id == 'content'){
+            if (currentFocus.id == 'content') {
                 currentTextFocus = currentFocus;
             }
         });
@@ -318,17 +296,12 @@
         processExistingFileNameInServer();
     }
 
-    function processExistingFileNameInServer(){
+    function processExistingFileNameInServer() {
         const originFileNames = document.getElementsByClassName('hiddenFile');
-        for(let ofn of originFileNames){
+        for (let ofn of originFileNames) {
             //existingFileNameInServer.set(addAttachFile(ofn.value), ofn.value);
             addAttachFile(ofn.value);
         }
-    }
-
-    function setFontSize(){
-        let fontSize  = document.getElementById('fontSize');
-        document.getElementById('content').style.fontSize = fontSize.value+'px';
     }
 
     function addAttachFile(existingFileNameInServer) {
@@ -337,7 +310,7 @@
         let fileName = fileInput.value;
 
 
-        if(existingFileNameInServer == undefined){
+        if (existingFileNameInServer == undefined) {
             for (let i = fileName.length - 1; i >= 0; i--) {
                 if (fileName[i] == '\\') {
                     attachFileList.set(fileNameCnt, fileInput.files);
@@ -361,7 +334,7 @@
                     break;
                 }
             }
-        }else {
+        } else {
             for (let i = existingFileNameInServer.length - 1; i >= 0; i--) {
                 if (existingFileNameInServer[i] == '_') {
                     existingFileNamesInServer.set(fileNameCnt, existingFileNameInServer);
@@ -394,22 +367,22 @@
         fileOneNameDiv.remove();
         console.log('__________1__________');
         console.log(keyNum);
-        for(let i of existingFileNamesInServer.keys()){
+        for (let i of existingFileNamesInServer.keys()) {
             console.log(i);
         }
         console.log('__________2_________');
-        for(let i of attachFileList.keys()){
+        for (let i of attachFileList.keys()) {
             console.log(i);
         }
         console.log('__________1__________');
-        for(let i of attachFileList.keys()){
-            if(i == keyNum){
+        for (let i of attachFileList.keys()) {
+            if (i == keyNum) {
                 attachFileList.delete(keyNum);
                 return;
             }
         }
-        for(let i of existingFileNamesInServer.keys()){
-            if(i == keyNum){
+        for (let i of existingFileNamesInServer.keys()) {
+            if (i == keyNum) {
                 existingFileNamesInServer.delete(keyNum);
             }
         }
@@ -422,6 +395,7 @@
         else
             addImgOrVideoBox.style.display = 'block';
     }
+
     function addImgOrVideoInContent() {
         const content = document.getElementById('content');
         const imgOrVideoSize = document.getElementById('imgOrVideoSize').value;
@@ -429,7 +403,7 @@
         const fileReader = new FileReader();
 
         if (!(imgOrVideoFile.files[0].type.startsWith('image/')
-            || imgOrVideoFile.files[0].type.startsWith('video/'))){
+            || imgOrVideoFile.files[0].type.startsWith('video/'))) {
             alert('동영상이나 사진만 추가할 수 있습니다.');
             return;
         }
@@ -448,6 +422,7 @@
             insertIntoContent(imgDataUrl, type, imgOrVideoSize);
         }
     }
+
     function insertIntoContent(imgDataUrl, type, imgOrVideoSize) {
         const content = document.getElementById('content');
         const fileTag = document.createElement(type);
@@ -460,28 +435,33 @@
         content.appendChild(fileTag);
         addImgOrVideoBox.style.display = 'none';
     }
+
     function encoding() {
         const contentHtml = document.getElementById('content').innerHTML;
         const encodedContent = encodeURIComponent(contentHtml);
         document.getElementById('contentForSubmit').value = encodedContent;
     }
+
     function submitToController() {
         const form = document.getElementById('bulletinForm');
         let fileTypeInputTag;
         let fileNameTag;
         // 위에는 기존에 서버에 저장되어 있던, 파일명을 보내주기 위한 태그. -> 첨부파일 목록에서 빼지 않은 내용은 지우지 않도록
-        const title = document.getElementById('titleTxt').value;
+        const titleInput = document.getElementById('titleInput').value;
         encoding();
         const content = document.getElementById('content').innerHTML.toString()
-        if (title == '') {
+        if (titleInput == '') {
             alert('제목을 입력하세요');
             return;
-        }
-        if (content.length < 50) {
-            alert('최소 50글자 이상 입력해주세요.');
+        } else if (titleInput.length > 30) {
+            alert('제목의 최대 길이는 30자까지입니다.');
             return;
         }
-        for(let i of attachFileList.keys()) {
+        if (content.length < 10) {
+            alert('최소 10글자 이상 입력해주세요.');
+            return;
+        }
+        for (let i of attachFileList.keys()) {
             fileTypeInputTag = document.createElement('input');
             fileTypeInputTag.setAttribute('type', 'file');
             fileTypeInputTag.setAttribute('name', 'file');
@@ -489,7 +469,7 @@
             fileTypeInputTag.files = attachFileList.get(i);
             form.appendChild(fileTypeInputTag);
         }
-        for(let i of existingFileNamesInServer.keys()) {
+        for (let i of existingFileNamesInServer.keys()) {
             fileNameTag = document.createElement('input');
             fileNameTag.setAttribute('type', 'hidden');
             fileNameTag.setAttribute('value', existingFileNamesInServer.get(i));
@@ -498,7 +478,8 @@
         }
         form.submit();
     }
-    function addThumbnail(){
+
+    function addThumbnail() {
         const inputThumbnail = document.getElementById('inputThumbnail');
         const fileReader = new FileReader();
         let fileDataUrl;

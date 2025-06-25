@@ -1,10 +1,12 @@
 package com.cai.helppsy.freeBulletinBoard.entity;
 
 
+import com.cai.helppsy.likes.entity.FreeBulletinReplyLike;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -16,8 +18,8 @@ public class FreeBulletinReply {
     @Column(length = 10)
     private String type;
 
-    @Column(length = 15)
-    private String writer;
+    @Column(length = 20)
+    private String userId;
 
     @Column(length = 400)
     private String content;
@@ -31,4 +33,6 @@ public class FreeBulletinReply {
     @JoinColumn(name = "fkNo")
     private FreeBulletinComment freeBulletinComment;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "freeBulletinReply", orphanRemoval = true)
+    private List<FreeBulletinReplyLike> freeBulletinReplyLikeList;
 }

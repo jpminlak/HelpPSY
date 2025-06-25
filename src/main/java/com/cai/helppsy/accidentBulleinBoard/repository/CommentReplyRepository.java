@@ -10,4 +10,7 @@ public interface CommentReplyRepository extends JpaRepository<CommentReplyEntity
 
     // 댓글 ID로 대댓글 목록 조회
     List<CommentReplyEntity> findByCommentEntityId(Integer commentId);
+
+    // 대댓글 수정
+    CommentReplyEntity findByIdAndAlias(Integer commentReplyId, String commentReplyAlias);
 }

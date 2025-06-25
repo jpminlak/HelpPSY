@@ -16,9 +16,13 @@ public class FreeBulletinDTO {
 
     private String writer;
 
+    private String userId;
+
     private Integer views;
 
     private int likes;
 
     private LocalDateTime createDate;
+
+    private String profileImgName;
 }

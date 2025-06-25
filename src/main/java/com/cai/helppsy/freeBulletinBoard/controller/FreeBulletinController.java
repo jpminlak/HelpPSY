@@ -33,7 +33,7 @@ public class FreeBulletinController {
 
     @GetMapping("mainFreeBulletin")
     public String mainFreeBulletin(Model model, @ModelAttribute SearchDTO searchDTO) {
-        List<FreeBulletin> bulletinList = freeBulletinService.bulletinList();
+        List<FreeBulletinDTO> bulletinList = freeBulletinService.bulletinList();
         Paging paging = new Paging();
         paging.setPerPageList(15, searchDTO.getCurrentPage(), searchDTO.getCurrentPageSetNum(), 5, bulletinList);
 
@@ -50,22 +50,21 @@ public class FreeBulletinController {
 
     @PostMapping("addFreeBulletin")
     public String addFreeBulletinBoard(@ModelAttribute FreeBulletin bulletinEntity
-            , @RequestParam(value = "file", required = false) MultipartFile[] files
-            , @RequestParam(value = "currentUserName", defaultValue = "guest") String currentUserName) {
-        freeBulletinService.addBulletin(bulletinEntity, files, currentUserName);
+            , @RequestParam(value = "file", required = false) MultipartFile[] files) {
+        freeBulletinService.addBulletin(bulletinEntity, files);
         return "redirect:/mainFreeBulletin";
     }
 
     @GetMapping("specificBulletin")
     public String specificBulletin(Model model, @RequestParam("no") Integer no
-            , @RequestParam(value = "userName", defaultValue = "guest") String userName) {
+            , @RequestParam(value = "userId", defaultValue = "") String userId) {
         freeBulletinService.increaseViews(no);
-        FreeBulletin bulletinOne = freeBulletinService.bulletinOne(no);
-        model.addAttribute("bulletinOne", bulletinOne);
+        model.addAttribute("bulletinOne", freeBulletinService.bulletinOne(no));
         model.addAttribute("commentList", freeBulletinLikesService.isPressedCommentLike(freeBulletinService.getComments(no)
-                , userName));
-        model.addAttribute("isPressedBulletinLike", freeBulletinLikesService.isPressedBulletinLike(userName, no));
+                , userId));
+        model.addAttribute("isPressedBulletinLike", freeBulletinLikesService.isPressedBulletinLike(userId, no));
         model.addAttribute("fileNames", freeBulletinService.getAttachFileNames(no));
+        model.addAttribute("userIdFromController", userId);
 
         return "freeBulletinBoard/specificFreeBulletin";
     }
@@ -74,8 +73,8 @@ public class FreeBulletinController {
     @PostMapping("freeBulletin/addComment")
     public String addComment(@ModelAttribute FreeBulletinComment freeBulletinComment
             , @RequestParam(value = "fkNo") Integer fkNo) {
-        if (freeBulletinComment.getWriter() == "") {
-            freeBulletinComment.setWriter("guest");
+        if (freeBulletinComment.getUserId().equals("")) {
+            freeBulletinComment.setUserId("guest");
         }
         freeBulletinService.addComment(freeBulletinComment, fkNo);
         return "succeeded";
@@ -85,8 +84,8 @@ public class FreeBulletinController {
     @PostMapping("freeBulletin/addReply")
     public String addReply(@ModelAttribute FreeBulletinReply freeBulletinCommentInComment
             , @RequestParam(value = "fkNo") Integer fkNo) {
-        if (freeBulletinCommentInComment.getWriter() == "") {
-            freeBulletinCommentInComment.setWriter("guest");
+        if (freeBulletinCommentInComment.getUserId().equals("")) {
+            freeBulletinCommentInComment.setUserId("guest");
         }
         freeBulletinService.addReply(freeBulletinCommentInComment, fkNo);
         return "succeeded";
@@ -95,27 +94,8 @@ public class FreeBulletinController {
     @PostMapping("showReply")
     @ResponseBody
     public List<FreeBulletinReplyDTO> commentInComment(@RequestParam(value = "no") Integer no
-            , @RequestParam(value = "userName", defaultValue = "guest") String useriName) {
-        List<FreeBulletinReply> replyList = freeBulletinService.getCommentInComments(no);
-
-        if (replyList == null)
-            return null;
-
-        List<FreeBulletinReplyDTO> list = new ArrayList<>();
-
-        for (int i = 0; i < replyList.size(); i++) {
-            FreeBulletinReplyDTO freeBulletinReplyDTO = new FreeBulletinReplyDTO();
-            freeBulletinReplyDTO.setNo(replyList.get(i).getNo());
-            freeBulletinReplyDTO.setFkNo(replyList.get(i).getFreeBulletinComment().getNo());
-            freeBulletinReplyDTO.setType(replyList.get(i).getType());
-            freeBulletinReplyDTO.setWriter(replyList.get(i).getWriter());
-            freeBulletinReplyDTO.setLikes(replyList.get(i).getLikes());
-            freeBulletinReplyDTO.setContent(replyList.get(i).getContent());
-            freeBulletinReplyDTO.setCreateDate(replyList.get(i).getCreateDate());
-            list.add(freeBulletinReplyDTO);
-        }
-
-        return freeBulletinLikesService.isPressedReplyLike(list, useriName);
+            , @RequestParam(value = "userId", defaultValue = "guest") String userId) {
+        return freeBulletinLikesService.isPressedReplyLike(freeBulletinService.getCommentInComments(no), userId);
     }
 
     //아래는 게시판 부분
@@ -126,24 +106,23 @@ public class FreeBulletinController {
     }
 
     @GetMapping("editFreeBullein")
-    public String editFreeBullein(@RequestParam("no") Integer no, @RequestParam("userName") String userName
+    public String editFreeBullein(@RequestParam("no") Integer no, @RequestParam("userId") String userId
             , Model model) throws UnsupportedEncodingException {
         if (no == null) {
             return "redirect:/specificBulletin";
         }
         model.addAttribute("bulletinOneInfo", freeBulletinService.bulletinOne(no));
-        model.addAttribute("userName", userName);
+        model.addAttribute("userId", userId);
         model.addAttribute("fileNames", freeBulletinService.getAttachFileNames(no));
         return "freeBulletinBoard/updateFreeBulletin";
     }
 
     @PostMapping("updateFreeBulletin")
-    public String updateFreeBulletin(@RequestParam("no") Integer no, @RequestParam("userName") String userName
-            , Model model, @ModelAttribute FreeBulletin bulletinEntity, @RequestParam(value = "existingFileNames", defaultValue = "noFileName") List<String> existingFileNames
+    public String updateFreeBulletin(Model model, @ModelAttribute FreeBulletin bulletinEntity, @RequestParam(value = "existingFileNames", defaultValue = "noFileName") List<String> existingFileNames
             , @RequestParam(value = "file", required = false) MultipartFile[] files) throws UnsupportedEncodingException {
-        freeBulletinService.updateFreeBulletin(no, bulletinEntity, files, existingFileNames);
-        userName = URLEncoder.encode(userName, "UTF-8");
-        return "redirect:/specificBulletin?no=" + no + "&userName=" + userName;
+        freeBulletinService.updateFreeBulletin(bulletinEntity.getNo(), bulletinEntity, files, existingFileNames);
+        bulletinEntity.setUserId(URLEncoder.encode(bulletinEntity.getUserId(), "UTF-8"));
+        return "redirect:/specificBulletin?no=" + bulletinEntity.getNo() + "&userId=" + bulletinEntity.getUserId();
     }
 
     // 아래는 댓글 부분

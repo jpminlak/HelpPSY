@@ -4,18 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="main/fragmentStyle.css">
+    <link rel="stylesheet" href="main/head.css">
     <script src="main/fragment.js"></script>
     <script src="main/jquery.js"></script>
     <title>자유 게시판</title>
 </head>
 <style>
+    body {
+        background-color: #d1dee5;
+    }
+
     #main {
         width: 800px;
         margin: auto;
         border: 1px solid;
-        border-color: gray;
+        border-color: #c2c1c1;
         border-radius: 5px;
+        background-color: #eff5f5;
+    }
+
+    hr {
+        width: 750px;
     }
 
     /* topInfoArea */
@@ -26,6 +35,12 @@
     }
 
     /* in topInfoArea */
+    #bulletinNo {
+        /*position: absolute;*/
+        margin-left: 25px;
+        margin-top: 5px;
+    }
+
     #mainTitle {
         margin-left: 25px;
         font-weight: 300;
@@ -43,6 +58,7 @@
         position: absolute;
         width: 50px;
         height: 50px;
+        border-radius: 50%;
     }
 
     #memberGrade {
@@ -100,7 +116,7 @@
     #mainContentArea {
         width: 800px;
         margin: auto;
-        /*         border: 1px solid; */
+        min-height: 300px;
         margin-bottom: 100px;
     }
 
@@ -111,9 +127,15 @@
     }
 
     /* commentArea */
+    #commentArea hr {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
     #commentArea {
         width: 800px;
         margin: auto;
+        margin-bottom: 50px;
     }
 
     #deleteBulletin {
@@ -168,14 +190,15 @@
         position: absolute;
         margin-left: 30px;
         margin-top: 10px;
+        border-radius: 50%;
     }
 
     .contentAndInfoOfComment {
         margin-left: 90px;
-        margin-top: 10px;
+        margin-top: 45px;
     }
 
-    .userNameOfComment {
+    .writerOfComment {
         margin-left: 0px;
         margin-top: 0px;
         font-weight: 550;
@@ -215,7 +238,6 @@
     .deleteForComment {
         position: absolute;
         margin-left: 400px;
-        margin-top: ;
         background-color: #d5d4d4;
         color: black;
         border-color: white;
@@ -231,7 +253,6 @@
     .editUiForComment {
         position: absolute;
         margin-left: 470px;
-        margin-top: ;
         background-color: #d5d4d4;
         color: black;
         border-color: white;
@@ -247,7 +268,6 @@
     .cancelEditUiForComment {
         position: absolute;
         margin-left: 470px;
-        margin-top: ;
         display: none;
         background-color: #d5d4d4;
         color: black;
@@ -307,16 +327,17 @@
 
     .profileImgOfReply {
         position: absolute;
-        margin-left: 50px;
+        margin-left: 70px;
         margin-top: 10px;
+        border-radius: 50%;
     }
 
     .contentAndInfoOfReply {
-        margin-left: 110px;
-        margin-top: 10px;
+        margin-left: 130px;
+        margin-top: 45px;
     }
 
-    .userNameOfReply {
+    .writerOfReply {
         margin-left: 0px;
         margin-top: 0px;
         font-weight: 550;
@@ -359,16 +380,31 @@
 
     .hidingReply {
         display: none;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+    }
+
+    .hidingReply:hover {
+        background-color: #44a844;
+        color: white;
     }
 
     .showingReplies {
         display: block;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+    }
+
+    .showingReplies:hover {
+        background-color: #448bde;
+        color: white;
     }
 
     .deleteBtnForReply {
         position: absolute;
         margin-left: 400px;
-        margin-top: ;
         background-color: #d5d4d4;
         color: black;
         border-color: white;
@@ -384,7 +420,6 @@
     .editUiForReply {
         position: absolute;
         margin-left: 480px;
-        margin-top: ;
         background-color: #d5d4d4;
         color: black;
         border-color: white;
@@ -400,7 +435,6 @@
     .cancelEditUiForReply {
         position: absolute;
         margin-left: 480px;
-        margin-top: ;
         display: none;
         background-color: #d5d4d4;
         color: black;
@@ -489,22 +523,24 @@
 
 <body>
 <div th:replace="~{main/mainPage:: header}"></div>
-<div th:replace="~{main/mainPage:: nav}"></div>
 <div id="main">
     <div id="topInfoArea">
-        <input id="currentUser" type="hidden" th:value="${session.userAlias}">
+        <input id="currentUserId" type="hidden" th:value="${session.userId}">
+        <input id="userIdFromController" type="hidden" th:value="${userIdFromController}">
+        <input id="bulletinNoForRequest" type="hidden" th:value="${bulletinOne.no}">
+        <div id="bulletinNo" th:text="'글 번호 :'+${bulletinOne.no}"></div>
         <h2 id="mainTitle" th:text="'제목 : '+${bulletinOne.title}"></h2>
-        <a id="deleteBulletin" th:if="${session.userAlias == bulletinOne.writer}"
+        <a id="deleteBulletin" th:if="${session.userId == bulletinOne.userId}"
                 th:href="'deleteFreeBulletin?no='+${bulletinOne.no}">
             <input type="button" value="삭제">
         </a>
-        <a id="updateBulletin" th:if="${session.userAlias == bulletinOne.writer}"
-                th:href="'editFreeBullein?no='+${bulletinOne.no}+'&userName='+${session.userAlias}">
+        <a id="updateBulletin" th:if="${session.userId == bulletinOne.userId}"
+                th:href="'editFreeBullein?no='+${bulletinOne.no}+'&userId='+${session.userId}">
             <input type="button" value="수정">
         </a>
         <div id="bulletinInfo">
             <img id="profileImg"
-                 src="https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png?type=c77_77">
+                 th:src="'/files/profile/'+${bulletinOne.profileImgName}">
             <p id="memberGrade">회원등급 : 일반</p>
             <p id="writer" th:text="'작성자 : '+${bulletinOne.writer}"></p>
             <p id="writingDate"
@@ -525,20 +561,17 @@
     </div>
     <hr>
     <div id="mainContentArea">
-        <div id="mainContent">
-
-        </div>
+        <div id="mainContent"></div>
         <input id="contentBeforeProcessing" type="hidden" th:value="${bulletinOne.content}">
     </div>
     <hr>
     <div id="commentArea">
-        <form th:if="${session.userAlias != null}" id="commentForm" action="freeBulletin/addComment" method="post">
+        <form th:if="${session.userId != null}" id="commentForm" action="freeBulletin/addComment" method="post">
             <div id="addCommentBox">
-                <div id="addComment"></div>
                 <div contenteditable="true" id="commentContent" name="content"></div>
                 <input id="addCommentBtn" type="button" value="올리기"
                        th:onclick="'addComment('+${bulletinOne.no}+')'">
-                <input id="commentWriter" type="hidden" th:value="${session.userAlias}" name="writer">
+                <input id="commentUserId" type="hidden" th:value="${session.userId}" name="userId">
                 <input id="commentType" type="hidden" value="free" name="type">
             </div>
         </form>
@@ -546,18 +579,18 @@
         <div th:id="'comment'+${commentOne.no}" class="comments" th:each="commentOne : ${commentList}">
             <hr>
             <img class="profileImgOfComment" width="50"
-                 src="https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png?type=c77_77">
-            <input class="deleteForComment" th:if="${commentOne.writer == session.userAlias}" th:id="'deleteForComment('+${commentOne.no}+')'" type="button" value="댓글 삭제"
+                 th:src="'/files/profile/'+${commentOne.profileImgName}">
+            <input class="deleteForComment" th:if="${commentOne.userId == session.userId}" th:id="'deleteForComment('+${commentOne.no}+')'" type="button" value="댓글 삭제"
                    th:onclick="'deleteForComment('+${commentOne.no}+')'">
-            <input th:if="${session.userAlias == commentOne.writer}" th:id="'editUiForComment'+${commentOne.no}"
+            <input th:if="${session.userId == commentOne.userId}" th:id="'editUiForComment'+${commentOne.no}"
                    class="editUiForComment" type="button" value="댓글 수정" th:onclick="'editUiForComment('+${commentOne.no}+')'">
             <input th:id="'cancelEditUiForComment'+${commentOne.no}"
                     class="cancelEditUiForComment" type="button" value="댓글 수정 취소" th:onclick="'cancelEditUiForComment('+${commentOne.no}+', 0)'">
             <input th:id="updateBtnForComment+${commentOne.no}" class="updateBtnForComment" type="button" value="수정완료"
                    th:onclick="'updateForComment('+${commentOne.no}+')'">
             <div class="contentAndInfoOfComment">
-                <div th:text="${commentOne.writer}" class="userNameOfComment"></div>
-                <div th:id="'contentOfComment'+${commentOne.no}" th:text="${commentOne.content}" class="contentOfComment"></div>
+                <div th:text="${commentOne.writer}" class="writerOfComment"></div>
+                <div th:id="'contentOfComment'+${commentOne.no}" th:utext="${commentOne.content}" class="contentOfComment"></div>
                 <div class="bottomOfComment">
                     <div th:text="${#temporals.format(commentOne.createDate, 'yyyy-MM-dd HH:mm:ss')}"
                          class="dateOfComment">
@@ -573,7 +606,7 @@
                        type="button" th:onclick="'showingReplies('+${commentOne.no}+')'">
                 <input th:id="'hidingReply'+${commentOne.no}" class="hidingReply" value="답글 숨기기"
                        type="button" th:onclick="'hidingReply('+${commentOne.no}+')'">
-                <form th:if="${session.userAlias != null}" th:id="reply+${commentOne.no}" class="addReplyForm" action="freeBulletin/addReply"
+                <form th:if="${session.userId != null}" th:id="reply+${commentOne.no}" class="addReplyForm" action="freeBulletin/addReply"
                       method="post">
                     <div class="addReplyBox">
                         <div contenteditable="true" th:id="'replyComment'+${commentOne.no}" class="replyContent"
@@ -587,7 +620,6 @@
         </div>
     </div>
 </div>
-<div th:replace="~{main/mainPage:: footer}"></div>
 </body>
 
 </html>
@@ -599,10 +631,16 @@
     let contentData; // 댓글이나 대댓글의 수정 취소시, 이전 글 내용으로 되돌릴 때, 쓰는 용도
 
     window.onload = () => {
-        document.getElementById('mainTitle').innerHTML = '자유 게시판'
-
         let isPressedBulletinLike = Number(document.getElementById('isPressedBulletinLike').value);
         let bottomOfComment = document.getElementsByClassName('bottomOfComment');
+
+        const currentUserId = document.getElementById(('currentUserId')).value;
+        const userIdFromController = document.getElementById('userIdFromController').value;
+        const bulletinNoForRequest = document.getElementById('bulletinNoForRequest').value;
+
+        if(currentUserId != userIdFromController){
+            location.href = 'specificBulletin?no='+bulletinNoForRequest+'&userId='+currentUserId;
+        }
 
         for (let i = 0; i < bottomOfComment.length; i++) {
             let children = bottomOfComment[i].children;
@@ -781,6 +819,10 @@
     }
 
     function bulletinClickLike(no) {
+        const userId = document.getElementById(('currentUserId')).value;
+
+        if(userId == '')
+            return;
 
         if (bulletinLikeFlag) {
             bulletinLikeFlag = false;
@@ -795,7 +837,7 @@
             dataType: 'text',
             data: {
                 type: 'freeBulletin',
-                userName: document.getElementById('commentWriter').value,
+                userId: document.getElementById('commentUserId').value,
                 fkNo: no,
                 flag: bulletinLikeFlag
             },
@@ -817,6 +859,10 @@
         })
     }
     function clickLikeOfComment(no) {
+        const userId = document.getElementById(('currentUserId')).value;
+
+        if(userId == '')
+            return;
 
         if (commentLikeFlag.get(no)) {
             commentLikeFlag.set(no, false);
@@ -831,7 +877,7 @@
             dataType: 'text',
             data: {
                 type: 'freeComment',
-                userName: document.getElementById('commentWriter').value,
+                userId: document.getElementById('commentUserId').value,
                 fkNo: no,
                 flag: commentLikeFlag.get(no)
             },
@@ -867,15 +913,15 @@
             dataType: 'text',
             data: {
                 fkNo: no,
-                writer: document.getElementById('commentWriter').value,
-                content: document.getElementById('commentContent').innerHTML,
+                userId: document.getElementById('commentUserId').value,
+                content: content,
                 type: document.getElementById('commentType').value,
-                userName: document.getElementById('commentWriter').value
+                userId: document.getElementById('commentUserId').value
             },
             success: function (result) {
                 console.log('성공 결과 : ' + result);
                 document.getElementById('commentContent').innerHTML = '';
-                location.href = '/specificBulletin?no=' + no + '&userName' + document.getElementById('commentWriter').value;
+                location.href = '/specificBulletin?no=' + no + '&userId' + document.getElementById('commentUserId').value;
             },
             error: function (error) {
                 console.log('에러 : ' + error);
@@ -896,7 +942,7 @@
             dataType: 'text',
             data: {
                 fkNo: no,
-                writer: document.getElementById('currentUser').value,
+                userId: document.getElementById(('currentUserId')).value,
                 content: content,
                 type: document.getElementById('cicType' + no).value
             },
@@ -921,12 +967,12 @@
         if(writeReply != undefined)
             writeReply.style.display = 'block';
 
-        let commentWriterTag = document.getElementById('commentWriter')
-        let commentWriter;
-        if(commentWriterTag == null)
-            commentWriter = 'guest';
+        let commentUserIdTag = document.getElementById('commentUserId')
+        let commentUserId;
+        if(commentUserIdTag == null)
+            commentUserId = 'guest';
         else
-            commentWriter = commentWriterTag.value;
+            commentUserId = commentUserIdTag.value;
 
         $.ajax({
             type: 'post',
@@ -935,7 +981,7 @@
             dataType: 'json',
             data: {
                 no: no,
-                userName: commentWriter
+                userId: commentUserId
             },
             success: function (result) {
                 replyList = result;
@@ -974,11 +1020,20 @@
             let replyDiv = document.createElement('div');
             replyDiv.setAttribute('class', 'replyDiv'+no);
             replyDiv.setAttribute('id', 'replyDiv'+replyList[i].no);
+            let hr = document.createElement('hr');
+            replyDiv.appendChild(hr);
             let profileImgOfReply = document.createElement('img');
             profileImgOfReply.setAttribute('class', 'profileImgOfReply');
-            profileImgOfReply.setAttribute('src', 'https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png?type=c77_77');
+            profileImgOfReply.setAttribute('src', '/files/profile/'+replyList[i].profileImgName);
             profileImgOfReply.setAttribute('width', '50');
-            if(document.getElementById('currentUser').value == replyList[i].writer){
+            replyDiv.appendChild(profileImgOfReply);
+            if(document.getElementById(('currentUserId')).value == replyList[i].userId){
+                let deleteBtnForReply = document.createElement('input');
+                deleteBtnForReply.setAttribute('type', 'button');
+                deleteBtnForReply.setAttribute('value', '대댓글 삭제');
+                deleteBtnForReply.setAttribute('class', 'deleteBtnForReply');
+                deleteBtnForReply.setAttribute('id', 'deleteBtnForReply'+replyList[i].no);
+                deleteBtnForReply.setAttribute('onclick', 'deleteForReply('+replyList[i].no+')');
                 let editUiForReply = document.createElement('input');
                 editUiForReply.setAttribute('class','editUiForReply');
                 editUiForReply.setAttribute('id','editUiForReply'+replyList[i].no);
@@ -991,12 +1046,6 @@
                 cancelEditUiForReply.setAttribute('value','대댓글 수정 취소');
                 cancelEditUiForReply.setAttribute('onclick','cancelEditUiForReply('+replyList[i].no+', 0)');
                 cancelEditUiForReply.setAttribute('type','button');
-                let deleteBtnForReply = document.createElement('input');
-                deleteBtnForReply.setAttribute('type', 'button');
-                deleteBtnForReply.setAttribute('value', '대댓글 삭제');
-                deleteBtnForReply.setAttribute('class', 'deleteBtnForReply');
-                deleteBtnForReply.setAttribute('id', 'deleteBtnForReply'+replyList[i].no);
-                deleteBtnForReply.setAttribute('onclick', 'deleteForReply('+replyList[i].no+')');
                 let updateBtnForReply = document.createElement('input');
                 updateBtnForReply.setAttribute('class','updateBtnForReply');
                 updateBtnForReply.setAttribute('id','updateBtnForReply'+replyList[i].no);
@@ -1011,9 +1060,9 @@
             }
             let contentAndInfo = document.createElement('div');
             contentAndInfo.setAttribute('class', 'contentAndInfoOfReply');
-            let userName = document.createElement('div');
-            userName.innerHTML = replyList[i].writer;
-            userName.setAttribute('class', 'userNameOfReply');
+            let writer = document.createElement('div');
+            writer.innerHTML = replyList[i].writer;
+            writer.setAttribute('class', 'writerOfReply');
             let content = document.createElement('div');
             content.innerHTML = replyList[i].content;
             content.setAttribute('class', 'contentOfReply');
@@ -1044,8 +1093,7 @@
             likesOfReply.setAttribute('class', 'likesOfReply')
             bottomOfReply.appendChild(likesOfReply);
 
-            replyDiv.appendChild(profileImgOfReply);
-            contentAndInfo.appendChild(userName);
+            contentAndInfo.appendChild(writer);
             contentAndInfo.appendChild(content);
             contentAndInfo.appendChild(bottomOfReply);
             replyDiv.appendChild(contentAndInfo);
@@ -1055,6 +1103,11 @@
         }
     }
     function clickReplyLike(no) {
+        const userId = document.getElementById(('currentUserId')).value;
+
+        if(userId == '')
+            return;
+
         if (replyFlag.get(no) == true) {
             replyFlag.set(no, false);
         } else {
@@ -1068,7 +1121,7 @@
             dataType: 'json',
             data: {
                 type: 'freeReply',
-                userName: document.getElementById('commentWriter').value,
+                userId: document.getElementById('commentUserId').value,
                 fkNo: no,
                 flag: replyFlag.get(no)
             },

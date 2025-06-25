@@ -13,4 +13,7 @@ public interface FreeBulletinRepository extends JpaRepository<FreeBulletin, Inte
     List<FreeBulletin> findByTitleContainingOrderByViewsAsc(String searchWord, Sort sort);
     List<FreeBulletin> findByTitleContainingOrderByNoDesc(String searchWord, Sort sort);
     List<FreeBulletin> findByTitleContainingOrderByNoAsc(String searchWord, Sort sort);
+    List<FreeBulletin> findByUserId(String userId);
+    List<FreeBulletin> findTop3ByOrderByViewsDesc();
+    List<FreeBulletin> findTop3ByOrderByLikesDesc();
 }

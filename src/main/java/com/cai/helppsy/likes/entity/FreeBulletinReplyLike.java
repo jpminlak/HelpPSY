@@ -16,8 +16,8 @@ public class FreeBulletinReplyLike {
     @Column(length = 16)
     private String type;
 
-    @Column(length = 15)
-    private String userName;
+    @Column(length = 20)
+    private String userId;
 
     @ManyToOne
     @JoinColumn(name = "fk_no")

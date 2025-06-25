@@ -14,6 +14,8 @@ public class FreeBulletinCommentDTO {
 
     private String content;
 
+    private String userId;
+
     private int likes;
 
     private LocalDateTime createDate;
@@ -21,4 +23,6 @@ public class FreeBulletinCommentDTO {
     private int fkNo;
 
     private int isPressedCommentLike;
+
+    private String profileImgName;
 }

@@ -84,10 +84,15 @@
 <div class="profile-container">
     <h1>프로필 수정</h1>
 
-    <form action="/update" method="post">
+    <form action="/update" method="POST" enctype="multipart/form-data">
+        <label>
+            프로필 사진
+            <input id="minwoo" type="file" name="Ffile" accept="image/*">
+        </label>
         <label>
             아이디:
-            <input type="text" name="userId" th:value="${user.userId}" readonly>
+            <input type="text" name="userId" th:value="${user.userId}" disabled>
+            <input type="hidden" name="userId" th:value="${user.userId}">
         </label>
 
         <label>
@@ -100,16 +105,16 @@
             <input type="text" name="alias" th:value="${user.alias}">
         </label>
 
-        <label>
-            구분:
-<!--            <input class="division" name="division" type="checkbox" onclick="checkOnlyOne(this)" value="설계사" readonly>설계사-->
-<!--            <input class="division" name="division" type="checkbox" onclick="checkOnlyOne(this)" value="일반인" readonly>일반인-->
-            <input type="text" name="division" th:value="${user.division}" readonly>
-        </label>
-        <label>
-            고유번호:
-            <input type="text" name="dNum" th:value="${user.dNum}" readonly>
-        </label>
+        <!--        <label>-->
+        <!--            구분:-->
+        <!--&lt;!&ndash;            <input class="division" name="division" type="checkbox" onclick="checkOnlyOne(this)" value="설계사" readonly>설계사&ndash;&gt;-->
+        <!--&lt;!&ndash;            <input class="division" name="division" type="checkbox" onclick="checkOnlyOne(this)" value="일반인" readonly>일반인&ndash;&gt;-->
+        <!--            <input type="text" name="division" th:value="${user.division}" readonly>-->
+        <!--        </label>-->
+        <!--        <label>-->
+        <!--            고유번호:-->
+        <!--            <input type="text" name="dNum" th:value="${user.dNum}" readonly>-->
+        <!--        </label>-->
 
         <label>
             소개글:
@@ -126,22 +131,22 @@
 </html>
 
 <script>
-    function checkOnlyOne(clickcheckbox) {
-        const checkboxes = document.getElementsByName("division");
+    <!--    function checkOnlyOne(clickcheckbox) {-->
+    <!--        const checkboxes = document.getElementsByName("division");-->
 
-        checkboxes.forEach((checkbox) => {
-            checkbox.checked = false;
-        });
+    <!--        checkboxes.forEach((checkbox) => {-->
+    <!--            checkbox.checked = false;-->
+    <!--        });-->
 
-        clickcheckbox.checked = true;
+    <!--        clickcheckbox.checked = true;-->
 
 
-        let DV = document.getElementsByClassName('division')
+    <!--        let DV = document.getElementsByClassName('division')-->
 
-        for(let i = 0 ; i<DV.length ; i++){
-            if(DV[i].checked == true){
-                DV[i].setAttribute('name',"division");
-            }
-        }
-    }
+    <!--        for(let i = 0 ; i<DV.length ; i++){-->
+    <!--            if(DV[i].checked == true){-->
+    <!--                DV[i].setAttribute('name',"division");-->
+    <!--            }-->
+    <!--        }-->
+    <!--    }-->
 </script>

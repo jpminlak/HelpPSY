@@ -2,6 +2,7 @@ package com.cai.helppsy.freeBulletinBoard.service;
 
 import com.cai.helppsy.freeBulletinBoard.dto.FreeBulletinCommentDTO;
 import com.cai.helppsy.freeBulletinBoard.dto.FreeBulletinDTO;
+import com.cai.helppsy.freeBulletinBoard.dto.FreeBulletinReplyDTO;
 import com.cai.helppsy.freeBulletinBoard.dto.SearchDTO;
 import com.cai.helppsy.freeBulletinBoard.entity.FreeBulletin;
 import com.cai.helppsy.freeBulletinBoard.entity.FreeBulletinAttach;
@@ -11,6 +12,7 @@ import com.cai.helppsy.freeBulletinBoard.repository.FreeBulletinAttachRepository
 import com.cai.helppsy.freeBulletinBoard.repository.FreeBulletinCommentRepository;
 import com.cai.helppsy.freeBulletinBoard.repository.FreeBulletinReplyRepository;
 import com.cai.helppsy.freeBulletinBoard.repository.FreeBulletinRepository;
+import com.cai.helppsy.memberManager.signupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -31,9 +33,24 @@ public class FreeBulletinService {
     private final FreeBulletinAttachRepository freeBulletinAttachRepository;
     private final FreeBulletinCommentRepository freeBulletinCommentRepository;
     private final FreeBulletinReplyRepository freeBulletinReplyRepository;
+    private final signupRepository signupRepository;
 
-    public FreeBulletin bulletinOne(int no) {
-        return freeBulletinRepository.findById(no).get();
+
+    public FreeBulletinDTO bulletinOne(int no) {
+        FreeBulletin freeBulletin = freeBulletinRepository.findById(no).get();
+        FreeBulletinDTO freeBulletinDTO = new FreeBulletinDTO();
+
+        freeBulletinDTO.setNo(freeBulletin.getNo());
+        freeBulletinDTO.setTitle(freeBulletin.getTitle());
+        freeBulletinDTO.setViews(freeBulletin.getViews());
+        freeBulletinDTO.setContent(freeBulletin.getContent());
+        freeBulletinDTO.setCreateDate(freeBulletin.getCreateDate());
+        freeBulletinDTO.setWriter(signupRepository.findByuserId(freeBulletin.getUserId()).getAlias());
+        freeBulletinDTO.setUserId(freeBulletin.getUserId());
+        freeBulletinDTO.setProfileImgName(signupRepository.findByuserId(freeBulletin.getUserId()).getProfileImage());
+        freeBulletinDTO.setThumbnail(freeBulletin.getThumbnail());
+        freeBulletinDTO.setLikes(freeBulletin.getLikes());
+        return freeBulletinDTO;
     }
 
     public void increaseViews(int no) {
@@ -42,17 +59,39 @@ public class FreeBulletinService {
         freeBulletinRepository.saveAndFlush(freeBulletin); // flush는 변경사항의 동기화를 의미한다.
     }
 
-    public List<FreeBulletin> bulletinList() {
-        return freeBulletinRepository.findAll();
+    public List<FreeBulletinDTO> bulletinList() {
+        List<FreeBulletin> freeBulletinList = freeBulletinRepository.findAll();
+        List<FreeBulletinDTO> freeBulletinDTOList = new ArrayList<>();
+        if(freeBulletinList != null){
+            for (FreeBulletin fbe : freeBulletinList) {
+                FreeBulletinDTO fbDTO = new FreeBulletinDTO();
+                fbDTO.setNo(fbe.getNo());
+                fbDTO.setContent(fbe.getContent());
+                fbDTO.setTitle(fbe.getTitle());
+                fbDTO.setLikes(fbe.getLikes());
+                fbDTO.setViews(fbe.getViews());
+                fbDTO.setCreateDate(fbe.getCreateDate());
+                fbDTO.setThumbnail(fbe.getThumbnail());
+                fbDTO.setWriter(signupRepository.findByuserId(fbe.getUserId()).getAlias());
+                fbDTO.setUserId(fbe.getUserId());
+                freeBulletinDTOList.add(fbDTO);
+            }
+        }
+        return freeBulletinDTOList;
+    }
+
+    public List<FreeBulletinDTO> DTOMapper(){
+
+        return null;
     }
 
     @Transactional
-    public void addBulletin(FreeBulletin bulletinEntity, MultipartFile[] files, String crrentUserName) {
+    public void addBulletin(FreeBulletin bulletinEntity, MultipartFile[] files) {
 
         LocalDateTime createDate = LocalDateTime.now();
         bulletinEntity.setCreateDate(createDate);
         bulletinEntity.setViews(0);
-        bulletinEntity.setWriter(crrentUserName);
+        bulletinEntity.setUserId(bulletinEntity.getUserId());
         freeBulletinRepository.save(bulletinEntity);
 
 
@@ -108,15 +147,17 @@ public class FreeBulletinService {
     public List<FreeBulletinCommentDTO> getComments(int fkNo) {
         List<FreeBulletinComment> cList = freeBulletinCommentRepository.findByFreeBulletin_no(fkNo);
         List<FreeBulletinCommentDTO> freeBulletinCommentDTOList = new ArrayList<>();
-        for (int i = 0; i < cList.size(); i++) {
+        for (FreeBulletinComment fbc : cList) {
             FreeBulletinCommentDTO freeBulletinCommentDTO = new FreeBulletinCommentDTO();
-            freeBulletinCommentDTO.setNo(cList.get(i).getNo());
-            freeBulletinCommentDTO.setType(cList.get(i).getType());
-            freeBulletinCommentDTO.setFkNo(cList.get(i).getFreeBulletin().getNo());
-            freeBulletinCommentDTO.setLikes(cList.get(i).getLikes());
-            freeBulletinCommentDTO.setContent(cList.get(i).getContent());
-            freeBulletinCommentDTO.setWriter(cList.get(i).getWriter());
-            freeBulletinCommentDTO.setCreateDate(cList.get(i).getCreateDate());
+            freeBulletinCommentDTO.setNo(fbc.getNo());
+            freeBulletinCommentDTO.setType(fbc.getType());
+            freeBulletinCommentDTO.setFkNo(fbc.getFreeBulletin().getNo());
+            freeBulletinCommentDTO.setLikes(fbc.getLikes());
+            freeBulletinCommentDTO.setContent(fbc.getContent());
+            freeBulletinCommentDTO.setWriter(signupRepository.findByuserId(fbc.getUserId()).getAlias());
+            freeBulletinCommentDTO.setUserId(fbc.getUserId());
+            freeBulletinCommentDTO.setCreateDate(fbc.getCreateDate());
+            freeBulletinCommentDTO.setProfileImgName(signupRepository.findByuserId(fbc.getUserId()).getProfileImage());
             freeBulletinCommentDTOList.add(freeBulletinCommentDTO);
         }
 
@@ -131,8 +172,29 @@ public class FreeBulletinService {
         freeBulletinReplyRepository.save(freeBulletinCommentInComment);
     }
 
-    public List<FreeBulletinReply> getCommentInComments(int no) {
-        return freeBulletinReplyRepository.findByFreeBulletinComment_no(no);
+    public List<FreeBulletinReplyDTO> getCommentInComments(Integer no) {
+        List<FreeBulletinReply> replyList = freeBulletinReplyRepository.findByFreeBulletinComment_no(no);
+
+        if (replyList == null)
+            return null;
+
+        List<FreeBulletinReplyDTO> list = new ArrayList<>();
+
+        for (FreeBulletinReply fbr : replyList) {
+            FreeBulletinReplyDTO freeBulletinReplyDTO = new FreeBulletinReplyDTO();
+            freeBulletinReplyDTO.setNo(fbr.getNo());
+            freeBulletinReplyDTO.setFkNo(fbr.getFreeBulletinComment().getNo());
+            freeBulletinReplyDTO.setType(fbr.getType());
+            freeBulletinReplyDTO.setWriter(signupRepository.findByuserId(fbr.getUserId()).getAlias());
+            freeBulletinReplyDTO.setUserId(fbr.getUserId());
+            freeBulletinReplyDTO.setLikes(fbr.getLikes());
+            freeBulletinReplyDTO.setContent(fbr.getContent());
+            freeBulletinReplyDTO.setCreateDate(fbr.getCreateDate());
+            freeBulletinReplyDTO.setProfileImgName(signupRepository.findByuserId(fbr.getUserId()).getProfileImage());
+            list.add(freeBulletinReplyDTO);
+        }
+        return list;
+
     }
 
     // 게시글 삭제
@@ -285,7 +347,7 @@ public class FreeBulletinService {
                 fbDTO.setViews(fbe.getViews());
                 fbDTO.setCreateDate(fbe.getCreateDate());
                 fbDTO.setThumbnail(fbe.getThumbnail());
-                fbDTO.setWriter(fbe.getWriter());
+                fbDTO.setWriter(signupRepository.findByuserId(fbe.getUserId()).getAlias());
                 fbDTOList.add(fbDTO);
             }
         } else {
@@ -294,4 +356,5 @@ public class FreeBulletinService {
 
         return fbDTOList;
     }
+    //String getProfile
 }

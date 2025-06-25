@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface FreeBulletinReplyLikeRepository extends JpaRepository<FreeBulletinReplyLike, Integer> {
-    FreeBulletinReplyLike findByFreeBulletinReply_noAndUserName(int no, String userName);
+    FreeBulletinReplyLike findByFreeBulletinReply_noAndUserId(int no, String userId);
 }

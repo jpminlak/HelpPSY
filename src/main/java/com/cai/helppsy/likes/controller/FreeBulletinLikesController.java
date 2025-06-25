@@ -20,8 +20,8 @@ public class FreeBulletinLikesController {
     @PostMapping("bulletinLikesUpAndDown")
     public int likesUp(@ModelAttribute FreeBulletinLike freeBulletinLikes
             , @RequestParam("fkNo") int fkNo, @RequestParam("flag") boolean flag){
-        if(freeBulletinLikes.getUserName().equals("")){
-            freeBulletinLikes.setUserName("guest");
+        if(freeBulletinLikes.getUserId().equals("")){
+            freeBulletinLikes.setUserId("guest");
         }
 
         return likesService.bulletinLikesUp(freeBulletinLikes, fkNo, flag);
@@ -31,8 +31,8 @@ public class FreeBulletinLikesController {
     @PostMapping("commentLikesUpAndDown")
     public int commentLikesUp(@ModelAttribute FreeBulletinCommentLike freeBulletinCommentLikes
             , @RequestParam("fkNo") int fkNo, @RequestParam("flag") boolean flag){
-        if(freeBulletinCommentLikes.getUserName().equals("")){
-            freeBulletinCommentLikes.setUserName("guest");
+        if(freeBulletinCommentLikes.getUserId().equals("")){
+            freeBulletinCommentLikes.setUserId("guest");
         }
 
         return likesService.commentLikesUp(freeBulletinCommentLikes, fkNo, flag);
@@ -42,8 +42,8 @@ public class FreeBulletinLikesController {
     @PostMapping("ReplyLikesUp")
     public int ReplyLikesUp(@ModelAttribute FreeBulletinReplyLike freeBulletinReplyLike
             , @RequestParam("fkNo") int fkNo, @RequestParam("flag") boolean flag){
-        if(freeBulletinReplyLike.getUserName().equals("")){
-            freeBulletinReplyLike.setUserName("guest");
+        if(freeBulletinReplyLike.getUserId().equals("")){
+            freeBulletinReplyLike.setUserId("guest");
         }
 
         return likesService.replyLikesUp(freeBulletinReplyLike, fkNo, flag);

@@ -23,5 +23,9 @@ public class WebConfig implements WebMvcConfigurer {
         // 좋아요 이미지 맵핑 (민우꺼)
         registry.addResourceHandler("/LikeImg/**")
                 .addResourceLocations("classpath:/static/LikeImg/");
+
+        // 빈씨 프로필
+        registry.addResourceHandler("/files/profile/**")
+                .addResourceLocations("file:" + fileUploadPath + "profile/");
     }
 }

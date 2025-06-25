@@ -4,11 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="main/fragmentStyle.css">
+    <link rel="stylesheet" href="main/head.css">
     <script src="main/fragment.js"></script>
     <title>자유 게시판</title>
 </head>
 <style>
+    body {
+        background-color: #d1dee5;
+    }
+
     #main {
         width: 1000px;
         height: 1100px;
@@ -29,6 +33,8 @@
         margin-top: 30px;
         border: 1px solid;
         border-radius: 5px;
+        background-color: #eff5f5;
+        border-color: #c2c1c1;
         width: 950px;
         height: 1000px
     }
@@ -46,14 +52,15 @@
         position: absolute;
         width: 70px;
         height: 44px;
-        margin-left: 495px;
+        margin-left: 665px;
         padding-left: 10px;
         margin-top: 30px;
+        font-size: 14px;
     }
 
     #sortingType {
         position: absolute;
-        margin-left: 570px;
+        margin-left: 495px;
         margin-top: 30px;
         width: 80px;
         height: 44px;
@@ -61,7 +68,7 @@
     }
     #descOrAsc {
         position: absolute;
-        margin-left: 655px;
+        margin-left: 580px;
         margin-top: 30px;
         width: 80px;
         height: 44px;
@@ -233,7 +240,6 @@
 
 <body>
 <div th:replace="~{main/mainPage:: header}"></div>
-<div th:replace="~{main/mainPage:: nav}"></div>
 <div id="main">
     <!--    <div id="poppularBulletin">-->
     <!--        <h1>(추천 게시물) 공사중...</h1>-->
@@ -265,8 +271,8 @@
                             <div th:text="${bulletinOne.no}+'번'" class="bulletinNo"></div>
                             <div th:text="'조회수 : '+${bulletinOne.views}+'회'" class="bulletinViews"></div>
                             <div class="bulletinTiltle">
-                                <a class="bulletinTitleTxt" th:text="${bulletinOne.title}"
-                                   th:href="@{specificBulletin(no=${bulletinOne.no}, userName=${session.userAlias})}">
+                                <a class="bulletinTitleTxt" th:text="${#strings.abbreviate(bulletinOne.title,15)}"
+                                   th:href="@{specificBulletin(no=${bulletinOne.no}, userId=${session.userId})}">
                                 </a>
                             </div>
                             <div class="bulletinWriter" th:text="${bulletinOne.writer}"></div>
@@ -286,10 +292,11 @@
                             <div th:text="${bulletinOne.no}+'번'" class="bulletinNo"></div>
                             <div th:text="'조회수 : '+${bulletinOne.views}+'회'" class="bulletinViews"></div>
                             <div class="bulletinTiltle">
-                                <a class="bulletinTitleTxt" th:text="${bulletinOne.title}"
-                                   th:href="@{specificBulletin(no=${bulletinOne.no}, userName=${session.userAlias})}">
+                                <a class="bulletinTitleTxt" th:text="${#strings.abbreviate(bulletinOne.title,15)}"
+                                   th:href="@{specificBulletin(no=${bulletinOne.no}, userId=${session.userId})}">
                                 </a>
                             </div>
+                            <h3 th:text="${#strings.abbreviate(bulletinOne.title,40)}"></h3>
                             <div class="bulletinWriter" th:text="${bulletinOne.writer}"></div>
                             <div class="bulletinLikeBox">
                                 <img class="bulletinLikeImg" src="LikeImg/unFilledHeart.png" width="17">
@@ -307,8 +314,8 @@
                             <div th:text="${bulletinOne.no}+'번'" class="bulletinNo"></div>
                             <div th:text="'조회수 : '+${bulletinOne.views}+'회'" class="bulletinViews"></div>
                             <div class="bulletinTiltle">
-                                <a class="bulletinTitleTxt" th:text="${bulletinOne.title}"
-                                   th:href="@{specificBulletin(no=${bulletinOne.no}, userName=${session.userAlias})}">
+                                <a class="bulletinTitleTxt" th:text="${#strings.abbreviate(bulletinOne.title,15)}"
+                                   th:href="@{specificBulletin(no=${bulletinOne.no}, userId=${session.userId})}">
                                 </a>
                             </div>
                             <div class="bulletinWriter" th:text="${bulletinOne.writer}"></div>
@@ -344,12 +351,10 @@
         </div>
     </div>
 </div>
-<div th:replace="~{main/mainPage:: footer}"></div>
 </body>
 
 <script>
     window.onload = () => {
-        document.getElementById('mainTitle').innerHTML = '자유 게시판';
         onloadPaging();
         document.getElementById('sortingType').value = document.getElementById('sortingTypeFromServer').value;
         document.getElementById('descOrAsc').value = document.getElementById('descOrAscFromServer').value;

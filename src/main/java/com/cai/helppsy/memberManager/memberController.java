@@ -1,17 +1,32 @@
 package com.cai.helppsy.memberManager;
 
+import com.cai.helppsy.accidentBulleinBoard.entity.RegistrationEntity;
+import com.cai.helppsy.accidentBulleinBoard.service.RegistrationService;
+import com.cai.helppsy.freeBulletinBoard.dto.FreeBulletinDTO;
+import com.cai.helppsy.freeBulletinBoard.entity.FreeBulletin;
+import com.cai.helppsy.freeBulletinBoard.repository.FreeBulletinRepository;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Controller
 public class memberController {
+    private final RegistrationService registrationService;
     private final signupRepository signupRepository;
     private final signupService signupservice;
+    private final FreeBulletinRepository freeBulletinRepository;
 
     @GetMapping("signUpMain")
     public String sinupMain() {
@@ -31,6 +46,7 @@ public class memberController {
     }
 
     // 로그인 (세션유지)
+
     @PostMapping("/login")
     public String login(@RequestParam("userId") String userId
             , @RequestParam("userPass") String userPass
@@ -48,10 +64,11 @@ public class memberController {
 
                 session.setAttribute("userId", user.getUserId()); // 세션에 id저장
                 session.setAttribute("userAlias", user.getAlias()); // 세션에 별명저장
-                session.setAttribute("division", user.getDivision());   // 세션에 설계사,일반인(구분) 저장
-                session.setAttribute("dNum", user.getDNum());   // 세션에 설계사 번호 저장
+//                session.setAttribute("division", user.getDivision());   // 세션에 설계사,일반인(구분) 저장
+//                session.setAttribute("dNum", user.getDNum());   // 세션에 설계사 번호 저장
                 session.setAttribute("userPass", user.getUserPass()); // 세션에 비밀번호 저장
                 session.setAttribute("Intro", user.getIntro());  //세션에 소개글 저장
+
             }
             model.addAttribute("user", session);
         }
@@ -80,17 +97,33 @@ public class memberController {
 //    public String profile(){
     public String profile(@RequestParam(value = "alias", required = false) String alias, Model model) {
         SignupEntity signupEntity = signupRepository.findByAlias(alias);
-//        if(sinupEntity != null) {
-//            System.out.println(sinupEntity.getId());
-//            System.out.println(sinupEntity.getUserId());
-//            System.out.println(sinupEntity.getAlias());
-//        }
-//        System.out.println(sinupEntity.getDivision());
         System.out.println("-----------1------------ -");
         System.out.println(signupEntity);
         System.out.println(alias);
         System.out.println("------------2----------- -");
         model.addAttribute("member", signupEntity);
+        // 사고게시판 글 리스트 추가
+        List<RegistrationEntity> accidentPosts = registrationService.getPostsByAlias(alias);
+        model.addAttribute("accidentPosts", accidentPosts);
+        // 자유게시판 글 리스트 추가
+        List<FreeBulletin> freeBulletins = freeBulletinRepository.findByUserId(signupRepository.findByAlias(alias).getUserId());
+        List<FreeBulletinDTO> freeBulletinDTOList = new ArrayList<>();
+        if(!freeBulletins.isEmpty()){
+            for(FreeBulletin fb : freeBulletins){
+                FreeBulletinDTO freeBulletinDTO = new FreeBulletinDTO();
+                freeBulletinDTO.setNo(fb.getNo());
+                freeBulletinDTO.setTitle(fb.getTitle());
+                freeBulletinDTO.setContent(fb.getContent());
+                freeBulletinDTO.setThumbnail(fb.getThumbnail());
+                freeBulletinDTO.setWriter(alias);
+                freeBulletinDTO.setUserId(fb.getUserId());
+                freeBulletinDTO.setViews(fb.getViews());
+                freeBulletinDTO.setLikes(fb.getLikes());
+                freeBulletinDTO.setCreateDate(fb.getCreateDate());
+                freeBulletinDTO.setProfileImgName(signupRepository.findByAlias(alias).getProfileImage());
+            }
+        }
+        model.addAttribute("freePosts", freeBulletinDTOList);
         return "memberManager/profile";
     }
 
@@ -105,33 +138,62 @@ public class memberController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute SignupEntity updatedUser, HttpSession session) {
-        String userId = (String) session.getAttribute("userId");
-        if (userId == null)
-            return "redirect:/main";
+    public String update(@ModelAttribute SignupEntity updatedUser,
+                         @RequestParam(value = "Ffile", required = false) MultipartFile profileImage,
+                         HttpSession session)  {
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println(profileImage);
+        System.out.println(profileImage.getSize());
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) {
+            return "redirect:/main";
+        }
         SignupEntity user = signupservice.login(userId);
+
         if (user != null) {
+            // 일반 정보 업데이트
             user.setAlias(updatedUser.getAlias());
             user.setUserPass(updatedUser.getUserPass());
-            user.setDivision(updatedUser.getDivision());
             user.setIntro(updatedUser.getIntro());
-            user.setDNum(updatedUser.getDNum());
-            signupservice.signup(user);  // save()로 덮어쓰기
-            session.setAttribute("userAlias", user.getAlias());  // 세션도 업데이트
+
+
+            if (!profileImage.isEmpty()) {
+                UUID uuid = UUID.randomUUID();
+                String uploadDir = System.getProperty("user.dir")+"/files/profile" ;
+                //System.out.println("파일 저장 경로: " + uploadDir);
+
+                String filename = uuid + "_" + profileImage.getOriginalFilename();
+                File dir = new File(uploadDir, filename);
+
+                try {
+                    profileImage.transferTo(dir);
+                    System.out.println("----------------------------------------------------1212121");
+                    user.setProfileImage(filename); // DB에 저장
+                    System.out.println("----------------------------------------------------1212121");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    // 저장 실패 시 처리 로직 추가 가능
+                }
+            }
+
+            signupservice.signup(user); // 저장
+            session.setAttribute("userAlias", user.getAlias());
             session.setAttribute("Intro", user.getIntro());
-            System.out.println(user.getAlias());
         }
 
         String redirectUrl = UriComponentsBuilder
                 .fromPath("/profile")
                 .queryParam("alias", user.getAlias())
                 .build()
-                .encode()   //한국어 자동 인코딩 (Tomcat 예외 / 한글 깨짐)
+                .encode()
                 .toUriString();
 
-        return "redirect:" + redirectUrl;
+        return "redirect:" + redirectUrl ;
     }
+
+
 
     @GetMapping("/checkId")
     @ResponseBody
@@ -139,4 +201,5 @@ public class memberController {
         boolean exists = signupservice.existsById(userId); // 여기 사용 가능
         return exists ? "DUPLICATE" : "OK";
     }
+
 }

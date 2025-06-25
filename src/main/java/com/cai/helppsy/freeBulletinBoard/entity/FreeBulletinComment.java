@@ -1,5 +1,6 @@
 package com.cai.helppsy.freeBulletinBoard.entity;
 
+import com.cai.helppsy.likes.entity.FreeBulletinCommentLike;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,8 +17,8 @@ public class FreeBulletinComment {
     @Column(length = 10)
     private String type;
 
-    @Column(length = 15)
-    private String writer;
+    @Column(length = 20)
+    private String userId;
 
     @Column(length = 400)
     private String content;
@@ -32,7 +33,5 @@ public class FreeBulletinComment {
     private FreeBulletin freeBulletin;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "freeBulletinComment", orphanRemoval = true)
-    private List<FreeBulletinReply> freeBulletinCommentInComment;
-
-
+    private List<FreeBulletinCommentLike> freeBulletinCommentLikeList;
 }

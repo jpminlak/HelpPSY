@@ -5,7 +5,11 @@ import com.cai.helppsy.inquiry.entity.Answer;
 import com.cai.helppsy.inquiry.entity.Question;
 import com.cai.helppsy.inquiry.repository.AnswerRepository;
 import com.cai.helppsy.inquiry.repository.QuestionRepository;
+import com.cai.helppsy.note.Note;
+import com.cai.helppsy.note.NoteRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +26,8 @@ import java.util.UUID;
 public class InquiryController {
     private final AnswerRepository a1;
     private final QuestionRepository q1;
+    private final NoteRepository noteRepository;
+
 
     @GetMapping("inquiry")
     public String inquiry() {
@@ -33,55 +39,91 @@ public class InquiryController {
                       @RequestParam("subject") String subject,
                       @RequestParam("content") String content,
                       @RequestParam("file") MultipartFile file) throws IOException {
+
         Question question = new Question();
         question.setWriter(writer);
         question.setSubject(subject);
         question.setContent(content);
         question.setCreateDate(LocalDateTime.now());
+
+        // 파일이 있을 경우 처리
         if (!file.isEmpty()) {
             UUID uuid = UUID.randomUUID();
-            String upload = System.getProperty("user.dir") + "/files/inquiry"; // 현재 경로 + "/upload/"
-            String fileName = uuid.toString()+"_"+file.getOriginalFilename();   //fileName에 원래 파일이름을 저장
-            File dest = new File(upload,fileName);
-            file.transferTo(dest);  //MultipartFile file 객체에 담긴 업로드된 파일을 실제로 서버 디스크에 저장
-            System.out.println("__________________");
-            System.out.println(dest);
-            System.out.println("__________________");
-            question.setFile(fileName);
+            String uploadDir = System.getProperty("user.dir") + "/files/inquiry";
+            File dir = new File(uploadDir);
+
+            // 디렉터리 없으면 생성
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            // 파일 이름 구성 및 저장
+            String fileName = uuid + "_" + file.getOriginalFilename();
+            File dest = new File(dir, fileName);
+            file.transferTo(dest);
+
+            question.setFile(fileName);  // 저장된 파일명 DB에 저장
         }
+
         q1.save(question);
         return "redirect:/inquiry";
     }
 
+
     @GetMapping("respondent")   // 문의 답변전체 페이지
-    public String listUsers(Model model) {
-        List<Question> users = q1.findAll();  // DB에서 모든 사용자 조회
+    public String listUsers(@RequestParam(value = "sort",defaultValue = "desc") String sort, Model model) {
+        Sort.Direction direction = sort.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        List<Question> users = q1.findAll(Sort.by(direction, "createDate"));
+
+//        List<Question> users = q1.findAll();  // DB에서 모든 사용자 조회
         model.addAttribute("users", users); // 모델에 담기
+        model.addAttribute("sort", sort);
         return "inquiry/respondent"; // 템플릿 파일명 (userList.html)
     }
 
     @PostMapping("kkk")
-    public String kkk(@RequestParam(value = "action") String action,    //@Requestparam으로 action을 넘겨줌
-                      @RequestParam(value = "ids", required = false) List<Integer> ids, //기본값: true를 false로 바꿈
+    public String kkk(@RequestParam(value = "action") String action,
+                      @RequestParam(value = "ids", required = false) List<Integer> ids,
                       @ModelAttribute Answer A,
-                      @RequestParam(value = "question.id", required = false) Integer qid) { //question.id를 넘겨줌 변수명 : qid
+                      @RequestParam(value = "question.id", required = false) Integer qid,
+                      HttpSession session) {
 
-        if ("delete".equals(action)) {      //action이 delete면
-            if (ids != null && !ids.isEmpty()) {    //ids가 빈값이 아니면 존재여부 확인
-                q1.deleteAllById(ids);  //해당 id(번호) 행 삭제
+        if ("delete".equals(action)) {
+            if (ids != null && !ids.isEmpty()) {
+                q1.deleteAllById(ids);
             }
-        } else if ("answer".equals(action)) {   //action이 answer이면
+        } else if ("answer".equals(action)) {
             A.setCreateDate(LocalDateTime.now());
 
-            // 질문 ID가 전달되었으면 연결해주기
-            if (qid != null) {  //qid가 존재하면
+            if (qid != null) {
                 Question question = q1.findById(qid).orElse(null);
                 A.setQuestion(question);
+
+                // 답변 저장
+                a1.save(A);
+
+                // ===== 쪽지 전송 로직 시작 =====
+                if (question != null) {
+                    String writerId = question.getWriter(); // 문의 작성자
+                    String adminId = (String) session.getAttribute("userId"); // 답변자 (관리자) 아이디
+
+                    // Note 객체 생성
+                    Note note = new Note();
+                    note.setReceiverId(writerId);
+                    note.setSenderId(adminId);
+                    note.setSentAt(LocalDateTime.now());
+                    note.setTitle("[문의 답변] " + question.getSubject());
+                    note.setContent("문의하신 내용: " + question.getContent() + "\n\n답변 내용: " + A.getContent2());
+
+                    noteRepository.save(note); // 쪽지 저장
+                }
+                // ===== 쪽지 전송 로직 끝 =====
             }
-            a1.save(A);
         }
+
         return "redirect:/respondent";
     }
+
 
     @PostMapping("delete")
     public String delete(@RequestParam(value = "ids", required = false) List<Integer> ids) {
