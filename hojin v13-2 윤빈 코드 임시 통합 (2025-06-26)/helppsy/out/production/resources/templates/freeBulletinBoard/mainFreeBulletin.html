@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main/head.css">
+    <script src="main/fragment.js"></script>
+    <title>자유 게시판</title>
+</head>
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    #main {
+        width: 1000px;
+        height: 1100px;
+        margin: auto;
+    }
+
+    #poppularBulletin {
+        margin: auto;
+        margin-top: 10px;
+        border: 1px solid;
+        border-radius: 5px;
+        width: 950px;
+        height: 200px;
+    }
+
+    #wholeBulletin {
+        margin: auto;
+        margin-top: 30px;
+        border: 1px solid;
+        border-radius: 5px;
+        /*background-color: #eff5f5;*/
+        background-color: #fff;
+        border-color: #c2c1c1;
+        width: 950px;
+        height: 1000px
+    }
+
+    #searchWord {
+        position: absolute;
+        width: 420px;
+        height: 40px;
+        font-size: 17px;
+        margin-left: 65px;
+        margin-top: 30px;
+    }
+
+    #searchBtn {
+        position: absolute;
+        width: 70px;
+        height: 44px;
+        margin-left: 665px;
+        padding-left: 10px;
+        margin-top: 30px;
+        font-size: 14px;
+    }
+
+    #sortingType {
+        position: absolute;
+        margin-left: 495px;
+        margin-top: 30px;
+        width: 80px;
+        height: 44px;
+        text-align: center;
+    }
+    #descOrAsc {
+        position: absolute;
+        margin-left: 580px;
+        margin-top: 30px;
+        width: 80px;
+        height: 44px;
+        text-align: center;
+    }
+
+    #newBulletin {
+        position: absolute;
+        width: 100px;
+        height: 44px;
+        margin-left: 780px;
+        margin-top: 30px;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        font-size: 15px;
+        border: none;
+    }
+
+    #newBulletin:hover {
+        background-color: rgb(72, 170, 33);
+        color: rgb(255, 255, 255);
+    }
+
+    #bulletins {
+        width: 900px;
+        height: 900px;
+        margin: auto;
+        margin-top: 80px;
+    }
+
+    #bulletinListTalbe {
+        margin: auto;
+        margin-top: 150px;
+        margin-bottom: 50px;
+    }
+
+    #bulletinListTalbe td {
+        /* border: 1px solid; */
+        height: 20px;
+        text-align: center;
+    }
+
+    #mainTitle {
+        text-decoration: none;
+        color: black;
+    }
+
+    #pagingBox {
+        position: absolute;
+        margin-left: 80px;
+        margin-top: 20px;
+    }
+
+    .pageNums {
+        text-decoration: none;
+        margin-left: 5px;
+        margin-right: 5px;
+        color: black;
+        font-size: 18px;
+    }
+
+    .pageNums:hover {
+        cursor: grab;
+    }
+
+    #pagingBox td {
+        width: 30px;
+        text-align: center;
+    }
+
+    .bulletinOneInfoBox {
+        border: 1px solid;
+        border-radius: 5px;
+        width: 160px;
+        height: 240px;
+    }
+
+    .thumbnailImg {
+        position: absolute;
+        margin-left: -70px;
+        margin-top: 8px;
+        border: 1px solid;
+        width: 140px;
+    }
+
+    .bulletinNo {
+        position: absolute;
+        font-size: 14px;
+        margin-left: 10px;
+        margin-top: 118px;
+        width: 45px;
+        color: #f3c535;
+        background-color: black;
+        font-weight: 500;
+    }
+
+    .bulletinTiltle {
+        position: absolute;
+        margin-left: 10px;
+        margin-top: 140px;
+    }
+
+    .bulletinTitleTxt {
+        color: black;
+        font-size: 16px;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    .bulletinTitleTxt:hover {
+        color: blue;
+    }
+
+    .bulletinLikeBox {
+        margin-left: 90px;
+        margin-top: 170px;
+        width: 40px;
+        height: 20px;
+    }
+
+    .bulletinLikeImg {
+        position: absolute;
+        margin-left: -25px;
+        margin-top: -7px;
+    }
+
+    .bulletinLikes {
+        position: absolute;
+        font-size: 14px;
+        margin-left: 15px;
+        margin-top: -5px;
+        color: gray;
+    }
+
+    .bulletinWriter {
+        position: absolute;
+        font-size: 14px;
+        margin-left: -70px;
+        margin-top: 165px;
+        text-decoration: none;
+        color: gray;
+    }
+
+    .bulletinWriter:hover {
+        color: #44a844;
+    }
+
+    .bulletinViews {
+        position: absolute;
+        font-size: 14px;
+        margin-left: 10px;
+        margin-top: 185px;
+        color: gray;
+    }
+
+    .bulletinCreatedDate {
+        position: absolute;
+        margin-left: 10px;
+        margin-top: 23px;
+        font-size: 14px;
+        color: gray;
+    }
+
+    /* pageNumTable */
+
+    #pageNumTable {
+        margin: auto;
+    }
+
+    #pagingBox {
+        margin: auto;
+        width: 900px;
+    }
+</style>
+
+<body>
+<div th:replace="~{main/mainPage:: header}"></div>
+<div id="main">
+    <!--    <div id="poppularBulletin">-->
+    <!--        <h1>(추천 게시물) 공사중...</h1>-->
+    <!--    </div>-->
+    <input id="searchListOrDefaultList" type="hidden" th:value="${searchListOrDefaultList}">
+    <div id="wholeBulletin">
+        <input id="searchWord" th:value="${searchDTO.searchWord}" type="text" placeholder="검색어를 입력하세요">
+        <input id="searchBtn" type="button" value="검색" onclick="search()">
+        <select id="sortingType">
+            <option value="">정렬기준</option>
+            <option value="views">조회수</option>
+            <option value="likes">좋아요수</option>
+        </select>
+        <input id="sortingTypeFromServer" type="hidden" th:value="${searchDTO.sortingType}">
+        <select id="descOrAsc">
+            <option value="">정렬방식</option>
+            <option value="desc">내림차순</option>
+            <option value="asc">오름차순</option>
+        </select>
+        <input id="descOrAscFromServer" type="hidden" th:value="${searchDTO.descOrAsc}">
+        <input th:if="${session.userAlias != null}" id="newBulletin" type="button" value="게시글 작성"
+               onclick="addBulletin()">
+        <div id="bulletins">
+            <table id="bulletinListTalbe">
+                <tr class="perPageList" th:if="${stat.count == 1}" th:each="bulletinOne, stat : ${perPageList}">
+                    <td th:if="${stat.count >= 1 && stat.count <= 5}" th:each="bulletinOne, stat : ${perPageList}">
+                        <div class="bulletinOneInfoBox">
+                            <img class="thumbnailImg" th:src="${bulletinOne.thumbnail}" width="140" height="130">
+                            <div th:text="${bulletinOne.no}+'번'" class="bulletinNo"></div>
+                            <div th:text="'조회수 : '+${bulletinOne.views}+'회'" class="bulletinViews"></div>
+                            <div class="bulletinTiltle">
+                                <a class="bulletinTitleTxt" th:text="${#strings.abbreviate(bulletinOne.title,15)}"
+                                   th:href="@{specificBulletin(no=${bulletinOne.no}, userId=${session.userId})}">
+                                </a>
+                            </div>
+                            <a class="bulletinWriter" th:href="'profile?alias='+${bulletinOne.writer}" th:text="${#strings.abbreviate(bulletinOne.writer,8)}"></a>
+                            <div class="bulletinLikeBox">
+                                <img class="bulletinLikeImg" src="LikeImg/unFilledHeart.png" width="17">
+                                <div th:text="${bulletinOne.likes}" class="bulletinLikes"></div>
+                            </div>
+                            <div th:text="${#temporals.format(bulletinOne.createDate, 'yyyy-MM-dd hh:mm:ss')}"
+                                 class="bulletinCreatedDate"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="perPageList" th:if="${stat.count == 4}" th:each="bulletinOne, stat : ${perPageList}">
+                    <td th:if="${stat.count >= 6 && stat.count <= 10}" th:each="bulletinOne, stat : ${perPageList}">
+                        <div class="bulletinOneInfoBox">
+                            <img class="thumbnailImg" th:src="${bulletinOne.thumbnail}" width="140" height="130">
+                            <div th:text="${bulletinOne.no}+'번'" class="bulletinNo"></div>
+                            <div th:text="'조회수 : '+${bulletinOne.views}+'회'" class="bulletinViews"></div>
+                            <div class="bulletinTiltle">
+                                <a class="bulletinTitleTxt" th:text="${#strings.abbreviate(bulletinOne.title,15)}"
+                                   th:href="@{specificBulletin(no=${bulletinOne.no}, userId=${session.userId})}">
+                                </a>
+                            </div>
+                            <a class="bulletinWriter" th:href="'profile?alias='+${bulletinOne.writer}" th:text="${#strings.abbreviate(bulletinOne.writer,8)}"></a>
+                            <div class="bulletinLikeBox">
+                                <img class="bulletinLikeImg" src="LikeImg/unFilledHeart.png" width="17">
+                                <div th:text="${bulletinOne.likes}" class="bulletinLikes"></div>
+                            </div>
+                            <div th:text="${#temporals.format(bulletinOne.createDate, 'yyyy-MM-dd hh:mm:ss')}"
+                                 class="bulletinCreatedDate"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="perPageList" th:if="${stat.count == 7}" th:each="bulletinOne, stat : ${perPageList}">
+                    <td th:if="${stat.count >= 8 && stat.count <= 15}" th:each="bulletinOne, stat : ${perPageList}">
+                        <div class="bulletinOneInfoBox">
+                            <img class="thumbnailImg" th:src="${bulletinOne.thumbnail}" width="140" height="130">
+                            <div th:text="${bulletinOne.no}+'번'" class="bulletinNo"></div>
+                            <div th:text="'조회수 : '+${bulletinOne.views}+'회'" class="bulletinViews"></div>
+                            <div class="bulletinTiltle">
+                                <a class="bulletinTitleTxt" th:text="${#strings.abbreviate(bulletinOne.title,15)}"
+                                   th:href="@{specificBulletin(no=${bulletinOne.no}, userId=${session.userId})}">
+                                </a>
+                            </div>
+                            <a class="bulletinWriter" th:href="'profile?alias='+${bulletinOne.writer}" th:text="${#strings.abbreviate(bulletinOne.writer,8)}"></a>
+                            <div class="bulletinLikeBox">
+                                <img class="bulletinLikeImg" src="LikeImg/unFilledHeart.png" width="17">
+                                <div th:text="${bulletinOne.likes}" class="bulletinLikes"></div>
+                            </div>
+                            <div th:text="${#temporals.format(bulletinOne.createDate, 'yyyy-MM-dd hh:mm:ss')}"
+                                 class="bulletinCreatedDate"></div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div id="pagingBox">
+                <table id="pageNumTable">
+                    <tr>
+                        <td><input type="button" value="<<" onclick="leftPageNumListNum()"></td>
+                        <td><input type="button" value="<" onclick="leftPaging()"></td>
+                        <td th:each="num : ${currentPageNums}">
+                            <div class="pageNums" th:text="${num}"
+                                 th:onclick="'clickPageNum('+${num}+', '+${searchDTO.currentPageSetNum}+')'"></div>
+                        </td>
+                        <td><input type="button" value=">" onclick="rightPaging()"></td>
+                        <td><input type="button" value=">>" onclick="RightPageNumListNum()"></td>
+                    </tr>
+                </table>
+                <input id="currentPage" type="hidden" th:value="${searchDTO.currentPage}">
+                <input id="currentPageSetNum" type="hidden" th:value="${searchDTO.currentPageSetNum}">
+                <input id="pageNumSetCnt" type="hidden" th:value="${pageNumSetCnt}">
+                <input id="allPageNumCnt" type="hidden" th:value="${allPageNumCnt}">
+                <input id="perPageNumCnt" type="hidden" th:value="${perPageNumCnt}">
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{main/mainPage:: footer}"></div>
+</body>
+
+<script>
+    window.onload = () => {
+        onloadPaging();
+        document.getElementById('sortingType').value = document.getElementById('sortingTypeFromServer').value;
+        document.getElementById('descOrAsc').value = document.getElementById('descOrAscFromServer').value;
+    }
+
+    function onloadPaging() {
+        let pages = document.getElementsByClassName('pageNums')
+        let currentPage = document.getElementById('currentPage').value;
+
+        for (let i = 0; i < pages.length; i++) {
+            if (Number(pages[i].innerHTML) == currentPage) {
+                pages[i].style.color = "blue";
+                return;
+            }
+        }
+    }
+
+    function addBulletin() {
+        location.href = "addFreeBulletinMain";
+    }
+
+    function leftPaging() {
+        let currentPage = Number(document.getElementById('currentPage').value);
+        let currentPageSetNum = Number(document.getElementById('currentPageSetNum').value);
+        let pages = document.getElementsByClassName('pageNums');
+        let firstPageIncurrentPageNums = Number(pages[0].innerHTML);
+        const searchListOrDefaultList = document.getElementById('searchListOrDefaultList').value;
+
+        if (currentPage > 1) {
+            currentPage--;
+            if (firstPageIncurrentPageNums > currentPage) {
+                currentPageSetNum--
+                if (searchListOrDefaultList == 'normal') {
+                    location.href = 'mainFreeBulletin?currentPage=' + currentPage + '&currentPageSetNum=' + currentPageSetNum;
+                } else {
+                    const searchWord = document.getElementById('searchWord').value;
+                    const sortingType = document.getElementById('sortingType').value;
+                    const descOrAsc = document.getElementById('descOrAsc').value;
+                    location.href = 'searchFreeBulletin?currentPage=' + currentPage + '&currentPageSetNum=' + currentPageSetNum
+                        + '&searchWord=' + searchWord + '&sortingType=' + sortingType+'&descOrAsc='+descOrAsc;
+                }
+            } else {
+                if (searchListOrDefaultList == 'normal') {
+                    location.href = 'mainFreeBulletin?currentPage=' + currentPage + '&currentPageSetNum=' + currentPageSetNum;
+                } else {
+                    const searchWord = document.getElementById('searchWord').value;
+                    const sortingType = document.getElementById('sortingType').value;
+                    const descOrAsc = document.getElementById('descOrAsc').value;
+                    location.href = 'searchFreeBulletin?currentPage=' + currentPage + '&currentPageSetNum=' + currentPageSetNum
+                        + '&searchWord=' + searchWord + '&sortingType=' + sortingType+'&descOrAsc='+descOrAsc;
+                }
+            }
+        }
+    }
+
+    function rightPaging() {
+        let currentPage = Number(document.getElementById('currentPage').value);
+        let currentPageSetNum = Number(document.getElementById('currentPageSetNum').value);
+        let allPageNumCnt = Number(document.getElementById('allPageNumCnt').value)
+        let pages = document.getElementsByClassName('pageNums')
+        let LastPageIncurrentPageNum = Number(pages[pages.length - 1].innerHTML)
+        const searchListOrDefaultList = document.getElementById('searchListOrDefaultList').value;
+
+        if (currentPage < allPageNumCnt) {
+            currentPage++
+            if (currentPage > LastPageIncurrentPageNum) {
+                currentPageSetNum++
+                if (searchListOrDefaultList == 'normal') {
+                    location.href = 'mainFreeBulletin?currentPage=' + currentPage + '&currentPageSetNum=' + currentPageSetNum;
+                } else {
+                    const searchWord = document.getElementById('searchWord').value;
+                    const sortingType = document.getElementById('sortingType').value;
+                    const descOrAsc = document.getElementById('descOrAsc').value;
+                    location.href = 'searchFreeBulletin?currentPage=' + currentPage + '&currentPageSetNum=' + currentPageSetNum
+                        + '&searchWord=' + searchWord + '&sortingType=' + sortingType+'&descOrAsc='+descOrAsc;
+                }
+            } else {
+                if (searchListOrDefaultList == 'normal') {
+                    location.href = 'mainFreeBulletin?currentPage=' + currentPage + '&currentPageSetNum=' + currentPageSetNum;
+                } else {
+                    const searchWord = document.getElementById('searchWord').value;
+                    const sortingType = document.getElementById('sortingType').value;
+                    const descOrAsc = document.getElementById('descOrAsc').value;
+                    location.href = 'searchFreeBulletin?currentPage=' + currentPage + '&currentPageSetNum=' + currentPageSetNum
+                        + '&searchWord=' + searchWord + '&sortingType=' + sortingType+'&descOrAsc='+descOrAsc;
+                }
+            }
+        }
+    }
+
+    function leftPageNumListNum() {
+        let currentPage = Number(document.getElementById('currentPage').value);
+        let currentPageSetNum = Number(document.getElementById('currentPageSetNum').value);
+        let cnt = Number(document.getElementById('perPageNumCnt').value);
+        const searchListOrDefaultList = document.getElementById('searchListOrDefaultList').value;
+
+        if (currentPageSetNum > 1) {
+            currentPageSetNum--;
+            let page = (currentPageSetNum - 1) * cnt + 1;
+            if (searchListOrDefaultList == 'normal') {
+                location.href = 'mainFreeBulletin?currentPage=' + page + '&currentPageSetNum=' + currentPageSetNum;
+            } else {
+                const searchWord = document.getElementById('searchWord').value;
+                const sortingType = document.getElementById('sortingType').value;
+                const descOrAsc = document.getElementById('descOrAsc').value;
+                location.href = 'searchFreeBulletin?currentPage=' + page + '&currentPageSetNum=' + currentPageSetNum
+                    + '&searchWord=' + searchWord + '&sortingType=' + sortingType+'&descOrAsc='+descOrAsc;
+            }
+        }
+    }
+
+    function RightPageNumListNum() {
+        let currentPage = Number(document.getElementById('currentPage').value);
+        let currentPageSetNum = Number(document.getElementById('currentPageSetNum').value);
+        let pageNumSetCnt = Number(document.getElementById('pageNumSetCnt').value);
+        let cnt = Number(document.getElementById('perPageNumCnt').value)
+        const searchListOrDefaultList = document.getElementById('searchListOrDefaultList').value;
+
+        if (currentPageSetNum < pageNumSetCnt) {
+            currentPageSetNum++;
+            let page = (currentPageSetNum - 1) * cnt + 1;
+            if (searchListOrDefaultList == 'normal') {
+                location.href = 'mainFreeBulletin?currentPage=' + page + '&currentPageSetNum=' + currentPageSetNum;
+            } else {
+                const searchWord = document.getElementById('searchWord').value;
+                const sortingType = document.getElementById('sortingType').value;
+                const descOrAsc = document.getElementById('descOrAsc').value;
+                location.href = 'searchFreeBulletin?currentPage=' + page + '&currentPageSetNum=' + currentPageSetNum
+                    + '&searchWord=' + searchWord + '&sortingType=' + sortingType+'&descOrAsc='+descOrAsc;
+            }
+        }
+    }
+
+    function search() {
+        const searchWord = document.getElementById('searchWord').value;
+        const sortingType = document.getElementById('sortingType').value;
+        const descOrAsc = document.getElementById('descOrAsc').value;
+
+        location.href = 'searchFreeBulletin?searchWord=' + searchWord + '&sortingType=' + sortingType
+            +'&descOrAsc='+descOrAsc;
+    }
+
+    function clickPageNum(pageNum, pageSetNum) {
+        const searchListOrDefaultList = document.getElementById('searchListOrDefaultList').value;
+
+        if (searchListOrDefaultList == 'normal') {
+            location.href = 'mainFreeBulletin?currentPage=' + pageNum + '&currentPageSetNum=' + pageSetNum;
+        } else {
+            const searchWord = document.getElementById('searchWord').value;
+            const sortingType = document.getElementById('sortingType').value;
+            const descOrAsc = document.getElementById('descOrAsc').value;
+            location.href = 'searchFreeBulletin?currentPage=' + pageNum + '&currentPageSetNum=' + pageSetNum
+                + '&searchWord=' + searchWord + '&sortingType=' + sortingType+'&descOrAsc='+descOrAsc;
+        }
+    }
+</script>
+</html>
