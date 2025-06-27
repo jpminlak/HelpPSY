@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>프로필</title>
+    <style>
+        * {
+            user-select: none;
+            box-sizing: border-box;
+        }
+
+        .scroll-box {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 40px;
+            background-image: url("https://images.unsplash.com/photo-1554034483-04fda0d3507b?...");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .profile-container {
+            max-width: 900px;
+            margin: auto;
+            background-color: #ffffffee;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 20px;
+        }
+
+        .profile-header img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-right: 25px;
+            border: 3px solid #ccc;
+        }
+
+        .profile-info h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #333;
+        }
+
+        .profile-info p {
+            margin: 6px 0;
+            color: #555;
+            font-size: 15px;
+        }
+
+        .profile-info input[type="button"] {
+            margin-top: 10px;
+            margin-right: 10px;
+            padding: 8px 14px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .profile-info input[type="button"]:hover {
+            background-color: #0056b3;
+        }
+
+        .profile-section {
+            margin-top: 40px;
+        }
+
+        .profile-section h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            border-left: 5px solid #007BFF;
+            padding-left: 10px;
+            color: #333;
+        }
+
+        .profile-section p {
+            color: #666;
+        }
+
+        .profile-section table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .profile-section table th,
+        .profile-section table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        .profile-section table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+
+        a input[type="button"]#main {
+            display: block;
+            margin: 40px auto 0;
+            padding: 10px 30px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        a input[type="button"]#main:hover {
+            background-color: #1e7e34;
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="profile-container">
+    <div class="profile-header">
+        <img th:if="${member.profileImage != null}"
+             th:src="@{'/files/profile/' + ${member.profileImage}}"
+             alt="프로필 이미지"
+             style="width: 120px; height: 120px; border-radius: 50%;">
+
+        <img th:if="${member.profileImage == null}"
+             src="/images/default-profile.png"
+             alt="기본 이미지"
+             style="width: 120px; height: 120px; border-radius: 50%;">
+
+
+        <div class="profile-info">
+            <h1><label th:text="${member.userId}"></label></h1>
+            <p>별명 : <label th:text="${member.alias}"></label></p>
+            <!--            <p>구분 : <label th:text="${member.division}"></label></p>-->
+            <!--            <p>고유번호 : <label th:text="${member.dNum}"></label></p>-->
+            <div th:if="${session.userId} == ${member.userId}">
+                <a href="profile_Update"><input id="profile_Update" type="button" value="프로필 편집" onclick=""></a>
+                <a href="/note_inbox"><input id="note_inbox" type="button" value="쪽지함"></a>
+            </div>
+            <div th:if="${session.userId} != ${member.userId}">
+                <a th:href="@{/note/{receiverId}(receiverId=${member.userId})}">
+                    <input id="note_form" type="button" value="쪽지">
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="profile-section">
+        <h2>소개글</h2>
+        <div th:if="${member.Intro} == null">
+            <p>소개글이 비어있습니다</p>
+        </div>
+        <div th:if="${member.Intro} != null">
+            <p><label th:text="${member.Intro}"></label></p>
+        </div>
+    </div>
+    <div class="profile-section">
+        <h2>사고게시판 작성 글</h2>
+        <div th:if="${#lists.isEmpty(accidentPosts)}">
+            <p>작성한 글이 없습니다.</p>
+        </div>
+        <div th:unless="${#lists.isEmpty(accidentPosts)}" class="scroll-box">
+            <table style="text-align: center;">
+                <thead>
+                <tr>
+                    <th>제목</th>
+                    <th>조회수</th>
+                    <th>작성일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="post : ${accidentPosts}">
+                    <td>
+                        <!-- 사고게시판 제목 클릭 시 사고 상세페이지로 이동 -->
+                        <a th:href="@{'/accidentview/' + ${post.id}}"
+                           th:text="${post.title}"
+                           style="text-decoration: none;">
+                        </a>
+                    </td>
+                    <td th:text="${post.postViews}"></td>
+                    <td th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="profile-section">
+        <h2>자유게시판 작성글</h2>
+        <div th:if="${#lists.isEmpty(freePosts)}">
+            <p>작성한 자유게시판 글이 없습니다.</p>
+        </div>
+        <div th:unless="${#lists.isEmpty(freePosts)}" class="scroll-box">
+            <table>
+                <thead>
+                <tr>
+                    <th>제목</th>
+                    <th>조회수</th>
+                    <th>작성일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="post : ${freePosts}">
+                    <td>
+                        <!-- 자유게시판 제목 클릭 시 자유 상세페이지로 이동 -->
+                        <a th:href="@{'/specificBulletin?no=' + ${post.no} + '&userId=' + ${post.userId}}"
+                           th:text="${post.title}"
+                           style="text-decoration: none;">
+                        </a>
+                    </td>
+                    <td th:text="${post.views}"></td>
+                    <td th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <a href="main"><input id="main" type="button" value="홈" onclick=""></a>
+</div>
+</body>
+
+</html>

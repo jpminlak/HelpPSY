@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>받은 쪽지함</title>
+    <link rel="stylesheet" th:href="@{/main/head.css}">
+    <script th:src="@{/main/fragment.js}"></script>
+    <style>
+        .note {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        .note th, .note td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: center;
+        }
+
+        .note th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        .note tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .note tr:hover {
+            background-color: #e6f7ff;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 12px 25px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .scroll-box {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        /* 추가: 링크 스타일 */
+        .note a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .note a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="header-container">
+        <div class="logo-nav-container">
+            <div class="logo-container">
+                <img id="like" th:src="@{/LikeImg/차량사고 커뮤니티 로고.png}" width="150" alt="로고">
+                <h2><b>Help PSY</b></h2>
+            </div>
+            <div class="nav-links">
+                <a href="/main">메인 화면</a>
+                <a href="/mainFreeBulletin">자유게시판</a>
+                <a href="/accidentmain">제보게시판</a>
+                <a href="/inquiry">문의하기</a>
+                <a th:if="${session.userId == 'aa'}" href="/respondent">답변 (관리자)</a>
+                <a href="/map">지도</a>
+            </div>
+            <div class="login-section">
+                <div id="memberBox">
+                    <div th:if="${session.userAlias == null}">
+                        <a href="/signInMain"><input type="button" value="로그인"></a>
+                        <a href="/signUpMain"><input type="button" value="회원가입"></a>
+                    </div>
+                    <div th:if="${session.userAlias != null}">
+                        <label th:text="${session.userAlias} + '님 환영합니다.'"></label>
+                        <!-- 현재 로그인한 사용자의 프로필 링크를 session.userId로 변경 -->
+                        <a th:href="@{'/profile?alias=' + ${session.userAlias}}"><input type="button" value="정보"></a>
+                        <input type="button" value="로그아웃" onclick="logout()">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1>받은 쪽지 목록</h1>
+    <div class="scroll-box">
+        <table class="note" id="scroll-box">
+            <thead>
+            <tr>
+                <th>발신자</th>
+                <th>발신일</th>
+                <th>제목</th>
+                <th>내용</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- iterStat을 사용하여 senderAliases 리스트의 인덱스에 접근 -->
+            <tr th:each="note, iterStat : ${notes}">
+                <td style="text-align:center;">
+                    <!-- 프로필 링크는 note.senderId (userId)를 사용하고, 표시되는 텍스트는 senderAliases에서 가져옴 -->
+                    <a th:href="@{'/profile?alias=' + ${senderAliases[__${iterStat.index}__]}}" th:text="${senderAliases[__${iterStat.index}__]}"></a>
+                </td>
+                <td th:text="${#temporals.format(note.sentAt, 'yyyy-MM-dd HH:mm')}" style="text-align:center;"></td>
+                <td>
+                    <a th:if="${note.relatedQuestionId != null}" th:href="@{'/question/' + ${note.relatedQuestionId}}" th:text="${note.title}"></a>
+                    <a th:unless="${note.relatedQuestionId != null}" th:href="@{'/noteDetail?id=' + ${note.id}}" th:text="${note.title}"></a>
+                </td>
+                <td th:text="${#strings.abbreviate(note.content, 50)}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a href="/main">
+        <button id="home">홈으로</button>
+    </a>
+</div>
+
+<div id="footer">
+    <p>개발자 이메일 : human@gmail.com | 대표 이름 : human</p>
+</div>
+
+</body>
+</html>
