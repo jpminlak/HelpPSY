@@ -33,7 +33,6 @@ public class memberController {
     private final FreeBulletinRepository freeBulletinRepository;
 
 
-
     @GetMapping("signUpMain")
     public String sinupMain() {
         return "memberManager/signUp";
@@ -115,21 +114,23 @@ public class memberController {
         // 자유게시판 글 리스트 추가
         List<FreeBulletin> freeBulletins = freeBulletinRepository.findByUserId(signupRepository.findByAlias(alias).getUserId());
         List<FreeBulletinDTO> freeBulletinDTOList = new ArrayList<>();
-
-        if(freeBulletins != null){
-            for(FreeBulletin fb : freeBulletins){
-                FreeBulletinDTO freeBulletinDTO = new FreeBulletinDTO();
-                freeBulletinDTO.setNo(fb.getNo());
-                freeBulletinDTO.setTitle(fb.getTitle());
-                freeBulletinDTO.setContent(fb.getContent());
-                freeBulletinDTO.setThumbnail(fb.getThumbnail());
-                freeBulletinDTO.setWriter(alias);
-                freeBulletinDTO.setUserId(fb.getUserId());
-                freeBulletinDTO.setViews(fb.getViews());
-                freeBulletinDTO.setLikes(fb.getLikes());
-                freeBulletinDTO.setCreateDate(fb.getCreateDate());
-                freeBulletinDTO.setProfileImgName(signupRepository.findByAlias(alias).getProfileImage());
-                freeBulletinDTOList.add(freeBulletinDTO);
+        if (signupEntity != null && signupEntity.getUserId() != null) {
+            freeBulletins = freeBulletinRepository.findByUserId(signupEntity.getUserId());
+            if (freeBulletins != null) {
+                for (FreeBulletin fb : freeBulletins) {
+                    FreeBulletinDTO freeBulletinDTO = new FreeBulletinDTO();
+                    freeBulletinDTO.setNo(fb.getNo());
+                    freeBulletinDTO.setTitle(fb.getTitle());
+                    freeBulletinDTO.setContent(fb.getContent());
+                    freeBulletinDTO.setThumbnail(fb.getThumbnail());
+                    freeBulletinDTO.setWriter(alias);
+                    freeBulletinDTO.setUserId(fb.getUserId());
+                    freeBulletinDTO.setViews(fb.getViews());
+                    freeBulletinDTO.setLikes(fb.getLikes());
+                    freeBulletinDTO.setCreateDate(fb.getCreateDate());
+                    freeBulletinDTO.setProfileImgName(signupRepository.findByAlias(alias).getProfileImage());
+                    freeBulletinDTOList.add(freeBulletinDTO);
+                }
             }
         }
         model.addAttribute("freePosts", freeBulletinDTOList);
@@ -145,11 +146,11 @@ public class memberController {
         model.addAttribute("user", user);
 
         //프로필 수정할 때 이미지 미리보기
-        if(user.getProfileImage() != null && !user.getProfileImage().isEmpty()){
-            String profileImageUrl = "/files/profile/"+user.getProfileImage();
+        if (user.getProfileImage() != null && !user.getProfileImage().isEmpty()) {
+            String profileImageUrl = "/files/profile/" + user.getProfileImage();
             model.addAttribute("profileImageUrl", profileImageUrl);
-        }else{
-            model.addAttribute("profileImageUrl","");
+        } else {
+            model.addAttribute("profileImageUrl", "");
         }
 
         return "memberManager/profile_Update";
@@ -161,9 +162,13 @@ public class memberController {
                          @RequestParam(value = "Ffile", required = false) MultipartFile profileImage,
                          HttpSession session) throws IOException {
 
-        registrationService.setSignupAlias(updatedUser.getAlias(),updatedUser.getId()); // 민우로직추가
-        commentService.setCommentSignupAlias(updatedUser.getAlias(),updatedUser.getId()); // 민우로직추가
-        commentReplyService.setReplyAlias(updatedUser.getAlias(),updatedUser.getId()); // 민우로직추가
+        registrationService.setSignupAlias(updatedUser.getAlias(), updatedUser.getId()); // 민우로직추가
+        commentService.setCommentSignupAlias(updatedUser.getAlias(), updatedUser.getId()); // 민우로직추가
+        commentReplyService.setReplyAlias(updatedUser.getAlias(), updatedUser.getId()); // 민우로직추가
+        System.out.println("===================여기확인해라");
+        System.out.println("1. 날라오는 별명 : "+updatedUser.getAlias());
+        System.out.println("2. 날라오는 아이디 : "+updatedUser.getUserId());
+        System.out.println("===================여기확인해라");
 
         System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         System.out.println(profileImage);
@@ -185,7 +190,7 @@ public class memberController {
 
             if (!profileImage.isEmpty()) {
                 UUID uuid = UUID.randomUUID();
-                String uploadDir = System.getProperty("user.dir")+"/files/profile" ;
+                String uploadDir = System.getProperty("user.dir") + "/files/profile";
                 //System.out.println("파일 저장 경로: " + uploadDir);
 
                 String filename = uuid + "_" + profileImage.getOriginalFilename();
@@ -218,7 +223,7 @@ public class memberController {
                 .encode()
                 .toUriString();
 
-        return "redirect:" + redirectUrl ;
+        return "redirect:" + redirectUrl;
     }
 
     @GetMapping("/checkId")

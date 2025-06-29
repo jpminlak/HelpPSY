@@ -78,12 +78,6 @@
             margin: 0 auto;                         /* 중앙 정렬 (가로) */
         }
 
-        .active {
-            margin-bottom: 10px;
-            padding : 6px;
-            background-color: rgba(138, 152, 98, 0.1);
-            border-color: rgba(138, 152, 98, 0.1);
-        }
 
         .page-num{
             background-color: rgba(138, 152, 98, 0.1);
@@ -322,6 +316,8 @@
 
         </ul>
     </nav>
+    <div th:replace="~{main/mainPage:: footer}"></div>
+
 </body>
 </html>
 <script>

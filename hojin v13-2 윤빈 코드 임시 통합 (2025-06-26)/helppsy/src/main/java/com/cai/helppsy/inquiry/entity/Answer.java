@@ -1,11 +1,9 @@
+// Answer.java
 package com.cai.helppsy.inquiry.entity;
-
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -22,6 +20,9 @@ public class Answer {
     @Column(length = 20)
     private String respondent;
 
+    @Column(length = 20)
+    private String respondentUserId; // <-- 이 필드가 있는지 확인합니다.
+
     @Column(length = 50)
     private String title;
 
@@ -32,6 +33,6 @@ public class Answer {
     private LocalDateTime createDate;
 
     @ManyToOne
-    @JoinColumn(name = "question_id")   //name = question_id 이면 join?
+    @JoinColumn(name = "question_id")
     private Question question;
 }

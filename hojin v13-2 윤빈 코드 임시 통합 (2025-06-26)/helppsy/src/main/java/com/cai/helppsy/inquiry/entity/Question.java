@@ -19,7 +19,10 @@ public class Question {
     private Integer id;
 
     @Column(length = 20)
-    private String writer;
+    private String writer; // 기존 필드 유지 (작성 당시의 별명)
+
+    @Column(length = 20)
+    private String writerUserId;
 
     @Column(length = 30)
     private String subject;
