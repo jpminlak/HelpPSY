@@ -5,6 +5,8 @@ import com.cai.helppsy.freeBulletinBoard.entity.FreeBulletinComment;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 
 @Entity
 @Data
@@ -16,8 +18,8 @@ public class FreeBulletinCommentLike {
     @Column(length = 16)
     private String type;
 
-    @Column(length = 15)
-    private String userName;
+    @Column(length = 20)
+    private String userId;
 
     @ManyToOne
     @JoinColumn(name = "fk_no")

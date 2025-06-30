@@ -7,4 +7,5 @@ public interface signupRepository extends JpaRepository<SignupEntity,String> {
     SignupEntity findByuserId(String userId);
     boolean existsByUserId(String userId);
     SignupEntity findByAlias(String alias);
+
 }

@@ -21,9 +21,9 @@ public class CommentLikeController {
     @PostMapping("/Commentlike")
     @ResponseBody // JSON으로 비동기 처리시 꼭 넣어주기!!! 이거뺴먹어서 2시간 날림
     public Map<String, Object> Commentlike(@RequestParam("type") String type,
-                                           @RequestParam("CommentUserAlias") String alias,
-                                           @RequestParam("commentId") Integer commentId,
-                                           @RequestParam("Commentliked") int liked){
+                              @RequestParam("CommentUserAlias") String alias,
+                              @RequestParam("commentId") Integer commentId,
+                              @RequestParam("Commentliked") int liked){
 
 
         CommentLikeDTO commentLikeDTO = commentLikeService.addCommentlike(type, alias, commentId,liked);
@@ -41,7 +41,7 @@ public class CommentLikeController {
     @PostMapping("/Commentlike/revert")
     @ResponseBody // JSON으로 비동기 처리시 꼭 넣어주기!!! 이거뺴먹어서 2시간 날림
     public Map<String, Object> Commentlikerevert
-    (@RequestParam("CommentUserAlias") String alias,@RequestParam("commentId") Integer commentId)                                           {
+            (@RequestParam("CommentUserAlias") String alias,@RequestParam("commentId") Integer commentId)                                           {
 
         int CommentlikedStatus = commentLikeService.getCommentLike(alias,commentId);
         int CommentlikeCount = commentLikeService.LikeCountByPostId(commentId); // 좋아요 총 개수

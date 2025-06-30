@@ -1,5 +1,7 @@
 package com.cai.helppsy.map;
 
+import com.cai.helppsy.accidentBulleinBoard.entity.RegistrationEntity;
+import com.cai.helppsy.accidentBulleinBoard.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,12 +15,14 @@ import java.util.List;
 @Controller
 public class MapController {
     private final MarkerService markerService;
+    private final RegistrationService registrationService;
 
     @GetMapping("/map")
     public String map(Model model) {
-    //public String map() {
         List<Mapmarker> mapMarkerList = this.markerService.getList();
+        List<RegistrationEntity> accMarkerList = this.registrationService.writegetlist();
         model.addAttribute("mapMarkerList", mapMarkerList);
+        model.addAttribute("accMarkerList", accMarkerList);
         System.out.println("지도 페이지 입장");
         return "/map/map";
     }
@@ -31,12 +35,12 @@ public class MapController {
         return "/map/map";
     }
 
-    @GetMapping("/map/loadMarker")
-    public String listMarker(Model model) {
-        List<Mapmarker> mapMarkerList = this.markerService.getList();
-        model.addAttribute("mapMarkerList", mapMarkerList);
-        return "/map/map";
-    }
+//    @GetMapping("/map/loadMarker")
+//    public String listMarker(Model model) {
+//        List<Mapmarker> mapMarkerList = this.markerService.getList();
+//        model.addAttribute("mapMarkerList", mapMarkerList);
+//        return "/redirect:map";
+//    }
 
     @PostMapping("/map/modMarker")
     public String modMarker(Mapmarker mapmarker) {
@@ -51,7 +55,7 @@ public class MapController {
 
     @GetMapping("/map/delMarker/{num}")
     public String deleteMarker(@PathVariable("num") Integer num){
-        Mapmarker mapmarker =this.markerService.getMarker(num);
+        Mapmarker mapmarker = this.markerService.getMarker(num);
         this.markerService.delete(mapmarker);
         return "redirect:/map";
     }

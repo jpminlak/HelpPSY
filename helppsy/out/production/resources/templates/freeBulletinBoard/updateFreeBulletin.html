@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main/head.css">
+    <script src="main/fragment.js"></script>
+    <title>자유 게시판</title>
+</head>
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    #main {
+        border: 1px solid;
+        border-color: #c2c1c1;
+        border-radius: 5px;
+        background-color: #fff;
+        width: 600px;
+        margin: auto;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    #topArea {
+        height: 200px;
+    }
+
+    #titleTxt {
+        position: absolute;
+        margin-left: 30px;
+        margin-top: 30px;
+        font-size: 20px;
+        font-weight: 400;
+    }
+
+    #titleInput {
+        position: absolute;
+        margin-left: 110px;
+        margin-top: 33px;
+        width: 390px;
+        height: 25px;
+    }
+
+    #attachFileTxt {
+        position: absolute;
+        margin-left: 30px;
+        margin-top: 90px;
+        font-size: 15px;
+        font-weight: 400;
+    }
+
+    #attachFileBox {
+        position: absolute;
+        margin-left: 110px;
+        margin-top: 95px;
+        border: 1px solid;
+        border-radius: 5px;
+        width: 400px;
+        height: 70px;
+    }
+
+    #fileInput {
+        position: absolute;
+        margin-left: 10px;
+        margin-top: 10px;
+        width: 60px;
+        font-size: 11px;
+    }
+
+    #fileListArea {
+        position: absolute;
+        border: 1px solid;
+        width: 310px;
+        height: 50px;
+        margin-top: 10px;
+        margin-left: 75px;
+        overflow: auto;
+    }
+
+    .fileOneNameDiv {
+    }
+
+    .deleteFileOne {
+        display: inline;
+    }
+
+    .fileOneName {
+        display: inline;
+        margin-left: 10px;
+    }
+
+    /* 게시글 내용 */
+
+    #contentBox {
+        border: 1px solid;
+        border-radius: 8px;
+        width: 500px;
+        margin: auto;
+        margin-top: 30px;
+    }
+
+    #addImgOrVideo {
+        background-color: rgb(105, 206, 105);
+        margin-left: 180px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        color: white;
+        border: none;
+    }
+
+    #addImgOrVideo:hover {
+        background-color: rgb(63, 143, 83);
+    }
+
+    #content {
+        border: 1px solid;
+        border-radius: 8px;
+        width: 450px;
+        margin: auto;
+        margin-bottom: 10px;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    #bulletinUpload {
+        width: 150px;
+        height: 30px;
+        margin-left: 230px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        background-color: rgb(105, 206, 105);
+        color: white;
+        border: none;
+    }
+
+    #bulletinUpload:hover {
+        background-color: rgb(63, 143, 83);
+    }
+
+    /* addImgOrVideoBox */
+    #addImgOrVideoBox {
+        position: absolute;
+        width: 300px;
+        height: 100px;
+        border: 1px solid;
+        border-radius: 8px;
+        margin-top: 50px;
+        margin-left: 150px;
+        background-color: rgb(212, 212, 212);
+        display: none;
+    }
+
+    #imgOrVideoFile {
+        position: absolute;
+        position: absolute;
+        margin-left: 120px;
+        margin-top: 10px;
+        font-size: 11px;
+    }
+
+    #imgOrVideoSizeTxt {
+        position: absolute;
+        font-size: 15px;
+        margin-top: 10px;
+        margin-left: 20px;
+    }
+
+    #imgOrVideoSize {
+        position: absolute;
+        margin-top: 13px;
+        margin-left: 70px;
+    }
+
+    #insertImgOrVideo {
+        position: absolute;
+        width: 100px;
+        height: 40px;
+        margin-left: 100px;
+        margin-top: 50px;
+    }
+
+    /* thumbnail */
+
+    #thumbnailBox {
+        border: 1px solid;
+        border-radius: 5px;
+        width: 500px;
+        margin: auto;
+    }
+
+    #thumbnailTxt {
+        text-align: center;
+    }
+
+    #inputThumbnail {
+        position: absolute;
+        width: 70px;
+        margin-top: -20px;
+        margin-left: 10px;
+    }
+
+    #preViewThumbnail {
+        margin-top: 40px;
+        margin-left: 100px;
+    }
+</style>
+
+<body>
+<div th:replace="~{main/mainPage:: header}"></div>
+<div id="main">
+    <form id="bulletinForm" action="updateFreeBulletin" method="post"
+          onsubmit="return false"
+          enctype="multipart/form-data">
+        <h1>자유 게시판 게시글 수정</h1>
+        <input type="hidden" th:value="${bulletinOneInfo.no}" name="no">
+        <input type="hidden" th:value="${bulletinOneInfo.userId}" name="userId">
+        <div id="topArea">
+            <h3 id="titleTxt">제목 : </h3>
+            <input th:value="${bulletinOneInfo.title}" id="titleInput" type="text" name="title">
+            <h4 id="attachFileTxt">첨부파일 : </h4>
+            <div id="attachFileBox">
+                <input id="fileInput" type="file"
+                       onchange="addAttachFile()">
+                <div id="fileListArea">
+
+                </div>
+                <div class="hiddenFiles">
+                    <input class="hiddenFile" type="hidden" th:value="${fileName}"
+                           th:each="fileName : ${fileNames}">
+                </div>
+            </div>
+        </div>
+        <div id="thumbnailBox">
+            <div id="thumbnailTxt">썸네일 등록(비율 14:13)</div>
+            <input id="inputThumbnail" type="file" accept="image/*" onchange="addThumbnail()">
+            <input id="thumbnailForSubmit" type="hidden" name="thumbnail" th:value="${bulletinOneInfo.thumbnail}">
+            <img id="preViewThumbnail" th:src="${bulletinOneInfo.thumbnail}" width="196" height="182">
+        </div>
+        <div id="addImgOrVideoBox">
+            <input id="imgOrVideoFile" type="file">
+            <div id="imgOrVideoSizeTxt">사이즈</div>
+            <select id="imgOrVideoSize">
+                <option value>선택</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="150">150</option>
+                <option value="200">200</option>
+                <option value="250">250</option>
+                <option value="300">300</option>
+                <option value="350">350</option>
+                <option value="400">400</option>
+                <option value="450">450</option>
+                <option value="500">500</option>
+            </select>
+            <input id="insertImgOrVideo" type="button" value="추가하기"
+                   onclick="addImgOrVideoInContent()">
+        </div>
+        <div id="contentBox">
+            <input id="addImgOrVideo" type="button" value="이미지 및 동영상 추가"
+                   onclick="showAddImgOrVideoBox()">
+            <div id="content" contenteditable="true"></div>
+            <input th:value="${bulletinOneInfo.content}" type="hidden" id='contentForSubmit' name="content">
+        </div>
+        <input id="bulletinUpload" type="button"
+               onclick="submitToController()" value="올리기">
+    </form>
+</div>
+<div th:replace="~{main/mainPage:: footer}"></div>
+</body>
+
+</html>
+<script>
+    const attachFileList = new Map();
+    let fileNameCnt = 1;
+    let initialFiles;
+    let currentTextFocus;
+    const existingFileNamesInServer = new Map();
+
+    window.onload = () => {
+        initialFiles = document.getElementById('fileInput').files;
+        document.getElementById('content').focus(() => {
+            const currentFocus = document.activeElement;
+            const currentFocusDiv = currentFocus.parentElement.children[3];
+            if (currentFocus.id == 'content') {
+                currentTextFocus = currentFocus;
+            }
+        });
+        document.getElementById('content').innerHTML
+            = decodeURIComponent(document.getElementById('contentForSubmit').value);
+        processExistingFileNameInServer();
+    }
+
+    function processExistingFileNameInServer() {
+        const originFileNames = document.getElementsByClassName('hiddenFile');
+        for (let ofn of originFileNames) {
+            //existingFileNameInServer.set(addAttachFile(ofn.value), ofn.value);
+            addAttachFile(ofn.value);
+        }
+    }
+
+    function addAttachFile(existingFileNameInServer) {
+        const fileInput = document.getElementById('fileInput');
+        const fileListArea = document.getElementById('fileListArea');
+        let fileName = fileInput.value;
+
+
+        if (existingFileNameInServer == undefined) {
+            for (let i = fileName.length - 1; i >= 0; i--) {
+                if (fileName[i] == '\\') {
+                    attachFileList.set(fileNameCnt, fileInput.files);
+                    fileInput.files = initialFiles;
+                    const fileOneNameDiv = document.createElement('div');
+                    fileOneNameDiv.setAttribute('class', 'fileOneNameDiv');
+                    fileOneNameDiv.setAttribute('id', 'fileOneNameDiv' + fileNameCnt);
+                    const deleteFileOne = document.createElement('input');
+                    deleteFileOne.setAttribute('class', 'deleteFileOne');
+                    deleteFileOne.setAttribute('type', 'button');
+                    deleteFileOne.setAttribute('value', 'x');
+                    deleteFileOne.setAttribute('onclick', 'deleteFileOne(' + fileNameCnt + ')');
+                    const fileOneName = document.createElement('div');
+                    fileOneName.setAttribute('class', 'fileOneName');
+                    fileName = fileName.substr(i + 1);
+                    fileOneName.innerHTML = fileName;
+                    fileOneNameDiv.appendChild(deleteFileOne)
+                    fileOneNameDiv.appendChild(fileOneName)
+                    fileListArea.appendChild(fileOneNameDiv);
+                    fileNameCnt++;
+                    break;
+                }
+            }
+        } else {
+            for (let i = existingFileNameInServer.length - 1; i >= 0; i--) {
+                if (existingFileNameInServer[i] == '_') {
+                    existingFileNamesInServer.set(fileNameCnt, existingFileNameInServer);
+                    const fileOneNameDiv = document.createElement('div');
+                    fileOneNameDiv.setAttribute('class', 'fileOneNameDiv');
+                    fileOneNameDiv.setAttribute('id', 'fileOneNameDiv' + fileNameCnt);
+                    const deleteFileOne = document.createElement('input');
+                    deleteFileOne.setAttribute('class', 'deleteFileOne');
+                    deleteFileOne.setAttribute('type', 'button');
+                    deleteFileOne.setAttribute('value', 'x');
+                    deleteFileOne.setAttribute('onclick', 'deleteFileOne(' + fileNameCnt + ')');
+                    const fileOneName = document.createElement('div');
+                    fileOneName.setAttribute('class', 'fileOneName');
+                    fileName = existingFileNameInServer.substr(i + 1);
+                    fileOneName.innerHTML = fileName;
+                    fileOneNameDiv.appendChild(deleteFileOne)
+                    fileOneNameDiv.appendChild(fileOneName)
+                    fileListArea.appendChild(fileOneNameDiv);
+                    fileNameCnt++;
+                    break;
+                }
+            }
+            console.log(fileName);
+            return fileName;
+        }
+    }
+
+    function deleteFileOne(keyNum) {
+        const fileOneNameDiv = document.getElementById('fileOneNameDiv' + keyNum);
+        fileOneNameDiv.remove();
+        console.log('__________1__________');
+        console.log(keyNum);
+        for (let i of existingFileNamesInServer.keys()) {
+            console.log(i);
+        }
+        console.log('__________2_________');
+        for (let i of attachFileList.keys()) {
+            console.log(i);
+        }
+        console.log('__________1__________');
+        for (let i of attachFileList.keys()) {
+            if (i == keyNum) {
+                attachFileList.delete(keyNum);
+                return;
+            }
+        }
+        for (let i of existingFileNamesInServer.keys()) {
+            if (i == keyNum) {
+                existingFileNamesInServer.delete(keyNum);
+            }
+        }
+    }
+
+    function showAddImgOrVideoBox() {
+        const addImgOrVideoBox = document.getElementById('addImgOrVideoBox');
+        if (addImgOrVideoBox.style.display == 'block')
+            addImgOrVideoBox.style.display = 'none';
+        else
+            addImgOrVideoBox.style.display = 'block';
+    }
+
+    function addImgOrVideoInContent() {
+        const content = document.getElementById('content');
+        const imgOrVideoSize = document.getElementById('imgOrVideoSize').value;
+        const imgOrVideoFile = document.getElementById('imgOrVideoFile');
+        const fileReader = new FileReader();
+
+        if (!(imgOrVideoFile.files[0].type.startsWith('image/')
+            || imgOrVideoFile.files[0].type.startsWith('video/'))) {
+            alert('동영상이나 사진만 추가할 수 있습니다.');
+            return;
+        }
+
+        fileReader.readAsDataURL(imgOrVideoFile.files[0]);
+
+        fileReader.onload = (e) => {
+            let type;
+            if (imgOrVideoFile.files[0].type.startsWith('image/')) {
+                type = 'img';
+            } else {
+                type = 'video';
+            }
+            imgOrVideoFile.value = '';
+            imgDataUrl = e.target.result;
+            insertIntoContent(imgDataUrl, type, imgOrVideoSize);
+        }
+    }
+
+    function insertIntoContent(imgDataUrl, type, imgOrVideoSize) {
+        const content = document.getElementById('content');
+        const fileTag = document.createElement(type);
+        if (type == 'video') {
+            fileTag.setAttribute('controls', true);
+            fileTag.setAttribute('contenteditable', false);
+        }
+        fileTag.setAttribute('src', imgDataUrl);
+        fileTag.setAttribute('width', imgOrVideoSize);
+        content.appendChild(fileTag);
+        addImgOrVideoBox.style.display = 'none';
+    }
+
+    function encoding() {
+        const contentHtml = document.getElementById('content').innerHTML;
+        const encodedContent = encodeURIComponent(contentHtml);
+        document.getElementById('contentForSubmit').value = encodedContent;
+    }
+
+    function submitToController() {
+        const form = document.getElementById('bulletinForm');
+        let fileTypeInputTag;
+        let fileNameTag;
+        // 위에는 기존에 서버에 저장되어 있던, 파일명을 보내주기 위한 태그. -> 첨부파일 목록에서 빼지 않은 내용은 지우지 않도록
+        const titleInput = document.getElementById('titleInput').value;
+        encoding();
+        const content = document.getElementById('content').innerHTML.toString()
+        if (titleInput == '') {
+            alert('제목을 입력하세요');
+            return;
+        } else if (titleInput.length > 30) {
+            alert('제목의 최대 길이는 30자까지입니다.');
+            return;
+        } else if (titleInput.length < 5) {
+            alert('제목의 최소 길이는 5자입니다.');
+            return;
+        }
+        if (content.length < 10) {
+            alert('최소 10글자 이상 입력해주세요.');
+            return;
+        }
+        for (let i of attachFileList.keys()) {
+            fileTypeInputTag = document.createElement('input');
+            fileTypeInputTag.setAttribute('type', 'file');
+            fileTypeInputTag.setAttribute('name', 'file');
+            fileTypeInputTag.style.display = "none";
+            fileTypeInputTag.files = attachFileList.get(i);
+            form.appendChild(fileTypeInputTag);
+        }
+        for (let i of existingFileNamesInServer.keys()) {
+            fileNameTag = document.createElement('input');
+            fileNameTag.setAttribute('type', 'hidden');
+            fileNameTag.setAttribute('value', existingFileNamesInServer.get(i));
+            fileNameTag.setAttribute('name', 'existingFileNames');
+            form.appendChild(fileNameTag);
+        }
+        form.submit();
+    }
+
+    function addThumbnail() {
+        const inputThumbnail = document.getElementById('inputThumbnail');
+        const fileReader = new FileReader();
+        let fileDataUrl;
+        fileReader.readAsDataURL(inputThumbnail.files[0]);
+        fileReader.onload = (e) => {
+            fileDataUrl = e.target.result;
+            document.getElementById('thumbnailForSubmit').value = fileDataUrl;
+            document.getElementById('preViewThumbnail').src = fileDataUrl;
+        }
+    }
+</script>

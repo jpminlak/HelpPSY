@@ -12,6 +12,8 @@ public class FreeBulletinReplyDTO {
 
     private String writer;
 
+    private String userId;
+
     private String content;
 
     private int likes;
@@ -21,6 +23,8 @@ public class FreeBulletinReplyDTO {
     private int fkNo;
 
     private int isPressedReplyLike;
+
+    private String profileImgName;
 
     public FreeBulletinReplyDTO(){
 

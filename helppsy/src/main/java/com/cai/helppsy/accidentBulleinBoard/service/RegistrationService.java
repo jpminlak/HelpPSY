@@ -5,6 +5,8 @@ import com.cai.helppsy.accidentBulleinBoard.entity.RegistrationEntity;
 import com.cai.helppsy.accidentBulleinBoard.entity.RegistrationFileEntity;
 import com.cai.helppsy.accidentBulleinBoard.repository.RegistrationFileRepository;
 import com.cai.helppsy.accidentBulleinBoard.repository.RegistrationRepository;
+import com.cai.helppsy.memberManager.SignupEntity;
+import com.cai.helppsy.memberManager.signupRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,11 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class RegistrationService {
+public class RegistrationService{
 
     private final RegistrationRepository registrationrepository; //일반 작성글
     private final RegistrationFileRepository filerepository; //파일
+    private final com.cai.helppsy.memberManager.signupRepository signupRepository; // 회원관리
 
     // 작성글 db 보내기
     public RegistrationEntity write(RegistrationEntity registrationEntity) {
@@ -118,17 +121,56 @@ public class RegistrationService {
         RegistrationEntity entity = registrationrepository.findById(Data.getId())
                 .orElseThrow(()->new RuntimeException("게시글을 찾을 수 없습니다"));
                 // .orElseThrow() = 값이 존재하면 그 값을 꺼내고,없으면 바로 예외를 던짐, !null 체크가 불필요하고, 코드도 더 안정적
-
         // JAP가 변경을 감지
         entity.setTitle(Data.getTitle()); // 제목
-        entity.setAccident(Data.getAccident()); // 사고분류
-        entity.setRegion(Data.getRegion()); // 사고지역
-        entity.setType(Data.getType()); // 차 종류
+        entity.setPreview(Data.getPreview()); // 미리보기 글
+        entity.setMainImg(Data.getMainImg()); // 썸네일 이미지
+        entity.setAccident(Data.getAccident()); // 제보 카테고리
+        entity.setDistinction(Data.getDistinction()); // 제보 분류
+        entity.setRegion(Data.getRegion()); // 제보지역
+        entity.setType(Data.getType()); // 제보상세위치
         entity.setContent(Data.getContent()); // 내용
         entity.setLatitude(Data.getLatitude()); // 위도
         entity.setLongitude(Data.getLongitude()); // 경도
-
         return registrationrepository.save(entity);
     }
 
+    public List<RegistrationEntity> getPostsByAlias(String alias) {
+        return registrationrepository.findByAlias(alias);
+    }
+
+    // 프로필 별명 변경 테이블에 반영해주기
+    public void setSignupAlias(String alias, Integer id){
+        List<RegistrationEntity> registrations = registrationrepository.findBySignupEntity_Id(id);
+        for (RegistrationEntity registration : registrations) {
+            registration.setAlias(alias);
+            registrationrepository.save(registration);
+        }
+    }
+
+//    // 프로필 별명 변경 테이블에 반영해주기
+//    public void setSignupAlias(String alias, Integer id){
+//
+//        List<RegistrationEntity> a = registrationrepository.findBySignupEntity_Id(id);
+//        if(a.isPresent()){
+//        RegistrationEntity entity = registrationrepository.findBySignupEntity_Id(id)
+//                .orElseThrow(()->new RuntimeException("게시글을 찾을 수 없습니다"));
+//        entity.setAlias(alias);
+//        registrationrepository.save(entity);
+//        }else {
+//            System.out.println("게시물이 존재하지않습니다");
+//        }
+//    }
+
+//    // 회원프로필 수정시 제보게시판 프로필 최신화
+//    // 프로필 최신화 정보 업데이트 내용 제보게시글 db저장 로직
+//    public RegistrationEntity getUpdateSignup(Integer id){
+//        // 기존 등록글 불러오기
+//        RegistrationEntity registration = registrationrepository.findById(id)
+//                .orElseThrow(()-> new RuntimeException("객체 비어있음"));
+//
+//
+//        registration.setAlias(signupAlias.getAlias());
+//        return registrationrepository.save(registration);
+//    }
 }

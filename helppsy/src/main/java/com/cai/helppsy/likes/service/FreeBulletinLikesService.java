@@ -51,15 +51,20 @@ public class FreeBulletinLikesService {
             freeBulletinRepository.saveAndFlush(bulletin);
             cnt = bulletin.getLikes();
             // 좋아요 태이블에서 삭제
-            freeBulletinLikesRepository.delete(freeBulletinLikesRepository.findByFreeBulletin_noAndUserName(fkNo, freeBulletinLikes.getUserName()));
+            freeBulletinLikesRepository.delete(freeBulletinLikesRepository.findByFreeBulletin_noAndUserId(fkNo, freeBulletinLikes.getUserId()));
         }
 
         return cnt;
     }
 
     // 해당 게시물에 좋아요를 눌렀었는지 여부
-    public int isPressedBulletinLike(String userName, int no) {
-        FreeBulletinLike freeBulletinLikes = freeBulletinLikesRepository.findByFreeBulletin_noAndUserName(no, userName);
+    public int isPressedBulletinLike(String userId, int no) {
+        FreeBulletinLike freeBulletinLikes = freeBulletinLikesRepository.findByFreeBulletin_noAndUserId(no, userId);
+
+        System.out.println("_________________________________22_____________________________");
+        System.out.println("유저 아이디"+userId);
+        System.out.println("게시글 번호"+no);
+        System.out.println("_________________________________22_____________________________");
 
         if (freeBulletinLikes != null) {
             return 1;
@@ -69,9 +74,6 @@ public class FreeBulletinLikesService {
 
 
     public int commentLikesUp(FreeBulletinCommentLike freeBulletinCommentLikes, int fkNo, boolean flag) {
-        System.out.println("___________falg_____________");
-        System.out.println(flag);
-        System.out.println("___________falg_____________");
 
         int cnt;
 
@@ -96,14 +98,14 @@ public class FreeBulletinLikesService {
             cnt = freeBulletinComment.getLikes();
             // 좋아요 태이블에서 삭제
             System.out.println(fkNo);
-            System.out.println(freeBulletinCommentLikes.getUserName());
+            System.out.println(freeBulletinCommentLikes.getUserId());
             System.out.println("_________________________1_________________________________");
-            if (freeBulletinCommentLikesRepository.findByFreeBulletinComment_noAndUserName(fkNo, freeBulletinCommentLikes.getUserName()) != null)
+            if (freeBulletinCommentLikesRepository.findByFreeBulletinComment_noAndUserId(fkNo, freeBulletinCommentLikes.getUserId()) != null)
                 System.out.println("null 아님");
             else
                 System.out.println("null임");
             System.out.println("_________________________2_________________________________");
-            freeBulletinCommentLikesRepository.delete(freeBulletinCommentLikesRepository.findByFreeBulletinComment_noAndUserName(fkNo, freeBulletinCommentLikes.getUserName()));
+            freeBulletinCommentLikesRepository.delete(freeBulletinCommentLikesRepository.findByFreeBulletinComment_noAndUserId(fkNo, freeBulletinCommentLikes.getUserId()));
         }
 
         return cnt;
@@ -114,7 +116,7 @@ public class FreeBulletinLikesService {
 
         for (int i = 0; i < freeBulletinCommentDTOList.size(); i++) {
             FreeBulletinCommentLike freeBulletinCommentLikes
-                    = freeBulletinCommentLikesRepository.findByFreeBulletinComment_noAndUserName(freeBulletinCommentDTOList.get(i).getNo(), userName);
+                    = freeBulletinCommentLikesRepository.findByFreeBulletinComment_noAndUserId(freeBulletinCommentDTOList.get(i).getNo(), userName);
 
             if (freeBulletinCommentLikes != null) {
                 freeBulletinCommentDTOList.get(i).setIsPressedCommentLike(1);
@@ -123,6 +125,7 @@ public class FreeBulletinLikesService {
             }
 
         }
+
         return freeBulletinCommentDTOList;
     }
 
@@ -155,14 +158,14 @@ public class FreeBulletinLikesService {
             cnt = freeBulletinReply.getLikes();
             // 좋아요 태이블에서 삭제
             System.out.println(fkNo);
-            System.out.println(freeBulletinReplyLike.getUserName());
+            System.out.println(freeBulletinReplyLike.getUserId());
             System.out.println("_________________________1_________________________________");
-            if (freeBulletinReplyLikeRepository.findByFreeBulletinReply_noAndUserName(fkNo, freeBulletinReplyLike.getUserName()) != null)
+            if (freeBulletinReplyLikeRepository.findByFreeBulletinReply_noAndUserId(fkNo, freeBulletinReplyLike.getUserId()) != null)
                 System.out.println("null 아님");
             else
                 System.out.println("null임");
             System.out.println("_________________________2_________________________________");
-            freeBulletinReplyLikeRepository.delete(freeBulletinReplyLikeRepository.findByFreeBulletinReply_noAndUserName(fkNo, freeBulletinReplyLike.getUserName()));
+            freeBulletinReplyLikeRepository.delete(freeBulletinReplyLikeRepository.findByFreeBulletinReply_noAndUserId(fkNo, freeBulletinReplyLike.getUserId()));
         }
 
         return cnt;
@@ -173,7 +176,7 @@ public class FreeBulletinLikesService {
 
         for (int i = 0; i < freeBulletinReplyDTOList.size(); i++) {
             FreeBulletinReplyLike FreeBulletinReplyLike
-                    = freeBulletinReplyLikeRepository.findByFreeBulletinReply_noAndUserName(freeBulletinReplyDTOList.get(i).getNo(), userName);
+                    = freeBulletinReplyLikeRepository.findByFreeBulletinReply_noAndUserId(freeBulletinReplyDTOList.get(i).getNo(), userName);
 
             if (FreeBulletinReplyLike != null) {
                 freeBulletinReplyDTOList.get(i).setIsPressedReplyLike(1);

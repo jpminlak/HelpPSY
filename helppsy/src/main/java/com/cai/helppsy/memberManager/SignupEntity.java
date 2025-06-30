@@ -18,6 +18,9 @@ public class SignupEntity {
     @Column(length = 20)
     private String userId; // 아이디
 
+    @Column(columnDefinition = "Text")
+    private String profileImage;  // 프로필 이미지
+
     @Column(length = 20)
     private String userPass; // 비밀번호
 
@@ -36,7 +39,6 @@ public class SignupEntity {
     @Column(length = 1000)
     private String note;    //쪽지
 
-//    // minwoo
 //    @OneToMany(mappedBy = "signupEntity",cascade = CascadeType.REMOVE)
 //    // mappedBy=참조엔티티속성명 , cascade = CascadeType.REMOVE = 질문을 삭제하면 답변도 같이 삭제되게끔 하는 코드
 //    private List<RegistrationEntity> registrationentity;

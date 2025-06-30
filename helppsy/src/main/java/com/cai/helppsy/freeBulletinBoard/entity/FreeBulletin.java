@@ -14,14 +14,19 @@ public class FreeBulletin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer no;
 
-    @Column(length = 30)
+    @Column(length = 45)
     private String title;
 
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(length = 20)
+    private String userId;
+
+    // 속성값의 길이가 longtext가 된다. 용량 약 4GB 까지 제한.
+    @Column(columnDefinition = "longtext")
     private String content;
 
-    @Column(length = 15)
-    private String writer;
+    // 속성값의 길이가 longtext가 된다. 용량 약 16MB 까지 제한.
+    @Column(columnDefinition = "mediumtext")
+    private String thumbnail;
 
     @Column(length = 9)
     private Integer views;
