@@ -284,7 +284,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr class="perPageList" th:if="${stat.count == 4}" th:each="bulletinOne, stat : ${perPageList}">
+                <tr class="perPageList" th:if="${stat.count == 6}" th:each="bulletinOne, stat : ${perPageList}">
                     <td th:if="${stat.count >= 6 && stat.count <= 10}" th:each="bulletinOne, stat : ${perPageList}">
                         <div class="bulletinOneInfoBox">
                             <img class="thumbnailImg" th:src="${bulletinOne.thumbnail}" width="140" height="130">
@@ -305,8 +305,8 @@
                         </div>
                     </td>
                 </tr>
-                <tr class="perPageList" th:if="${stat.count == 7}" th:each="bulletinOne, stat : ${perPageList}">
-                    <td th:if="${stat.count >= 8 && stat.count <= 15}" th:each="bulletinOne, stat : ${perPageList}">
+                <tr class="perPageList" th:if="${stat.count == 11}" th:each="bulletinOne, stat : ${perPageList}">
+                    <td th:if="${stat.count >= 11 && stat.count <= 15}" th:each="bulletinOne, stat : ${perPageList}">
                         <div class="bulletinOneInfoBox">
                             <img class="thumbnailImg" th:src="${bulletinOne.thumbnail}" width="140" height="130">
                             <div th:text="${bulletinOne.no}+'번'" class="bulletinNo"></div>
