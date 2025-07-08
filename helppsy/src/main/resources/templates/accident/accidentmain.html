@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="kor">
+
+<head>
+    <meta charset="UTF-8">
+    <title>제보 게시판</title>
+    <!--    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">-->
+
+    <link rel="stylesheet" th:href="@{/main/head.css}">
+    <script src="main/fragment.js"></script>
+
+    <style>
+
+        .minwooBody {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8f9fa;
+            margin: 20px;
+
+        }
+
+        /* 제목 스타일 */
+        h3 {
+            text-align: center;
+            font-size: 24px;
+            color: #444;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+        }
+
+        /* 네비게이션 바 스타일 */
+        nav {
+            background-color: #f8f8f8;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            justify-content: center;    /* 수정: 왼쪽 → 가운데 정렬 */
+            align-items: center;
+        }
+
+        nav li {
+            margin: 0 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* 테이블 스타일 */
+
+        table {
+            border-collapse: collapse;              /* 테이블 셀 경계를 하나로 합쳐서 깔끔하게 만듦 */
+            background-color: #fff;                 /* 테이블 배경을 흰색으로 설정 → 배경색과 구분되도록 */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);  /* 테이블에 은은한 그림자 효과를 주어 입체감 부여 */
+            width: 720px;                           /* 테이블의 전체 너비 설정 → 적당한 고정폭으로 정렬된 느낌 제공 */
+            border-radius: 8px;                     /* 테이블 모서리를 부드럽게 둥글게 처리 */
+            overflow: hidden;                       /* 테두리 둥글기에 맞춰 내용이 삐져나오지 않도록 처리 */
+            margin: 0 auto;                         /* 중앙 정렬 (가로) */
+        }
+
+
+        .page-num{
+            background-color: rgba(138, 152, 98, 0.1);
+            border-color: rgba(138, 152, 98, 0.1);
+        }
+
+        /* 페이지 리스트 목록 스타일 시작점 */
+                .profileDiv {               /* 프로필사진,작성자,작성일,조회수 묶기 div */
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    width: 100%;
+                    max-width: 600px;
+                    margin-bottom: 10px;
+                }
+                .ImgTitleDiv{             /* 대표이미지,글제목 묶기 div */
+                     display: flex;              /* 이미지와 제목을 한 줄에 나란히 */
+                     align-items: center;        /* 수직 중앙 정렬 */
+                     gap: 10px;                  /* 이미지와 제목 사이 간격 */
+                }
+
+                .profileUserImg {
+                    width: 35px;
+                    height: 35px;
+                }
+                #MainImg{
+                    border: 1px solid rgba(50, 89, 139, 0.4);
+                }
+                #MainImg img {
+                    width: 120px;
+                    height: auto;
+
+                }
+                .profileUserName{
+                    font-size: 17px;
+                    margin: 0;        /* 기본 여백 제거 */
+                    color: black;
+                }
+                .profileTime,
+                .profileViewCntSet,
+                .profileAccident {
+                    font-size: 14px;
+                    margin: 0; /* 기본 여백 제거 */
+                    color: #333;
+                }
+                .ListTd{
+                    border: 1px solid rgba(50, 89, 139, 0.2);  /*  더 은은한 파란색 테두리 */
+                    border-radius: 8px;                        /*  둥근 모서리 */
+                    padding: 16px;                             /*  내부 여백 */
+                    margin-bottom: 20px;                       /*  게시글 간 간격 */
+                    background-color: #ffffff;                 /*  배경은 흰색으로 유지 */
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);  /*  약간의 그림자 추가 */
+                }
+
+                /* 제목+미리보기 감싸는 div 스타일 */
+                .PostTexts {
+                    display: flex;
+                    flex-direction: column;  /* 제목 → 미리보기 세로 정렬 */
+                    gap: 4px;                /* 제목과 미리보기 사이 약간의 여백 */
+                }
+                /* 제목 링크 */
+                .post-title {
+                    font-size: 18px;
+                    font-weight: bold;
+                    color: #222;
+                    text-decoration: none;
+                }
+                /* 미리보기 텍스트 스타일 (제목 아래) */
+                .Preview {
+                    font-size: 14px;
+                    color: #666;
+                    text-decoration: none;
+                    /*  줄바꿈 허용 */
+                    white-space: normal;                 /*  줄바꿈 허용 */
+                                                /* 너무 길면 아래로 흐르되 일정 높이까지만 보여주기 */
+                    display: -webkit-box;               /* 줄 수 제한을 위한 flex 컨테이너 역할 */
+                    -webkit-line-clamp: 3;              /* 최대 줄 수: n줄 */
+                    -webkit-box-orient: vertical;       /* 세로 방향 박스 */
+                    overflow: hidden;                   /* 넘치는 텍스트 감춤 */
+                    text-overflow: ellipsis;            /* 말줄임표 (...) 처리 */
+                    max-width: 520px;                   /* 최대 너비 제한 (원하는 값으로 조절 가능) */
+                    line-height: 1.4;                   /* 줄 간격 조정 */
+                    max-height: calc(1.4em * 3);        /* 최대 n줄 높이까지만 보이도록 제한 (줄 수에 맞춰 계산됨) */
+                }
+        /* 페이지 리스트 목록 스타일 끝난점 */
+
+        /* 셀렉트 박스 꾸미기 */
+            select#accident {
+                appearance: none; /* 브라우저 기본 드롭다운 UI 제거하고 커스터마이징 가능하게 함 */
+
+                width: 200px;             /* 셀렉트 박스 너비 */
+                padding: 10px 12px;       /* 내부 여백 (위아래 10px, 좌우 12px) */
+                font-size: 14px;          /* 글자 크기 */
+                color: #333;              /* 글자 색상 (어두운 회색) */
+
+                background-color: #ffffff;  /* 배경 흰색 */
+                border: 1px solid rgba(50, 89, 139, 0.2);  /* 연한 파란색 테두리 */
+                border-radius: 6px;        /* 모서리를 부드럽게 둥글게 */
+                box-shadow: 0 1px 3px rgba(0,0,0,0.08);  /* 아주 은은한 그림자 */
+
+
+                margin-right: 20px;       /* 오른쪽 여백 (다른 요소와 간격 확보) */
+            }
+            #OneDiv {
+                margin: 15px auto 16px auto; /* 위쪽 100px, 좌우 auto 가운데정렬, 아래 16px */
+                display: flex;
+                justify-content: flex-end;    /* 오른쪽 끝 정렬 */
+                max-width: 770px;             /* 테이블과 같은 너비 */
+                width: 100%;
+            }
+            #TwoDiv {
+                display: flex;
+                align-items: center;
+                gap: -15px;                    /* 셀렉트박스와 버튼 간 간격 */
+            }
+            .ThreeDiv {
+                margin: 0 15px;
+            }
+
+            /* 글쓰기 버튼 페이징번호랑 스타일 맞추기 */
+            .writingButton {
+                background-color: rgba(138, 152, 98, 0.1);
+                border: 1px solid rgba(138, 152, 98, 0.2);
+                padding: 8px 12px;
+                border-radius: 6px;
+                font-weight: bold;
+                color: #333;
+                text-decoration: none;
+                transition: background-color 0.3s;
+            }
+
+            .writing-button:hover {
+                background-color: rgba(138, 152, 98, 0.2);
+            }
+    </style>
+    </style>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<body class="minwooBody">
+    <div th:replace="~{main/mainPage:: header}"></div>
+
+    <div id="OneDiv">
+        <div id="TwoDiv">
+            <form method="get" action="/return">
+                <select name="accident" id="accident" onchange="this.form.submit()" class="ThreeDiv">
+                    <option th:value="'전체보기'" th:selected="${selectedAccident == '전체보기'}">전체보기</option>
+                    <option th:value="'교통·도로 관련'" th:selected="${selectedAccident == '교통·도로 관련'}">교통·도로 관련</option>
+                    <option th:value="'생활 안전/환경'" th:selected="${selectedAccident == '생활 안전/환경'}">생활 안전/환경</option>
+                    <option th:value="'치안·범죄 예방'" th:selected="${selectedAccident == '치안·범죄 예방'}">치안·범죄 예방</option>
+                    <option th:value="'긴급·재난 상황'" th:selected="${selectedAccident == '긴급·재난 상황'}">긴급·재난 상황</option>
+                    <option th:value="'사회적 약자 보호'" th:selected="${selectedAccident == '사회적 약자 보호'}">사회적 약자 보호</option>
+                    <option th:value="'불법·비상식 행위 제보'" th:selected="${selectedAccident == '불법·비상식 행위 제보'}">불법·비상식 행위 제보</option>
+                </select>
+            </form>
+
+            <div class="ThreeDiv"><a id="writingID" class="writingButton ThreeDiv" th:href="@{/accidentwriting}">글등록</a></div>
+            <!-- 로그인 상태 -->
+            <input type="hidden" name="alias" id="alias" th:value="${session.userAlias}" />
+        </div>
+      </div>
+
+    <table>
+        <tr th:each="list : ${pagedResult.content}">
+            <td class="ListTd">
+                <div class="profileDiv">
+                    <!-- 회원 이미지 -->
+                    <img class="profileUserImg" th:if="${list.profileImage != null}"
+                         th:src="@{'/files/profile/' + ${list.profileImage}}">
+
+                    <img class="profileUserImg" th:if="${list.profileImage == null}"
+                         src="https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png?type=c77_77">
+                    <!-- 작성자 -->
+                    <a class="profileUserName" th:href="@{'/profile?alias=' + ${list.alias}}" th:text="${list.alias}"></a>
+                    <!-- 작성일 -->
+                    <p class="profileTime" th:text="${#temporals.format(list.createDate, 'yyyy-MM-dd HH:mm')}"></p>
+                    <!-- 조회수 -->
+                    <p class="profileViewCntSet"  th:text="'조회수:'+${list.postViews}"></p>
+                    <!-- 카테고리 -->
+                    <p class="profileAccident"  th:text="${list.accident}"></p>
+                </div>
+
+                <div class="ImgTitleDiv">
+                    <!-- 대표이미지 -->
+                    <a class="post-title" id="MainImg" th:href="@{'/accidentview/' + ${list.id}}"
+                       th:attr="data-post-id=${list.id}" th:utext="${list.MainImg}"></a>
+
+                    <div class="PostTexts">
+                        <!-- 글 제목 -->
+                        <a class="post-title"  th:href="@{'/accidentview/' + ${list.id}}"
+                           th:attr="data-post-id=${list.id}" th:text="${list.title}"> </a>
+                        <!-- 미리보기 글  class안에 공백으로 놓으면 class 여러개 가능-->
+                        <a class="Preview post-title" th:href="@{'/accidentview/' + ${list.id}}"
+                           th:attr="data-post-id=${list.id}" th:text="${list.Preview}"> </a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <!--페이징 -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <!-- h:classappend="${currentPage == 0} ? 'disabled'"> currentPage == 0일 경우 "disabled" 클래스를 붙여라.-->
+            <!-- th:unless 역할: 조건이 false일 때만 HTML 요소를 출력 currentPage > 0이 false인 경우에만 이
+            <a> 태그가 HTML에 렌더링됨. 즉, 첫 페이지일 때만 Previous 버튼이 비활성 상태로 보임. -->
+
+            <!-- 이전 버튼 -->
+            <li class="page-num" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{'/return'(page=${currentPage - 1}, accident=${selectedAccident})}"
+                   th:if="${currentPage > 0}" ><</a>
+            </li>
+            <!-- <li>현재 페이지가 0일때 이전 버튼을 비활성화
+                 <a>클릭시 현재페이지의 -1
+                 현재페이지가 0보다 클때 (클릭가능)
+                 현재페이지가 0보다 크지 않을때 -->
+
+            <!-- 페이지 번호 -->
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${i == currentPage} ? 'active'">
+                <a class="page-link" th:href="@{'/return'(page=${i}, accident=${selectedAccident})}" th:text="${i + 1}"></a>
+            </li>
+            <!-- i에 0 ~ (전체페이지수 -1)일때 까지 반복출력
+                 // #numbers는 숫자 관련 유틸리티를 제공하는 내장 객체로, sequence() 메서드를 통해 특정 범위의 숫자 시퀀스를 생성
+                 i가 현재페이지와 같을떄 active로 클래스는 현재 페이지임을 강조
+                 클릭시 현재 페이지 나타남, 텍스트표현은 현재페이지 +1 -->
+
+            <!-- 다음 버튼 -->
+            <li class="page-num" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{'/return'(page=${currentPage + 1}, accident=${selectedAccident})}"
+                   th:if="${currentPage < totalPages - 1}">></a>
+            </li>
+
+        </ul>
+    </nav>
+    <div th:replace="~{main/mainPage:: footer}"></div>
+
+</body>
+</html>
+<script>
+
+    // 글쓰기 회원만 권한 주기
+    document.getElementById("writingID").addEventListener("click", function(e) {
+            let alias = document.getElementById('alias').value;
+            if (alias === ""){
+                e.preventDefault();  // a태그의 기본 이동 동작 막기
+                alert('로그인된 사용자만 글등록이 가능합니다')
+                return;
+            }
+    });
+
+    // 게시글 조회수 (게시글리스트 제목 클릭시 조회수 측정)
+    $(document).on('click', '.post-title', function () {
+        const postId = $(this).data('post-id');
+
+        $.ajax({
+            url: '/Accident/Views',
+            type: 'POST',
+            data: { postId: postId },
+            success: function (updatedViews) {
+                // 조회수 셀 업데이트
+                $(`#views-${postId}`).text(updatedViews);
+            },
+            error: function () {
+                alert('조회수 증가에 실패했습니다.');
+            }
+        });
+    });
+
+</script>

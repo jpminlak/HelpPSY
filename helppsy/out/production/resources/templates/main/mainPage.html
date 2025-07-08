@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>차량 사고 메인 화면</title>
+    <link rel="stylesheet" th:href="@{/main/head.css}">
+    <script th:src="@{/main/fragment.js}"></script>
+
+    <style>
+        table {
+            border-collapse: separate;
+            /*border-spacing:  2%;*/
+            width: 100%;
+        }
+
+        table tr td {
+            width: 450px;
+            height: 30px;
+            padding-left: 10px;
+            font-size: 1.2em;
+            background-color: rgb(252, 238, 221);
+            border-radius: 4px;
+            display: block;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        button {
+            margin-top: 20px;
+            margin-left: 10px;
+            padding: 8px 16px;
+            background-color: #8b89fa;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        /* 클릭 시 색상 변화 스타일 */
+        .clicked {
+            background-color: #5c59fa;
+        }
+
+        .best-section1 {
+            width: 47%;
+            min-height: 350px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-right: 1%;
+            padding: 10px;
+            border: 1px solid #000;
+            background-color: white;
+            border-radius: 10px;
+        }
+
+        .best-sections {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            width: 90%;
+            margin: auto;
+        }
+
+        .welcome-message {
+            border: 1px solid white;
+            border-radius: 5px;
+            width: 90%;
+            margin: auto;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .wrapper {
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        #footer {
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo-nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links a {
+            margin: 0 8px;
+            color: black;
+        }
+
+        .login-section {
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .best-section1 {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .logo-nav-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="wrapper">
+    <div class="header-container" th:fragment="header">
+        <div class="logo-nav-container">
+            <div class="logo-container">
+                <img id="like" th:src="@{/LikeImg/차량사고 커뮤니티 로고.png}" width="150" alt="로고">
+                <h2><b>Help PSY</b></h2>
+            </div>
+            <div class="nav-links">
+                <a href="/main">메인 화면</a>
+                <a href="/mainFreeBulletin">자유게시판</a>
+                <a href="/accidentmain">제보게시판</a>
+                <a href="/inquiry">문의하기</a>
+                <a th:if="${session.userId == 'aa'}" href="/respondent">답변 (관리자)</a>
+                <a href="/map">지도</a>
+            </div>
+            <div class="login-section">
+                <div id="memberBox">
+                    <div th:if="${session.userAlias == null}">
+                        <a href="/signInMain"><input type="button" value="로그인"></a>
+                        <a href="/signUpMain"><input type="button" value="회원가입"></a>
+                    </div>
+                    <div th:if="${session.userAlias != null}">
+                        <label th:text="${session.userAlias} + '님 환영합니다.'"></label>
+                        <a th:href="@{'/profile?alias=' + ${session.userAlias}}"><input type="button" value="정보"></a>
+                        <input type="button" value="로그아웃" onclick="logout()">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <main>
+        <div class="welcome-message">Help PSY 커뮤니티에 오신 것을 환영합니다.</div>
+
+        <div class="best-sections">
+            <!-- 자유게시판 추천글 -->
+            <div class="best-section1">
+                <h3 style="text-align: center;">자유게시판 추천글</h3>
+                <button type="button" class="btn1" onclick="freeLike()">좋아요</button>
+                <button type="button" class="btn1" onclick="freeView()">조회수</button>
+                <table id="freeLike">
+                    <!--자유게시판 좋아요 개수 상위 5개-->
+                    <tr th:each="top5ViewLikes : ${top5ViewLikes}">
+                        <!-- <span th:text="${top5ViewLikes.no}" class="freeNumber" style="display: none;"></span> -->
+                        <td><a th:text="${top5ViewLikes.title}"
+                               th:href="@{specificBulletin(no=${top5ViewLikes.no}, userName=${session.userId})}"></a>
+                        </td>
+                    </tr>
+                </table>
+                <table id="freeView" style="display: none;">
+                    <!--자유게시판 조회수 상위 5개-->
+                    <tr th:each="top5ViewFree : ${top5ViewFree}">
+                        <td><a th:text="${top5ViewFree.title}"
+                               th:href="@{specificBulletin(no=${top5ViewFree.no}, userName=${session.userId})}"></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="best-section1">
+                <h3 style="text-align: center;">지역별 제보 정보</h3>
+                <button type="button" class="btn2" onclick="accAll()">전체</button> &nbsp;
+                <span>  <!--select box를 눌렀을 때의 길이는 조절 불가-->
+                        <select name="region" id="region" style="width: 150px; height: 34px;">
+                            <option>지역을 선택하세요</option>
+                            <option value="서울">서울</option>
+                            <option value="부산">부산</option>
+                            <option value="대구">대구</option>
+                            <option value="인천">인천</option>
+                            <option value="광주">광주</option>
+                            <option value="대전">대전</option>
+                            <option value="울산">울산</option>
+                            <option value="세종">세종</option>
+                            <option value="경기">경기</option>
+                            <option value="강원">강원</option>
+                            <option value="충북">충북</option>
+                            <option value="충남">충남</option>
+                            <option value="경북">경북</option>
+                            <option value="경남">경남</option>
+                            <option value="전북">전북</option>
+                            <option value="전남">전남</option>
+                            <option value="제주">제주</option>
+                        </select>
+                    </span>
+                <span id="region2" style="display: none;"></span>
+                <!--제보게시판 전체 조회수 상위 5개.-->
+                <!--지역을 선택하면 전체게시물도 자동으로 그대로 드러나서 초기설정을 안보이게 함. 이걸 해결하려면 동기방식을 사용해야하나, 그때마다 페이지를 다시 불러온다.-->
+                <table id="accAll">
+                    <tr th:if="${mode}!=region" th:each="top5ViewAccident : ${top5ViewAccident}">
+                        <td><a th:text="${top5ViewAccident.title}"
+                               th:href="@{'/accidentview/' + ${top5ViewAccident.id}}"></a>
+                        </td>
+                    </tr>
+                </table>
+                <!--제보게시판 지역 조회수 상위 5개-->
+                <table id="accLocal">
+                    <tr th:each="top5Region : ${top5ViewAccidentRegion}">
+                        <td><a th:text="${top5Region.title}" th:href="@{'/accidentview/' + ${top5Region.id}}"></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div style="width: 6%;"></div>
+        </div>
+    </main>
+</div>
+
+<div id="footer" th:fragment="footer">
+    <p>개발자 이메일 : human@gmail.com / 대표 이름 : human</p>
+</div>
+
+<script>
+    function logout() {
+        location.href = '/logout';
+    }
+
+    var btn1 = document.getElementsByClassName("btn1");
+    var btn2 = document.getElementsByClassName("btn2");
+    function freeLike() {
+        document.getElementById("freeLike").style.display = 'block';
+        document.getElementById("freeView").style.display = 'none';
+
+        // 클릭 시 색상 변화
+        if (event.target.classList[1] === "clicked") {
+            event.target.classList.remove("clicked");
+        } else {
+            for (var i = 0; i < btn1.length; i++) {
+                btn1[i].classList.remove("clicked");
+            }
+            event.target.classList.add("clicked");
+        }
+    }
+    function freeView() {
+        document.getElementById("freeLike").style.display = 'none';
+        document.getElementById("freeView").style.display = 'block';
+
+        // 클릭 시 색상 변화
+        if (event.target.classList[1] === "clicked") {
+            event.target.classList.remove("clicked");
+        } else {
+            for (var i = 0; i < btn1.length; i++) {
+                btn1[i].classList.remove("clicked");
+            }
+            event.target.classList.add("clicked");
+        }
+    }
+    function accAll() {
+        document.getElementById("accAll").style.display = 'block';
+        document.getElementById("accLocal").style.display = 'none';
+        location.href = "/main"
+        // 클릭 시 색상 변화
+        if (event.target.classList[1] === "clicked") {
+            event.target.classList.remove("clicked");
+        } else {
+            for (var i = 0; i < btn2.length; i++) {
+                btn2[i].classList.remove("clicked");
+            }
+            event.target.classList.add("clicked");
+        }
+    }
+    /*function init() {
+        for (var i = 0; i < btn.length; i++) {
+            btn[i].addEventListener("click", handleClick);
+        }
+    }
+    init();*/
+
+    // 사고게시물 지역 선택
+    const regionSelect = document.querySelector('#region');
+    regionSelect.addEventListener("change", (event) => {
+        const result = document.querySelector("#region2");
+        result.textContent = `${event.target.value}`;
+        location.href = "/main/local/" + regionSelect.value;
+        document.getElementById("accAll").style.display = 'none';
+        document.getElementById("accLocal").style.display = 'block';
+    });
+</script>
+</body>
+</html>

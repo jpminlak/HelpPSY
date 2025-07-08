@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main/head.css">
+    <script src="main/fragment.js"></script>
+    <script src="main/jquery.js"></script>
+    <title>자유 게시판</title>
+</head>
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    #main {
+        width: 800px;
+        margin: auto;
+        border: 1px solid;
+        border-color: #c2c1c1;
+        border-radius: 5px;
+        background-color: #fff;
+    }
+
+    hr {
+        width: 750px;
+    }
+
+    /* topInfoArea */
+    #topInfoArea {
+        width: 800px;
+        margin: auto;
+        /*         border: 1px solid; */
+    }
+
+    /* in topInfoArea */
+    #bulletinNo {
+        /*position: absolute;*/
+        margin-left: 25px;
+        margin-top: 5px;
+    }
+
+    #mainTitle {
+        margin-left: 25px;
+        font-weight: 300;
+    }
+
+    #bulletinInfo {
+        width: 350px;
+        /*         border: 1px solid; */
+        height: 60px;
+        margin-left: 25px;
+    }
+
+    /* in bulletinInfo */
+    #profileImg {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+
+    #memberGrade {
+        position: absolute;
+        font-size: 12px;
+        margin-left: 70px;
+    }
+
+    #writer {
+        position: absolute;
+        font-size: 12px;
+        margin-left: 170px;
+        margin-top: 12px;
+        color: black;
+        text-decoration: none;
+    }
+
+    #writer:hover {
+        color: #44a844;
+    }
+
+    #writingDate {
+        position: absolute;
+        font-size: 12px;
+        margin-left: 70px;
+        margin-top: 30px;
+        color: gray;
+    }
+
+    #viewCnt {
+        position: absolute;
+        font-size: 12px;
+        margin-left: 240px;
+        margin-top: 30px;
+        color: gray;
+    }
+
+    #bulletinLikesDiv {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        margin-left: 500px;
+        margin-top: -50px;
+    }
+
+    /* in bulletinLikesDiv */
+    #bulletinLikesImg {
+        position: absolute;
+        margin-left: 4.5px;
+        width: 30px;
+    }
+
+    #bulletinLikes {
+        position: absolute;
+        width: 40px;
+        text-align: center;
+        margin-top: 25px;
+        font-size: 12px;
+    }
+
+    /* mainContentArea */
+    #mainContentArea {
+        width: 800px;
+        margin: auto;
+        min-height: 300px;
+        margin-bottom: 100px;
+    }
+
+    /* in mainContentArea */
+    #mainContent {
+        margin: auto;
+        width: 500px;
+    }
+
+    /* commentArea */
+    #commentArea hr {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    #commentArea {
+        width: 800px;
+        margin: auto;
+        margin-bottom: 50px;
+    }
+
+    #deleteBulletin {
+        position: absolute;
+        margin-left: 640px;
+        margin-top: -50px;
+    }
+
+    #deleteBulletin input {
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        width: 50px;
+        border-radius: 5px;
+        font-weight: 500;
+    }
+
+    #deleteBulletin input:hover {
+        background-color: #ff3737;
+        color: white;
+    }
+
+    #updateBulletin {
+        position: absolute;
+        margin-left: 700px;
+        margin-top: -50px;
+    }
+
+    #updateBulletin input {
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        font-weight: 500;
+        width: 50px;
+        border-radius: 5px;
+    }
+
+    #updateBulletin input:hover {
+        background-color: #448bde;
+        color: white;
+    }
+
+    /* in commentArea */
+
+    /* comment */
+
+    .comments {
+    
+    }
+
+    .profileImgOfComment {
+        position: absolute;
+        margin-left: 30px;
+        margin-top: 10px;
+        border-radius: 50%;
+    }
+
+    .contentAndInfoOfComment {
+        margin-left: 90px;
+        margin-top: 45px;
+    }
+
+    .writerOfComment {
+        margin-left: 0px;
+        margin-top: 0px;
+        font-weight: 550;
+        color: black;
+        text-decoration: none;
+        display: block;
+    }
+
+    .writerOfComment:hover {
+        color: #44a844;
+    }
+
+    .contentOfComment {
+        margin-left: 0px;
+        margin-top: 5px;
+        font-weight: 400;
+        color: rgb(48, 46, 46);
+    }
+    .bottomOfComment{
+
+    }
+    .dateOfComment {
+        display: inline;
+        margin-left: 0px;
+        margin-top: 5px;
+        color: gray;
+        font-size: 14px;
+    }
+
+    .likeImgOfComment {
+        display: inline;
+        margin-left: 20px;
+        margin-top: 0px;
+    }
+
+    .likesOfComment {
+        display: inline;
+        margin-left: 2px;
+        margin-top: 3px;
+        font-size: 14px;
+        color: gray;
+    }
+
+    .deleteForComment {
+        position: absolute;
+        margin-left: 400px;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        border-radius: 5px;
+        font-weight: 500;
+    }
+
+    .deleteForComment:hover {
+        background-color: #ff3737;
+        color: white;
+    }
+
+    .editUiForComment {
+        position: absolute;
+        margin-left: 470px;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        border-radius: 5px;
+        font-weight: 500;
+    }
+
+    .editUiForComment:hover {
+        background-color: #448bde;
+        color: white;
+    }
+
+    .cancelEditUiForComment {
+        position: absolute;
+        margin-left: 470px;
+        display: none;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        border-radius: 5px;
+        font-weight: 500;
+    }
+
+    .cancelEditUiForComment:hover {
+        background-color: #44a844;
+        color: white;
+    }
+
+    .updateBtnForComment {
+        position: absolute;
+        display: none;
+        margin-left: 570px;
+        margin-top: 0px;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        border-radius: 5px;
+        font-weight: 500;
+    }
+
+    .updateBtnForComment:hover {
+        background-color: #448bde;
+        color: white;
+    }
+
+    #commentContent {
+        display: inline-block;
+        width: 400px;
+        height: 50px;
+        border: 1px solid;
+        border-radius: 5px;
+        margin-left: 140px;
+        overflow: auto;
+    }
+
+    #addCommentBtn {
+        width: 50px;
+        height: 52px;
+        position: absolute;
+        margin-left: 5px;
+        margin-top: 0px;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+    }
+
+    #addCommentBtn:hover {
+        background-color: #44a844;
+        color: white;
+    }
+
+    /* reply */
+
+    .profileImgOfReply {
+        position: absolute;
+        margin-left: 70px;
+        margin-top: 10px;
+        border-radius: 50%;
+    }
+
+    .contentAndInfoOfReply {
+        margin-left: 130px;
+        margin-top: 45px;
+    }
+
+    .writerOfReply {
+        margin-left: 0px;
+        margin-top: 0px;
+        font-weight: 550;
+        color: black;
+        text-decoration: none;
+        display: block;
+    }
+
+    .writerOfReply:hover {
+        color: #44a844;
+    }
+
+    .contentOfReply {
+        margin-left: 0px;
+        margin-top: 5px;
+        font-weight: 400;
+        color: rgb(48, 46, 46);
+    }
+
+    .bottomOfReply {}
+
+    .dateOfReply {
+        display: inline;
+        margin-left: 0px;
+        margin-top: 5px;
+        color: gray;
+        font-size: 14px;
+    }
+
+    .likeImgOfReply {
+        display: inline;
+        margin-left: 20px;
+        margin-top: 0px;
+    }
+
+    .likesOfReply {
+        display: inline;
+        margin-left: 2px;
+        margin-top: 3px;
+        font-size: 14px;
+        color: gray;
+    }
+
+    .addReplyForm {
+        display: none;
+    }
+
+    .hidingReply {
+        display: none;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+    }
+
+    .hidingReply:hover {
+        background-color: #44a844;
+        color: white;
+    }
+
+    .showingReplies {
+        display: block;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+    }
+
+    .showingReplies:hover {
+        background-color: #448bde;
+        color: white;
+    }
+
+    .deleteBtnForReply {
+        position: absolute;
+        margin-left: 400px;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        border-radius: 5px;
+        font-weight: 500;
+    }
+
+    .deleteBtnForReply:hover {
+        background-color: #ff3737;
+        color: white;
+    }
+
+    .editUiForReply {
+        position: absolute;
+        margin-left: 480px;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        border-radius: 5px;
+        font-weight: 500;
+    }
+
+    .editUiForReply:hover {
+        background-color: #448bde;
+        color: white;
+    }
+
+    .cancelEditUiForReply {
+        position: absolute;
+        margin-left: 480px;
+        display: none;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        border-radius: 5px;
+        font-weight: 500;
+    }
+
+    .cancelEditUiForReply:hover {
+        background-color: #44a844;
+        color: white;
+    }
+
+    .updateBtnForReply {
+        position: absolute;
+        display: none;
+        margin-left: 590px;
+        margin-top: 0px;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+        border-radius: 5px;
+        font-weight: 500;
+    }
+
+    .updateBtnForReply:hover {
+        background-color: #448bde;
+        color: white;
+    }
+
+    .replyContent {
+        display: inline-block;
+        width: 400px;
+        height: 50px;
+        border: 1px solid;
+        border-radius: 5px;
+        margin-left: 140px;
+        overflow: auto;
+    }
+
+    .addReplyBtn {
+        width: 50px;
+        height: 52px;
+        position: absolute;
+        margin-left: 5px;
+        margin-top: 0px;
+        background-color: #d5d4d4;
+        color: black;
+        border-color: white;
+    }
+
+    .addReplyBtn:hover {
+        background-color: #44a844;
+        color: white;
+    }
+
+    /* attachFile */
+
+    #showingAttachFileBtn {
+        position: absolute;
+        margin-left: 700px;
+        margin-top: 10px;
+    }
+
+    #showingAttachFileBtn:hover {
+        color: blue;
+    }
+
+    #attachFiles {
+        display: none;
+        position: absolute;
+        border: 1px solid;
+        border-radius: 10px;
+        width: 200px;
+        height: 200px;
+        margin-top: 35px;
+        margin-left: 560px;
+        overflow: auto;
+    }
+
+    .fileNames {
+        display: block;
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+</style>
+
+<body>
+<div th:replace="~{main/mainPage:: header}"></div>
+<div id="main">
+    <div id="topInfoArea">
+        <input id="currentUserId" type="hidden" th:value="${session.userId}">
+        <input id="userIdFromController" type="hidden" th:value="${userIdFromController}">
+        <input id="bulletinNoForRequest" type="hidden" th:value="${bulletinOne.no}">
+        <div id="bulletinNo" th:text="'글 번호 :'+${bulletinOne.no}"></div>
+        <h2 id="mainTitle" th:text="'제목 : '+${bulletinOne.title}"></h2>
+        <a id="deleteBulletin" th:if="${session.userId == bulletinOne.userId}"
+                th:href="'deleteFreeBulletin?no='+${bulletinOne.no}">
+            <input type="button" value="삭제">
+        </a>
+        <a id="updateBulletin" th:if="${session.userId == bulletinOne.userId}"
+                th:href="'editFreeBullein?no='+${bulletinOne.no}+'&userId='+${session.userId}">
+            <input type="button" value="수정">
+        </a>
+        <div id="bulletinInfo">
+            <img id="profileImg"
+                 th:src="'/files/profile/'+${bulletinOne.profileImgName}">
+            <p id="memberGrade">회원등급 : 일반</p>
+            <a id="writer" th:text="'작성자 : '+${bulletinOne.writer}" th:href="'profile?alias='+${bulletinOne.writer}"></a>
+            <p id="writingDate"
+               th:text="'등록일 : '+${#temporals.format(bulletinOne.createDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
+            <p id="viewCnt" th:text="'조회수 : '+${bulletinOne.views}"></p>
+        </div>
+        <div id="bulletinLikesDiv">
+            <img id="bulletinLikesImg" src="" th:onclick="'bulletinClickLike('+${bulletinOne.no}+')'"
+                 width="30">
+            <p id="bulletinLikes" th:text="${bulletinOne.likes}"></p>
+            <input id="isPressedBulletinLike" th:value="${isPressedBulletinLike}" type="hidden">
+        </div>
+        <div id="showingAttachFileBtn" onclick="showingAttachFile()">첨부파일</div>
+        <div id="attachFiles">
+            <a class="fileNames" th:text="${fileOneName}" th:href="'download/freeBulletin?fileName='+${fileOneName}"
+               th:each="fileOneName : ${fileNames}"></a>
+        </div>
+    </div>
+    <hr>
+    <div id="mainContentArea">
+        <div id="mainContent"></div>
+        <input id="contentBeforeProcessing" type="hidden" th:value="${bulletinOne.content}">
+    </div>
+    <hr>
+    <div id="commentArea">
+        <form th:if="${session.userId != null}" id="commentForm" action="freeBulletin/addComment" method="post">
+            <div id="addCommentBox">
+                <div contenteditable="true" id="commentContent" name="content"></div>
+                <input id="addCommentBtn" type="button" value="올리기"
+                       th:onclick="'addComment('+${bulletinOne.no}+')'">
+                <input id="commentUserId" type="hidden" th:value="${session.userId}" name="userId">
+                <input id="commentType" type="hidden" value="free" name="type">
+            </div>
+        </form>
+
+        <div th:id="'comment'+${commentOne.no}" class="comments" th:each="commentOne : ${commentList}">
+            <hr>
+            <img class="profileImgOfComment" width="50"
+                 th:src="'/files/profile/'+${commentOne.profileImgName}">
+            <input class="deleteForComment" th:if="${commentOne.userId == session.userId}" th:id="'deleteForComment('+${commentOne.no}+')'" type="button" value="댓글 삭제"
+                   th:onclick="'deleteForComment('+${commentOne.no}+')'">
+            <input th:if="${session.userId == commentOne.userId}" th:id="'editUiForComment'+${commentOne.no}"
+                   class="editUiForComment" type="button" value="댓글 수정" th:onclick="'editUiForComment('+${commentOne.no}+')'">
+            <input th:id="'cancelEditUiForComment'+${commentOne.no}"
+                    class="cancelEditUiForComment" type="button" value="댓글 수정 취소" th:onclick="'cancelEditUiForComment('+${commentOne.no}+', 0)'">
+            <input th:id="updateBtnForComment+${commentOne.no}" class="updateBtnForComment" type="button" value="수정완료"
+                   th:onclick="'updateForComment('+${commentOne.no}+')'">
+            <div class="contentAndInfoOfComment">
+                <a th:text="${commentOne.writer}" class="writerOfComment" th:href="'profile?alias='+${commentOne.writer}"></a>
+                <a th:id="'contentOfComment'+${commentOne.no}" th:utext="${commentOne.content}" class="contentOfComment"></a>
+                <div class="bottomOfComment">
+                    <div th:text="${#temporals.format(commentOne.createDate, 'yyyy-MM-dd HH:mm:ss')}"
+                         class="dateOfComment">
+                    </div>
+                    <img class="likeImgOfComment" width="15" th:id="'commentLikeImg'+${commentOne.no}"
+                         th:onclick="'clickLikeOfComment('+${commentOne.no}+')'" src="">
+                    <div th:text="${commentOne.likes}" class="likesOfComment"
+                         th:id="'commentLikes'+${commentOne.no}"></div>
+                    <input th:value="${commentOne.isPressedCommentLike}" type="hidden">
+                    <input th:value="${commentOne.no}" type="hidden">
+                </div>
+                <input th:id="'showingReplies'+${commentOne.no}" class="showingReplies" value="답글 보기"
+                       type="button" th:onclick="'showingReplies('+${commentOne.no}+')'">
+                <input th:id="'hidingReply'+${commentOne.no}" class="hidingReply" value="답글 숨기기"
+                       type="button" th:onclick="'hidingReply('+${commentOne.no}+')'">
+                <form th:if="${session.userId != null}" th:id="reply+${commentOne.no}" class="addReplyForm" action="freeBulletin/addReply"
+                      method="post">
+                    <div class="addReplyBox">
+                        <div contenteditable="true" th:id="'replyComment'+${commentOne.no}" class="replyContent"
+                                  name="content"></div>
+                        <input class="addReplyBtn" type="button" value="올리기"
+                               th:onclick="'addReply('+${commentOne.no}+')'">
+                        <input th:id="'cicType'+${commentOne.no}" type="hidden" value="free" name="type">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{main/mainPage:: footer}"></div>
+</body>
+
+</html>
+<script>
+    let replyList = [];
+    let bulletinLikeFlag;
+    let commentLikeFlag = new Map();
+    let replyFlag = new Map();
+    let contentData; // 댓글이나 대댓글의 수정 취소시, 이전 글 내용으로 되돌릴 때, 쓰는 용도
+
+    window.onload = () => {
+        let isPressedBulletinLike = Number(document.getElementById('isPressedBulletinLike').value);
+        let bottomOfComment = document.getElementsByClassName('bottomOfComment');
+
+        const currentUserId = document.getElementById(('currentUserId')).value;
+        const userIdFromController = document.getElementById('userIdFromController').value;
+        const bulletinNoForRequest = document.getElementById('bulletinNoForRequest').value;
+
+        if(currentUserId != userIdFromController){
+            location.href = 'specificBulletin?no='+bulletinNoForRequest+'&userId='+currentUserId;
+        }
+
+        for (let i = 0; i < bottomOfComment.length; i++) {
+            let children = bottomOfComment[i].children;
+
+            if (children[3].value == '1') {
+                children[1].src = '/LikeImg/filledHeart.png';
+                commentLikeFlag.set(Number(children[4].value), true);
+            } else {
+                children[1].src = '/LikeImg/unFilledHeart.png';
+                commentLikeFlag.set(Number(children[4].value), false);
+            }
+
+        }
+
+        if (isPressedBulletinLike == '1') {
+            document.getElementById('bulletinLikesImg').src = '/LikeImg/filledHeart.png';
+            bulletinLikeFlag = true;
+        } else {
+            document.getElementById('bulletinLikesImg').src = '/LikeImg/unFilledHeart.png';
+            bulletinLikeFlag = false;
+        }
+
+        // 아래는 인코딩된 게시글 내용을 디코딩하여 보여주시 위한 코드
+        let contentBeforeProcessing = document.getElementById('contentBeforeProcessing').value;
+        let content = document.getElementById('mainContent');
+        let contentAfterProcessing = decodeURIComponent(contentBeforeProcessing);
+        content.innerHTML = contentAfterProcessing;
+
+        splitFileName();
+    }
+
+    function deleteForComment(no){
+        $.ajax({
+            url: '/deleteFreeBulletinComment',
+            async: true,
+            dataType: 'text',
+            method: 'get',
+            data: {
+                no: no
+            },
+            success: function(result){
+                console.log('성공 : '+result);
+                document.getElementById('comment'+no).remove();
+            },
+            error: function(error){
+                console.log('실패 : '+error)
+            }
+        });
+    }
+
+    function cancelEditUiForComment(no, num){
+        const contentOfCommentDiv = document.getElementById('contentOfComment'+no);
+        const editUiForComment = document.getElementById('editUiForComment'+no);
+        const cancelEditUiForComment = document.getElementById('cancelEditUiForComment'+no);
+        const updateBtnForComment = document.getElementById('updateBtnForComment'+no);
+        if(num == 0)
+            contentOfCommentDiv.innerHTML = contentData;
+        contentOfCommentDiv.setAttribute('contenteditable', 'false');
+        editUiForComment.style.display = 'block';
+        cancelEditUiForComment.style.display = 'none';
+        updateBtnForComment.style.display = 'none';
+    }
+
+    function editUiForComment(no){
+        const contentOfCommentDiv = document.getElementById('contentOfComment'+no);
+        const editUiForComment = document.getElementById('editUiForComment'+no);
+        const cancelEditUiForComment = document.getElementById('cancelEditUiForComment'+no);
+        const updateBtnForComment = document.getElementById('updateBtnForComment'+no);
+        contentData = contentOfCommentDiv.innerHTML;
+        contentOfCommentDiv.setAttribute('contenteditable', 'true');
+        contentOfCommentDiv.focus();
+        editUiForComment.style.display = 'none';
+        cancelEditUiForComment.style.display = 'block';
+        updateBtnForComment.style.display = 'block';
+    }
+
+    function updateForComment(no){
+        const contentOfCommentDiv = document.getElementById('contentOfComment'+no);
+
+        $.ajax({
+            dataType: 'text',
+            async: true,
+            url: '/editFreeBulleinComment',
+            type: 'post',
+            data: {
+                no: no,
+                content: contentOfCommentDiv.innerHTML
+            },
+            success: function(result){
+                console.log('성공 : '+result);
+                cancelEditUiForComment(no, 1);
+            },
+            error: function(error){
+                console.log('에러발생 : '+error);
+            }
+        });
+    }
+
+    function cancelEditUiForReply(no, num){
+        const contentOfReplyDiv = document.getElementById('contentOfReply'+no);
+        const editUiForReply = document.getElementById('editUiForReply'+no);
+        const cancelEditUiForReply = document.getElementById('cancelEditUiForReply'+no);
+        const updateBtnForReply = document.getElementById('updateBtnForReply'+no);
+        if(num == 0)
+            contentOfReplyDiv.innerHTML = contentData;
+        contentOfReplyDiv.setAttribute('contenteditable', 'false');
+        editUiForReply.style.display = 'block';
+        cancelEditUiForReply.style.display = 'none';
+        updateBtnForReply.style.display = 'none';
+    }
+
+    function editUiForReply(no){
+        const contentOfReplyDiv = document.getElementById('contentOfReply'+no);
+        const editUiForReply = document.getElementById('editUiForReply'+no);
+        const cancelEditUiForReply = document.getElementById('cancelEditUiForReply'+no);
+        const updateBtnForReply = document.getElementById('updateBtnForReply'+no);
+        contentData = contentOfReplyDiv.innerHTML;
+        contentOfReplyDiv.setAttribute('contenteditable', 'true');
+        contentOfReplyDiv.focus();
+        editUiForReply.style.display = 'none';
+        cancelEditUiForReply.style.display = 'block';
+        updateBtnForReply.style.display = 'block';
+    }
+
+    function updateForReply(no){
+        const contentOfReplyDiv = document.getElementById('contentOfReply'+no);
+
+        $.ajax({
+            dataType: 'text',
+            async: true,
+            url: '/editFreeBulleinReply',
+            type: 'post',
+            data: {
+                no: no,
+                content: contentOfReplyDiv.innerHTML
+            },
+            success: function(result){
+                console.log('성공 : '+result);
+                cancelEditUiForReply(no, 1);
+            },
+            error: function(error){
+                console.log('에러발생 : '+error);
+            }
+        });
+    }
+
+    let showingAttachFileFlag = false;
+    function showingAttachFile(){
+        if(showingAttachFileFlag){
+            document.getElementById('attachFiles').style.display = 'none';
+            showingAttachFileFlag = false;
+        }else {
+            document.getElementById('attachFiles').style.display = 'block';
+            showingAttachFileFlag = true;
+        }
+    }
+
+    function splitFileName() {
+        let fileNameElements = document.getElementsByClassName('fileNames');
+        let originFileName;
+        let fileName;
+        let splitSpotIndex;
+
+        for (let i = 0; i < fileNameElements.length; i++) {
+            originFileName = fileNameElements[i].innerHTML
+            for (let j = originFileName.length - 1; j >= 0; j--) {
+                if (originFileName.charAt(j) == '_') {
+                    splitSpotIndex = j + 1;
+                    break;
+                }
+            }
+            fileName = originFileName.substr(splitSpotIndex);
+
+            fileNameElements[i].innerHTML = fileName;
+        }
+    }
+
+    function bulletinClickLike(no) {
+        const userId = document.getElementById(('currentUserId')).value;
+
+        if(userId == '')
+            return;
+
+        if (bulletinLikeFlag) {
+            bulletinLikeFlag = false;
+        } else {
+            bulletinLikeFlag = true;
+        }
+
+        $.ajax({
+            type: 'post',
+            url: '/bulletinLikesUpAndDown',
+            async: true,
+            dataType: 'text',
+            data: {
+                type: 'freeBulletin',
+                userId: document.getElementById('commentUserId').value,
+                fkNo: no,
+                flag: bulletinLikeFlag
+            },
+            success: function (result) {
+                console.log('성공 결과 : ' + result);
+
+                let bulletinLikes = document.getElementById('bulletinLikes');
+                bulletinLikes.innerHTML = result;
+
+                if (bulletinLikeFlag) {
+                    document.getElementById('bulletinLikesImg').src = '/LikeImg/filledHeart.png';
+                } else {
+                    document.getElementById('bulletinLikesImg').src = '/LikeImg/unFilledHeart.png';
+                }
+            },
+            error: function (error) {
+                console.log('에러 : ' + error);
+            }
+        })
+    }
+    function clickLikeOfComment(no) {
+        const userId = document.getElementById(('currentUserId')).value;
+
+        if(userId == '')
+            return;
+
+        if (commentLikeFlag.get(no)) {
+            commentLikeFlag.set(no, false);
+        } else {
+            commentLikeFlag.set(no, true);
+        }
+
+        $.ajax({
+            type: 'post',
+            url: '/commentLikesUpAndDown',
+            async: true,
+            dataType: 'text',
+            data: {
+                type: 'freeComment',
+                userId: document.getElementById('commentUserId').value,
+                fkNo: no,
+                flag: commentLikeFlag.get(no)
+            },
+            success: function (result) {
+                console.log('성공 결과 : ' + result);
+
+                let commentLikes = document.getElementById('commentLikes' + no);
+                commentLikes.innerHTML = result;
+                if (commentLikeFlag.get(no)) {
+                    document.getElementById('commentLikeImg' + no).src = '/LikeImg/filledHeart.png';
+                } else {
+                    document.getElementById('commentLikeImg' + no).src = '/LikeImg/unFilledHeart.png';
+                }
+            },
+            error: function (error) {
+                console.log('에러 : ' + error);
+            }
+        })
+    }
+
+    function addComment(no) {
+        let content = document.getElementById('commentContent').innerHTML;
+
+        if (content == '') {
+            alert('내용을 입력해주세요.');
+            return;
+        }
+
+        $.ajax({
+            type: 'post',
+            url: '/freeBulletin/addComment',
+            async: false,
+            dataType: 'text',
+            data: {
+                fkNo: no,
+                userId: document.getElementById('commentUserId').value,
+                content: content,
+                type: document.getElementById('commentType').value,
+                userId: document.getElementById('commentUserId').value
+            },
+            success: function (result) {
+                console.log('성공 결과 : ' + result);
+                document.getElementById('commentContent').innerHTML = '';
+                location.href = '/specificBulletin?no=' + no + '&userId' + document.getElementById('commentUserId').value;
+            },
+            error: function (error) {
+                console.log('에러 : ' + error);
+            }
+        })
+    }
+    function addReply(no) {
+        let content = document.getElementById('replyComment' + no).innerHTML;
+
+        if (content == '') {
+            alert('내용을 입력해주세요.');
+            return;
+        }
+        $.ajax({
+            type: 'post',
+            url: '/freeBulletin/addReply',
+            async: true,
+            dataType: 'text',
+            data: {
+                fkNo: no,
+                userId: document.getElementById(('currentUserId')).value,
+                content: content,
+                type: document.getElementById('cicType' + no).value
+            },
+            success: function (result) {
+                console.log('성공 결과 : ' + result);
+                document.getElementById('replyComment' + no).innerHTML = '';
+                if (document.getElementById('showingReplies' + no).style.display == 'none') {
+                    deleteReply(no);
+                    showingReplies(no);
+                }
+            },
+            error: function (error) {
+                console.log('에러 : ' + error);
+            }
+        })
+    }
+
+    function showingReplies(no) {
+        let showingButton = document.getElementById('showingReplies' + no).style.display = 'none';
+        let hidingButton = document.getElementById('hidingReply' + no).style.display = 'block';
+        let writeReply = document.getElementById('reply' + no);
+        if(writeReply != undefined)
+            writeReply.style.display = 'block';
+
+        let commentUserIdTag = document.getElementById('commentUserId')
+        let commentUserId;
+        if(commentUserIdTag == null)
+            commentUserId = 'guest';
+        else
+            commentUserId = commentUserIdTag.value;
+
+        $.ajax({
+            type: 'post',
+            url: '/showReply',
+            async: true,
+            dataType: 'json',
+            data: {
+                no: no,
+                userId: commentUserId
+            },
+            success: function (result) {
+                replyList = result;
+                console.log('성공 결과 : ' + result);
+                insertReply(no);
+            },
+            error: function (error) {
+                console.log('에러 : ' + error);
+            }
+
+        })
+    }
+    function deleteForReply(no){
+        $.ajax({
+            url: '/deleteFreeBulletinReply',
+            method: 'get',
+            async: true,
+            dataType: 'text',
+            data: {
+                no: no
+            },
+            success: function(result){
+                console.log('성공 : '+result);
+                document.getElementById('replyDiv'+no).remove();
+            },
+            error: function(error){
+                console.log('실패 : '+error);
+            }
+        });
+    }
+    function insertReply(no) {
+        no = Number(no);
+        for (let i = 0; i < replyList.length; i++) {
+            let commentArea = document.getElementById('commentArea');
+            //
+            let replyDiv = document.createElement('div');
+            replyDiv.setAttribute('class', 'replyDiv'+no);
+            replyDiv.setAttribute('id', 'replyDiv'+replyList[i].no);
+            let hr = document.createElement('hr');
+            replyDiv.appendChild(hr);
+            let profileImgOfReply = document.createElement('img');
+            profileImgOfReply.setAttribute('class', 'profileImgOfReply');
+            profileImgOfReply.setAttribute('src', '/files/profile/'+replyList[i].profileImgName);
+            profileImgOfReply.setAttribute('width', '50');
+            replyDiv.appendChild(profileImgOfReply);
+            if(document.getElementById(('currentUserId')).value == replyList[i].userId){
+                let deleteBtnForReply = document.createElement('input');
+                deleteBtnForReply.setAttribute('type', 'button');
+                deleteBtnForReply.setAttribute('value', '대댓글 삭제');
+                deleteBtnForReply.setAttribute('class', 'deleteBtnForReply');
+                deleteBtnForReply.setAttribute('id', 'deleteBtnForReply'+replyList[i].no);
+                deleteBtnForReply.setAttribute('onclick', 'deleteForReply('+replyList[i].no+')');
+                let editUiForReply = document.createElement('input');
+                editUiForReply.setAttribute('class','editUiForReply');
+                editUiForReply.setAttribute('id','editUiForReply'+replyList[i].no);
+                editUiForReply.setAttribute('value','대댓글 수정');
+                editUiForReply.setAttribute('type','button');
+                editUiForReply.setAttribute('onclick','editUiForReply('+replyList[i].no+')');
+                let cancelEditUiForReply = document.createElement('input');
+                cancelEditUiForReply.setAttribute('class','cancelEditUiForReply');
+                cancelEditUiForReply.setAttribute('id','cancelEditUiForReply'+replyList[i].no);
+                cancelEditUiForReply.setAttribute('value','대댓글 수정 취소');
+                cancelEditUiForReply.setAttribute('onclick','cancelEditUiForReply('+replyList[i].no+', 0)');
+                cancelEditUiForReply.setAttribute('type','button');
+                let updateBtnForReply = document.createElement('input');
+                updateBtnForReply.setAttribute('class','updateBtnForReply');
+                updateBtnForReply.setAttribute('id','updateBtnForReply'+replyList[i].no);
+                updateBtnForReply.setAttribute('value','대댓글 수정 완료');
+                updateBtnForReply.setAttribute('onclick','updateForReply('+replyList[i].no+')');
+                updateBtnForReply.setAttribute('type','button');
+
+                replyDiv.appendChild(editUiForReply);
+                replyDiv.appendChild(cancelEditUiForReply);
+                replyDiv.appendChild(deleteBtnForReply);
+                replyDiv.appendChild(updateBtnForReply);
+            }
+            let contentAndInfo = document.createElement('div');
+            contentAndInfo.setAttribute('class', 'contentAndInfoOfReply');
+            let writer = document.createElement('a');
+            writer.innerHTML = replyList[i].writer;
+            writer.setAttribute('class', 'writerOfReply');
+            writer.setAttribute('href', 'profile?alias='+replyList[i].writer);
+            let content = document.createElement('div');
+            content.innerHTML = replyList[i].content;
+            content.setAttribute('class', 'contentOfReply');
+            content.setAttribute('id', 'contentOfReply'+replyList[i].no);
+            let bottomOfReply = document.createElement('div');
+            bottomOfReply.setAttribute('class', 'bottomOfReply');
+            // 아래는 bottomOfReply의 자식노드들
+            let writingDate = document.createElement('div');
+            let createDate = replyList[i].createDate;
+            createDate = createDate.substr(0, 10) + ' ' + createDate.substr(11, 8);
+            writingDate.innerHTML = '작성일 : ' + createDate;
+            writingDate.setAttribute('class', 'dateOfReply');
+            bottomOfReply.appendChild(writingDate);
+            let likeImg = document.createElement('img');
+            likeImg.setAttribute('id', 'replyLikesImg' + replyList[i].no);
+            likeImg.setAttribute('width', '15');
+            likeImg.setAttribute('onclick', 'clickReplyLike(' + replyList[i].no + ')');
+            if (replyList[i].isPressedReplyLike == 1) {
+                likeImg.setAttribute('src', 'LikeImg/filledHeart.png');
+                replyFlag.set(replyList[i].no, true);
+            } else {
+                likeImg.setAttribute('src', 'LikeImg/unFilledHeart.png');
+                replyFlag.set(replyList[i].no, false);
+            }
+            likeImg.setAttribute('class', 'likeImgOfReply');
+            bottomOfReply.appendChild(likeImg);
+            let likesOfReply = document.createElement('div');
+            likesOfReply.setAttribute('id', 'replyLikesCnt' + replyList[i].no)
+            likesOfReply.innerHTML = replyList[i].likes;
+            likesOfReply.setAttribute('class', 'likesOfReply')
+            bottomOfReply.appendChild(likesOfReply);
+
+            contentAndInfo.appendChild(writer);
+            contentAndInfo.appendChild(content);
+            contentAndInfo.appendChild(bottomOfReply);
+            replyDiv.appendChild(contentAndInfo);
+
+            let comment = document.getElementById('comment'+no);
+            comment.appendChild(replyDiv);
+        }
+    }
+    function clickReplyLike(no) {
+        const userId = document.getElementById(('currentUserId')).value;
+
+        if(userId == '')
+            return;
+
+        if (replyFlag.get(no) == true) {
+            replyFlag.set(no, false);
+        } else {
+            replyFlag.set(no, true);
+        }
+
+        $.ajax({
+            type: 'post',
+            url: '/ReplyLikesUp',
+            async: true,
+            dataType: 'json',
+            data: {
+                type: 'freeReply',
+                userId: document.getElementById('commentUserId').value,
+                fkNo: no,
+                flag: replyFlag.get(no)
+            },
+            success: function (result) {
+                console.log('성공 결과 : ' + result);
+                document.getElementById('replyLikesCnt' + no).innerHTML = result;
+
+                if (replyFlag.get(no) == true)
+                    document.getElementById('replyLikesImg' + no).src = 'LikeImg/filledHeart.png';
+                else
+                    document.getElementById('replyLikesImg' + no).src = 'LikeImg/unFilledHeart.png';
+            },
+            error: function (error) {
+                console.log('에러 : ' + error);
+            }
+        })
+    }
+    function hidingReply(no) {
+        let showingButton = document.getElementById('showingReplies' + no).style.display = 'block';
+        let hidingButton = document.getElementById('hidingReply' + no).style.display = 'none';
+        let writeReply = document.getElementById('reply' + no);
+        if(writeReply != undefined)
+            writeReply.style.display = 'none';
+
+        deleteReply(no);
+    }
+    function deleteReply(no) {
+        let replyDiv = document.getElementsByClassName('replyDiv'+no);
+
+        for (let i = replyDiv.length - 1; i >= 0; i--) {
+            replyDiv[i].remove();
+        }
+    }
+</script>

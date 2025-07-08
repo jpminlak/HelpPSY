@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>답변</title>
+    <link rel="stylesheet" th:href="@{/main/head.css}">
+    <script th:src="@{/main/fragment.js}"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #e6f7ff;
+        }
+
+        button[type="submit"] {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #c82333;
+        }
+
+        .sort-links a {
+            margin: 0 5px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .sort-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+<div th:replace="~{main/mainPage:: header}"></div>
+
+<form action="/delete" method="post" id="deleteForm">
+    <table>
+        <thead>
+        <tr>
+            <th>선택</th>
+            <th>번호</th>
+            <th>작성자</th>
+            <th>제목</th>
+            <th>내용</th>
+            <th>파일명</th>
+            <th>작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user, iterStat : ${users}">
+            <td><input type="checkbox" name="ids" th:value="${user.id}"></td>
+            <td>
+                <a th:href="@{'/question/' + ${user.id}}" th:text="${user.id}"></a>
+            </td>
+            <td>
+                <span th:with="displayAlias=${currentWriterAliases[__${iterStat.index}__]}">
+                    <a th:if="${displayAlias != null && displayAlias != ''}"
+                       th:href="@{'/profile?alias=' + ${displayAlias}}" th:text="${displayAlias}"></a>
+                    <span th:unless="${displayAlias != null && displayAlias != ''}"
+                          th:text="${displayAlias}"></span>
+                </span>
+            </td>
+            <td th:text="${user.subject}"></td>
+            <td th:text="${user.content}"></td>
+            <td th:text="${user.file}"></td>
+            <td th:text="${#temporals.format(user.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="sort-links">
+        <a th:href="@{/respondent(sort='desc')}">최신순</a> |
+        <a th:href="@{/respondent(sort='asc')}">오래된순</a>
+    </div>
+    <button type="submit">삭제</button>
+</form>
+
+<div id="footer">
+    <p>개발자 이메일 : human@gmail.com | 대표 이름 : human</p>
+</div>
+
+<script>
+    window.onload = () => {
+        const mainTitle = document.getElementById('mainTitle');
+        if (mainTitle) { // mainTitle 요소가 존재하는지 확인
+            mainTitle.innerText = '문의 답변 전체보기';
+        }
+    }
+</script>
+</body>
+
+</html>

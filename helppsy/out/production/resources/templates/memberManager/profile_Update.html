@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>프로필 수정</title>
+    <style>
+        * {
+            user-select: none;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .form-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .form-buttons input[type="submit"],
+        .form-buttons input[type="button"] {
+            padding: 10px 20px;
+            font-size: 14px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        .form-buttons input[type="button"] {
+            background-color: #777;
+        }
+
+        .form-buttons input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .form-buttons input[type="button"]:hover {
+            background-color: #5f5f5f;
+        }
+
+        /* Added style for circular profile image preview */
+        .profile-container img#profileImagePreview {
+            border-radius: 50%; /* Make it circular */
+            object-fit: cover; /* Ensure the image covers the area without distortion */
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            max-width: 150px; /* Adjust size as needed */
+            max-height: 150px; /* Adjust size as needed */
+            display: block; /* Ensure it's on its own line */
+            margin-left: auto; /* Center the image */
+            margin-right: auto; /* Center the image */
+        }
+    </style>
+</head>
+<body>
+
+<div class="profile-container">
+    <h1>프로필 수정</h1>
+
+    <form action="/update" method="POST" enctype="multipart/form-data">
+        <label>
+            프로필 사진:
+            <input id="profileImageInput" type="file" name="Ffile" accept="image/*">
+            <img id="profileImagePreview" src="" alt="프로필 이미지 미리보기" style="display: none;">
+        </label>
+        <label>
+            아이디:
+            <input type="text" name="userId" th:value="${user.userId}" disabled>
+            <input type="hidden" name="userId" th:value="${user.userId}">
+        </label>
+
+        <label>
+            새 비밀번호:
+            <input type="password" name="userPass" th:value="${user.userPass}">
+        </label>
+
+        <label>
+            별명:
+            <input type="text" name="alias" th:value="${user.alias}">
+        </label>
+
+        <label>
+            소개글:
+            <textarea name="intro" rows="5" cols="50" th:text="${user.intro}"></textarea>
+        </label>
+
+        <div class="form-buttons">
+            <a href="main"><input type="button" value="홈"></a>
+            <input type="submit" value="수정하기">
+        </div>
+    </form>
+</div>
+</body>
+</html>
+
+<script th:inline="javascript">
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const profileImageInput = document.getElementById('profileImageInput');
+        const profileImagePreview = document.getElementById('profileImagePreview');
+
+        profileImageInput.addEventListener('change', function(event) {
+            const file = event.target.files[0]; // 선택된 파일 가져오기
+
+            if (file) {
+                const reader = new FileReader(); // FileReader 객체 생성
+
+                reader.onload = function(e) {
+                    profileImagePreview.src = e.target.result; // 이미지 src에 파일 데이터 설정
+                    profileImagePreview.style.display = 'block'; // 이미지 표시
+                };
+
+                reader.readAsDataURL(file); // 파일을 Data URL 형식으로 읽기
+            } else {
+                profileImagePreview.src = ''; // 파일이 없으면 이미지 초기화
+                profileImagePreview.style.display = 'none'; // 이미지 숨기기
+            }
+        });
+
+        // 프로필 수정 시 기존 프로필 이미지가 있다면 미리보기로 표시
+        if ([[${profileImageUrl}]] && [[${profileImageUrl}]] !== '') {
+            profileImagePreview.src = [[${profileImageUrl}]];
+            profileImagePreview.style.display = 'block';
+        }
+
+    });
+
+</script>
